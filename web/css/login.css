@@ -1,0 +1,203 @@
+* {
+  box-sizing: border-box;
+}
+body.login-page {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #e9eef0;
+  font: 400 14px/1.6 "Plus Jakarta Sans",sans-serif;
+  background: radial-gradient(ellipse at 15% 25%,#a3e63512,transparent 45%),radial-gradient(ellipse
+    at 90% 80%,#a3e63510,transparent 40%),#10141a;
+  background-attachment: fixed;
+}
+.login-page main {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px 48px;
+}
+.auth-container {
+  width: 100%;
+  max-width: 460px;
+}
+.auth-intro {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.auth-intro img {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+.auth-intro h1 {
+  margin: 0;
+  font: 700 36px/1.2 "Space Grotesk",sans-serif;
+  letter-spacing: -.045em;
+  color: #f4f7f8;
+}
+.auth-intro p {
+  margin: 8px 0 0;
+  color: #9baeb8;
+  font-size: 13px;
+}
+.auth-card {
+  background: linear-gradient(145deg,#20272b,#171d21);
+  border: 1px solid #ffffff16;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 32px 80px #0004,inset 0 1px #ffffff06;
+}
+.auth-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #ffffff12;
+}
+.auth-card-heading h2 {
+  margin: 0;
+  font: 500 11px/20px "JetBrains Mono",monospace;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: #b9c8d0;
+}
+.status-dot {
+  width: 7px;
+  height: 7px;
+  background: #a3e635;
+  border-radius: 50%;
+}
+.login-page #login-form .field {
+  margin-bottom: 20px;
+}
+.login-page label {
+  display: block;
+  margin-bottom: 8px;
+  color: #b9c6ce;
+  font: 500 11px/18px "JetBrains Mono",monospace;
+}
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.login-page a {
+  color: #a3e635;
+  text-decoration: none;
+}
+.label-row a {
+  font-size: 11px;
+}
+.login-page #login-form :is(input[type="email"],input[type="password"]) {
+  background: #10171b;
+  border: 1px solid #37434b;
+  color: #e9eef0;
+  height: 48px;
+  font-size: 14px;
+  padding-right: 14px;
+}
+.login-page #login-form input::placeholder {
+  color: #82939e;
+  opacity: 1;
+}
+.login-page #login-form input:focus {
+  border-color: #a3e635;
+  outline: none;
+  box-shadow: none;
+}
+.login-page #login-form .input-leading-icon {
+  color: #99aeb8;
+}
+.login-page #submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #c0fa7266;
+  background: #a3e635;
+  color: #19280e;
+  font: 600 14px "Plus Jakarta Sans",sans-serif;
+  cursor: pointer;
+  box-shadow: 0 8px 24px #80ca1212;
+  transition: background .18s;
+}
+.login-page #submit:hover {
+  background: #b3ee53;
+}
+.login-page #submit:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+.access-notice {
+  border-top: 1px solid #ffffff12;
+  margin: 24px 0 0;
+  padding-top: 20px;
+  color: #93a4ad;
+  font-size: 11px;
+  line-height: 1.8;
+  text-align: center;
+}
+.back-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  font-size: 12px;
+}
+.login-page .alert {
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.login-page .alert.error {
+  background: #ef44440c;
+  border: 1px solid #ef444440;
+  color: #fecaca;
+}
+.login-page .alert.info {
+  background: #a3e6350a;
+  border: 1px solid #a3e63530;
+  color: #d1e9b4;
+}
+.login-page [hidden] {
+  display: none !important;
+}
+.login-page :is(a,button):focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 4px;
+}
+@media (max-width: 639px) {
+  .login-page main {
+    padding: 28px 16px 40px;
+  }
+  .auth-card {
+    padding: 24px;
+  }
+  .auth-intro img {
+    width: 72px;
+    height: 72px;
+  }
+  .auth-intro h1 {
+    font-size: 32px;
+  }
+  .login-page #login-form :is(input[type="email"],input[type="password"]) {
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .login-page * {
+    transition: none !important;
+  }
+}
