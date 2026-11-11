@@ -13,7 +13,7 @@
 header {
   position: relative;
   background: #0b1013;
-  border-bottom: 1px solid #ffffff12;
+  border-bottom: 1px solid transparent;
   padding: 16px 24px;
   font: 500 12px/1.5 "Plus Jakarta Sans", sans-serif;
   color: #94a3b8;
@@ -21,11 +21,11 @@ header {
 header::after {
   content: "";
   position: absolute;
-  top: 100%;
+  top: calc(100% - 1px);
   left: 0;
   right: 0;
-  height: 20px;
-  background: linear-gradient(to bottom, #0b1013cc, transparent);
+  height: 36px;
+  background: linear-gradient(to bottom, #0b1013 0%, #0b1013e6 20%, #0b101380 55%, #0b101300 100%);
   pointer-events: none;
 }
 .inner {
