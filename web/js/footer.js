@@ -16,6 +16,7 @@ class SKPassFooter extends HTMLElement {
       <img class="footer-logo" src="${logo}" width="40" height="40" alt="SKPass" />
       <span><strong>SKPass System</strong><small>Official Portal of the Provincial Government</small></span>
     </div>
+    <div class="footer-links">
     <nav aria-label="Footer">
       <a href="#privacy"
         onclick="alert('Privacy Policy: All vehicle registration data is secured in compliance with the Data Privacy Act.'); return false;">Privacy Policy</a><span class="divider" aria-hidden="true">|</span><a href="#terms"
@@ -24,8 +25,9 @@ class SKPassFooter extends HTMLElement {
         onclick="alert('Gate Protocols: Vehicles must slow down to 10 km/h at checkpoint scanners. Display your digital QR pass or physical placard to the guard camera.'); return false;">Gate Protocols</a>
       <span class="status" role="status"><i aria-hidden="true"></i><span class="status-text"></span></span>
     </nav>
+    <p class="legal">All rights reserved. Unauthorized access is punishable by law.</p>
+    </div>
   </div>
-  <p class="legal">All rights reserved. Unauthorized access is punishable by law.</p>
 </footer>`;
     root.append(template.content.cloneNode(true));
 

@@ -144,13 +144,17 @@ nav > a {
   background: #f59e0b;
 }
 .legal {
-  max-width: 1280px;
-  margin: 12px auto 0;
-  padding-top: 12px;
-  border-top: 1px solid #ffffff0d;
+  margin: 2px 0 0;
+  padding: 0;
+  border: 0;
   font-size: 11px;
   color: #64748b;
-  text-align: center;
+  text-align: right;
+}
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 a:hover {
   color: #e9eef0;
@@ -167,6 +171,12 @@ a:focus-visible {
   }
   nav {
     justify-content: center;
+  }
+  .footer-links {
+    align-items: center;
+  }
+  .legal {
+    text-align: center;
   }
 }
 @media (max-width: 900px) {
@@ -197,7 +207,7 @@ a:focus-visible {
     font-size: 10px;
   }
   .legal {
-    margin-top: 10px;
-    padding-top: 10px;
+    margin-top: 4px;
+    padding-top: 0;
   }
 }
