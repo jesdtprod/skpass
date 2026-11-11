@@ -106,6 +106,20 @@ form.addEventListener("submit", async (e) => {
         plate: fd.get("plate").toString().toUpperCase(),
         category: fd.get("category"),
         status: data.status,
+        details: Object.fromEntries(
+          [
+            "owner_name",
+            "vehicle_type",
+            "color",
+            "office",
+            "position",
+            "agency",
+            "host_name",
+            "purpose",
+            "valid_from",
+            "valid_to",
+          ].filter((key) => fd.has(key)).map((key) => [key, fd.get(key)]),
+        ),
       });
       clearRequestKey();
       location.href = `../my-qr/?v=${encodeURIComponent(data.vehicle_id)}&new=1`;

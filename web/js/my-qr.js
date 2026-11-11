@@ -51,7 +51,9 @@ function icon(kind) {
 }
 
 function card(rec, view, note) {
+  view = { ...rec.details, ...view };
   const s = view.status;
+  if (s === "approved" && (focusId === rec.vehicle_id || !focusId)) welcome.hidden = true;
   const kids = [
     h(
       "div",
@@ -98,6 +100,7 @@ function card(rec, view, note) {
       : date.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
   }
   const details = [
+    ["Pass reference", rec.vehicle_id],
     ["Vehicle type", typeNames[view.vehicle_type] ?? view.vehicle_type],
     ["Color", view.color],
     ["Office / Department", view.office],
@@ -154,17 +157,15 @@ function card(rec, view, note) {
     }
     const canvas = h("canvas", { class: "qr", "aria-label": `QR code for ${rec.plate}` });
     drawQr(canvas, view.token);
-    kids.push(canvas);
-    if (view.valid_from || view.valid_to) {
-      kids.push(
-        h(
-          "p",
-          { class: "center muted" },
-          `Valid ${view.valid_from ?? "…"} to ${view.valid_to ?? "…"}`,
-        ),
-      );
-    }
-    kids.push(h("p", { class: "center muted" }, "Show this QR to the guard at the gate."));
+    kids.push(
+      h(
+        "div",
+        { class: "qr-display" },
+        h("div", { class: "qr-display-heading" }, "Vehicle gate pass"),
+        canvas,
+        h("p", { class: "center muted" }, "Show this QR to the guard at the gate."),
+      ),
+    );
     kids.push(
       h("button", {
         class: "btn",
@@ -182,7 +183,7 @@ function card(rec, view, note) {
       h(
         "button",
         {
-          class: "btn refresh-pass",
+          class: `btn refresh-pass ${s === "approved" && view.token ? "secondary-refresh" : ""}`,
           type: "button",
           onclick: () => refresh(rec.vehicle_id),
         },

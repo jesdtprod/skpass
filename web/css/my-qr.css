@@ -419,3 +419,44 @@ body.my-qr-page {
     transition: none !important;
   }
 }
+
+.my-qr-page .qr-display {
+  background: #11181d;
+  border: 1px solid #ffffff12;
+  border-radius: 16px;
+  padding: 20px 16px;
+  margin: 20px 0;
+  text-align: center;
+}
+.qr-display-heading {
+  font: 500 10px/18px "JetBrains Mono",monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #a5b6c0;
+}
+.my-qr-page .qr-display canvas.qr {
+  margin: 16px auto;
+  width: 100%;
+  max-width: 256px;
+}
+.my-qr-page .qr-display p {
+  margin: 0;
+  font-size: 12px;
+}
+.my-qr-page #list .actions .secondary-refresh {
+  background: #10171b;
+  color: #c7d4dc;
+  border-color: #ffffff20;
+  box-shadow: none;
+}
+.my-qr-page #list .actions .secondary-refresh:hover {
+  background: #253038;
+  border-color: #a3e63560;
+}
+.my-qr-page .pass-details > div:first-child {
+  grid-column: 1 / -1;
+}
+.my-qr-page .pass-details > div:first-child dd {
+  font: 400 11px/20px "JetBrains Mono",monospace;
+  color: #aabcc7;
+}
