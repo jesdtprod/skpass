@@ -114,6 +114,11 @@ body.portal-page {
   transform: translateY(-2px);
   border-color: #a3e63580;
 }
+.portal-page [data-purpose="primary-action-buttons"] > a:focus-visible {
+  outline: none;
+  border-color: #a3e635;
+  box-shadow: none;
+}
 .portal-page [data-purpose="primary-action-buttons"] > a > div:first-child {
   min-width: 0;
   gap: 14px;
