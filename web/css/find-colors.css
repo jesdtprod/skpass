@@ -1,0 +1,34 @@
+/* Use the same neutral surfaces and lime accents as vehicle registration. */
+body #find-form {
+  background: #1a2025;
+  border-color: #ffffff16;
+  box-shadow: 0 16px 64px #0002;
+}
+body #find-form :is(input,select) {
+  background-color: #11181d;
+  border-color: #36424a;
+  color: #e9eef0;
+}
+body #find-form input::placeholder {
+  color: #82939e;
+  opacity: 1;
+}
+body #find-form label {
+  color: #b9c6ce;
+}
+body #find-form .input-group {
+  background: #11181d;
+  border-color: #36424a;
+}
+body #find-form input:focus {
+  border-color: #a3e635;
+  outline: none;
+  box-shadow: none;
+}
+body #find-form #submit {
+  background: #a3e635;
+  color: #19280e;
+}
+body #find-form #submit:hover {
+  background: #b3ee53;
+}
