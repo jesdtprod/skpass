@@ -54,6 +54,11 @@ function svgIcon(d, stroke = "1.7") {
 /** One metric card. `sub` is the context line shown under the number. */
 function stat(href, n, label, cls = "", sub = null, total = 0, basis = "registered vehicles") {
   const ratio = total > 0 ? Math.min(100, Math.max(0, n / total * 100)) : 0;
+  const totalLabel = basis === "registered vehicles"
+    ? "registered vehicles"
+    : basis === "today's scans"
+    ? "scans today"
+    : "scans this period";
   const tone = label === "Blocked vehicles" && n
     ? "critical"
     : label === "Approved vehicles"
@@ -72,7 +77,11 @@ function stat(href, n, label, cls = "", sub = null, total = 0, basis = "register
       "div",
       { class: "metric-value-row" },
       h("div", { class: "n" }, String(n)),
-      h("span", { class: "metric-arrow", "aria-hidden": "true" }, svgIcon("M7 17 17 7M7 7h10v10")),
+      h(
+        "span",
+        { class: "metric-share", title: `Share of ${basis}` },
+        total > 0 ? `${ratio.toFixed(1).replace(/\.0$/, "")}%` : "No data",
+      ),
     ),
     h("div", {
       class: "metric-track",
@@ -84,6 +93,16 @@ function stat(href, n, label, cls = "", sub = null, total = 0, basis = "register
       "aria-valuetext": `${n} of ${total} ${basis}`,
       title: `${n} of ${total} ${basis}`,
     }, h("span", { style: `width:${ratio}%` })),
+    h(
+      "div",
+      { class: "metric-total" },
+      h("span", {}, `Of ${total} ${totalLabel}`),
+      h(
+        "span",
+        { class: "metric-link-icon", "aria-hidden": "true" },
+        svgIcon("M7 17 17 7M7 7h10v10"),
+      ),
+    ),
     sub ? h("div", { class: "metric-sub" }, sub) : null,
   );
 }

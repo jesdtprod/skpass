@@ -1189,9 +1189,10 @@
 
 /* Metric summaries: clear hierarchy, consistent icons and actual share meters. */
 .admin-home .dashboard-view .metric-card {
-  min-height: 144px;
-  padding: 16px;
-  border-radius: 14px;
+  min-height: 128px;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 0 #ffffff04;
 }
 .admin-home .dashboard-view .metric-card .l {
   font: 600 11px/16px "Plus Jakarta Sans", sans-serif;
@@ -1199,31 +1200,31 @@
   letter-spacing: 0;
 }
 .dashboard-view .metric-heading {
-  min-height: 30px;
+  min-height: 24px;
   align-items: center;
 }
 .admin-home .dashboard-view .metric-icon {
   display: grid;
   place-items: center;
-  flex: 0 0 30px;
-  width: 30px;
-  height: 30px;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
   border: 1px solid #ffffff0c;
   border-radius: 9px;
   background: #ffffff04;
   color: var(--metric-accent);
 }
 .dashboard-view .metric-icon svg {
-  width: 17px;
-  height: 17px;
+  width: 15px;
+  height: 15px;
   display: block;
 }
 .dashboard-view .metric-value-row {
-  margin-top: 8px;
+  margin-top: 4px;
   align-items: center;
 }
 .admin-home .dashboard-view .metric-card .n {
-  font-size: 30px;
+  font-size: 28px;
 }
 .dashboard-view .metric-arrow svg {
   display: block;
@@ -1233,7 +1234,7 @@
 .dashboard-view .metric-track {
   height: 4px;
   overflow: hidden;
-  margin-top: 12px;
+  margin-top: 8px;
   border-radius: 999px;
   background: #ffffff0b;
 }
@@ -1246,9 +1247,35 @@
 .dashboard-view .metric-sub {
   border: 0;
   padding-top: 0;
-  margin-top: 9px;
+  margin-top: 3px;
   font-size: 10px;
-  line-height: 16px;
+  line-height: 14px;
+}
+.dashboard-view .metric-share {
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid color-mix(in srgb, var(--metric-accent) 18%, transparent);
+  background: color-mix(in srgb, var(--metric-accent) 6%, transparent);
+  color: var(--metric-accent);
+  font: 600 10px/16px "JetBrains Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+.dashboard-view .metric-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 5px;
+  color: #7e97a5;
+  font: 500 9px/14px "Plus Jakarta Sans", sans-serif;
+}
+.dashboard-view .metric-link-icon svg {
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+.dashboard-view .metric-card:hover .metric-link-icon {
+  color: var(--metric-accent);
 }
 .admin-home .dashboard-view .metric-card:focus-visible {
   outline: 2px solid #a3e635;
