@@ -1,48 +1,461 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html class="dark" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Staff Login · SKPass</title>
-    <meta name="theme-color" content="#2d9a0f" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Staff Login - SKPass Vehicle Gate Management</title>
+    <meta
+      name="description"
+      content="Official Provincial Government staff gate pass portal for authorized guards and administrators."
+    />
+    <meta name="theme-color" content="#090d14" />
+
+    <!-- PWA & Favicons -->
     <link rel="manifest" href="../manifest.webmanifest" />
-    <link rel="icon" type="image/png" href="../icons/favicon-32.png?v=fullcolor-2" sizes="32x32" />
-    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png?v=fullcolor-2" />
-    <link rel="stylesheet" href="../css/base.css" />
-    <link rel="stylesheet" href="../css/form-controls.css?v=1" />
+    <link rel="icon" href="../icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16.png" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS v3 with forms and container queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              emerald: "#10b981",
+              darkEmerald: "#059669",
+              accent: "#34d399",
+              deepBg: "#090d14",
+              panelBg: "#0e1624",
+              surface: "#151e30",
+              border: "#1f2b40",
+            },
+          },
+          fontFamily: {
+            sans: [
+              "Inter",
+              "system-ui",
+              "-apple-system",
+              "BlinkMacSystemFont",
+              "Segoe UI",
+              "Roboto",
+              "sans-serif",
+            ],
+            mono: [
+              "JetBrains Mono",
+              "ui-monospace",
+              "SFMono-Regular",
+              "Menlo",
+              "monospace",
+            ],
+          },
+          boxShadow: {
+            glow: "0 0 50px -10px rgba(16, 185, 129, 0.18)",
+            innerBorder: "inset 0 1px 0 0 rgba(255, 255, 255, 0.07)",
+          },
+        },
+      },
+    };
+    </script>
+
+    <!-- BEGIN: Custom Style Blocks -->
+    <style data-purpose="background-patterns">
+    /* Subtle civic surveillance grid overlay */
+    .civic-grid {
+      background-size: 40px 40px;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    }
+    .radial-glow {
+      background: radial-gradient(circle at 50% 25%, rgba(16, 185, 129, 0.09) 0%, transparent 65%);
+    }
+
+    /* Alert styling used by login.js */
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.8125rem;
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .alert.error {
+      background: rgba(127, 29, 29, 0.35);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fecaca;
+    }
+    .alert.info {
+      background: rgba(6, 78, 59, 0.35);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+    }
+    </style>
+    <!-- END: Custom Style Blocks -->
     <link rel="stylesheet" href="../css/control-shapes.css" />
   </head>
-  <body>
-    <skpass-header></skpass-header>
-    <script type="module" src="../js/header.js"></script>
-    <main class="container">
-      <header class="brand compact">
-        <a href="../"><img src="../icons/logo.png" alt="SKPass" /></a>
-        <h1>Staff Login</h1>
-        <p>Guards and administrators</p>
-      </header>
+  <body
+    class="bg-brand-deepBg text-slate-200 min-h-screen flex flex-col justify-between font-sans antialiased relative selection:bg-emerald-500 selection:text-black"
+  >
+    <!-- Ambient backdrop elements -->
+    <div aria-hidden="true" class="fixed inset-0 civic-grid pointer-events-none z-0"></div>
+    <div aria-hidden="true" class="fixed inset-0 radial-glow pointer-events-none z-0"></div>
 
-      <div id="alert" class="alert error" role="alert" hidden></div>
+    <!-- BEGIN: MainHeader -->
+    <header
+      class="relative z-10 w-full border-b border-brand-border/60 bg-brand-deepBg/80 backdrop-blur-md px-6 py-4"
+      data-purpose="top-navigation-bar"
+    >
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <!-- Civic Crest & Department Info -->
+        <a class="flex items-center space-x-3.5 group" href="../">
+          <div
+            class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:border-emerald-400 transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              ></path>
+            </svg>
+          </div>
+          <div class="leading-tight">
+            <p
+              class="text-xs font-semibold tracking-wider text-slate-100 uppercase">Provincial Government</p>
+            <p
+              class="text-[11px] text-slate-400 font-normal">Digital Access &amp; Security Division</p>
+          </div>
+        </a>
 
-      <form id="login-form" class="card" novalidate>
-        <div class="field">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" autocomplete="username" required />
+        <!-- Live Protocol Badge -->
+        <div class="flex items-center space-x-4">
+          <div
+            class="hidden sm:flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900/90 border border-brand-border text-xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-slate-400">Terminal Clearance:</span>
+            <span class="font-mono text-emerald-400 font-medium">ONLINE</span>
+          </div>
+          <a
+            id="support-link"
+            class="text-xs text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+            href="#support"
+          >
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path
+                d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              ></path>
+            </svg>
+            Support Desk
+          </a>
         </div>
-        <div class="field">
-          <label for="password">Password</label>
-          <input id="password" name="password" type="password" autocomplete="current-password"
-            required />
+      </div>
+    </header>
+    <!-- END: MainHeader -->
+
+    <!-- BEGIN: MainContent -->
+    <main
+      class="relative z-10 flex-grow flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+      <div class="w-full max-w-[460px]" data-purpose="auth-container">
+        <!-- Logo and Headline Header -->
+        <div class="text-center mb-8">
+          <!-- Shield Hexagon Emblem -->
+          <div
+            class="mx-auto mb-4 w-16 h-16 rounded-2xl bg-gradient-to-b from-brand-surface to-brand-panelBg border border-emerald-500/30 shadow-glow flex items-center justify-center p-3 relative group"
+          >
+            <div
+              class="absolute inset-0 bg-emerald-500/10 rounded-2xl blur-sm group-hover:bg-emerald-500/20 transition-all"
+            ></div>
+            <!-- Hexagonal Car Emblem -->
+            <svg class="w-10 h-10 text-emerald-400 relative z-10" fill="none" stroke="currentColor"
+              viewbox="0 0 48 48">
+              <!-- Outer Hexagon -->
+              <path
+                class="text-emerald-500 stroke-current opacity-80"
+                d="M24 4L42 14.5V33.5L24 44L6 33.5V14.5L24 4Z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              ></path>
+              <!-- Modern Car silhouette inside -->
+              <path
+                class="text-white fill-emerald-500/20 stroke-current"
+                d="M14 26L17 18H31L34 26M13 26H35C36.1046 26 37 26.8954 37 28V30C37 30.5523 36.5523 31 36 31H12C11.4477 31 11 30.5523 11 30V28C11 26.8954 11.8954 26 13 26Z"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              ></path>
+              <!-- Headlights / Road lines -->
+              <circle class="fill-white stroke-none" cx="16" cy="28.5" r="1.5"></circle>
+              <circle class="fill-white stroke-none" cx="32" cy="28.5" r="1.5"></circle>
+              <path class="stroke-emerald-400" d="M20 34L19 37M28 34L29 37" stroke-linecap="round"
+                stroke-width="1.8"></path>
+            </svg>
+          </div>
+
+          <!-- Typography -->
+          <h1
+            class="text-3xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
+            Staff login
+          </h1>
+          <p class="mt-1.5 text-sm text-slate-400 font-medium">Guards and administrators</p>
         </div>
-        <button id="submit" class="btn" type="submit">Sign in</button>
-      </form>
-      <p class="center"><a href="../">Back to home</a></p>
+
+        <!-- BEGIN: StaffLoginFormCard -->
+        <div
+          class="bg-brand-panelBg/90 backdrop-blur-xl border border-brand-border rounded-2xl p-7 sm:p-9 shadow-2xl relative shadow-glow"
+          data-purpose="login-card"
+        >
+          <!-- Security Badge Header inside Card -->
+          <div class="flex items-center justify-between pb-5 mb-6 border-b border-brand-border/80">
+            <div class="flex items-center space-x-2">
+              <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
+              <span
+                class="text-xs font-mono tracking-wider text-slate-300 uppercase">AUTHENTICATION PORTAL</span>
+            </div>
+            <span
+              class="text-[11px] font-mono bg-slate-900/90 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded"
+            >
+              SECURE 256-BIT
+            </span>
+          </div>
+
+          <!-- Alert Box for Auth Feedback -->
+          <div id="alert" class="alert error" role="alert" hidden></div>
+
+          <form id="login-form" class="space-y-5" data-purpose="credentials-form" novalidate>
+            <!-- Email Field -->
+            <div>
+              <label class="block text-xs font-semibold tracking-wide uppercase text-slate-300 mb-2"
+                for="email">
+                Email
+              </label>
+              <div class="relative rounded-lg shadow-sm">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                    <path
+                      d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  autocomplete="username"
+                  class="block w-full pl-10 pr-3.5 py-2.5 text-sm rounded-lg bg-brand-deepBg border border-brand-border text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500 transition-all font-mono"
+                  id="email"
+                  name="email"
+                  placeholder="officer.badge@provincial.gov"
+                  required
+                  type="email"
+                />
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <label class="block text-xs font-semibold tracking-wide uppercase text-slate-300"
+                  for="password">
+                  Password
+                </label>
+                <a
+                  class="text-xs text-emerald-400/90 hover:text-emerald-300 transition-colors font-medium cursor-pointer"
+                  id="forgot"
+                  href="#reset"
+                >
+                  Forgot key?
+                </a>
+              </div>
+              <div class="relative rounded-lg shadow-sm">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                    <path
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  autocomplete="current-password"
+                  class="block w-full pl-10 pr-10 py-2.5 text-sm rounded-lg bg-brand-deepBg border border-brand-border text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500 transition-all font-mono"
+                  id="password"
+                  name="password"
+                  placeholder="••••••••••••"
+                  required
+                  type="password"
+                />
+                <button
+                  aria-label="Toggle password visibility"
+                  class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-200 transition-colors focus:outline-none cursor-pointer"
+                  onclick="const input = document.getElementById('password'); input.type = input.type === 'password' ? 'text' : 'password';"
+                  type="button"
+                >
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                    <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round"
+                      stroke-linejoin="round" stroke-width="2"></path>
+                    <path
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Remember Session & Checkpoint Verification -->
+            <div class="flex items-center justify-between text-xs pt-1">
+              <label
+                class="flex items-center space-x-2 text-slate-400 hover:text-slate-300 cursor-pointer select-none">
+                <input
+                  class="w-4 h-4 rounded bg-brand-deepBg border-brand-border text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0 transition-colors"
+                  type="checkbox"
+                  checked
+                />
+                <span>Retain terminal token</span>
+              </label>
+              <span class="inline-flex items-center text-[11px] text-slate-500">
+                <svg class="w-3 h-3 mr-1 text-emerald-400/80" fill="currentColor" viewbox="0 0 20 20">
+                  <path
+                    clip-rule="evenodd"
+                    d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  ></path>
+                </svg>
+                Guarded Channel
+              </span>
+            </div>
+
+            <!-- Sign In Submit CTA -->
+            <div class="pt-2">
+              <button
+                id="submit"
+                class="w-full py-3 px-4 rounded-xl font-semibold text-white bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 hover:from-emerald-500 hover:to-emerald-400 active:scale-[0.99] transition-all shadow-lg shadow-emerald-950/60 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-brand-panelBg text-sm flex items-center justify-center gap-2 group cursor-pointer"
+                type="submit"
+              >
+                <span>Sign in</span>
+                <svg
+                  class="w-4 h-4 group-hover:translate-x-0.5 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewbox="0 0 24 24"
+                >
+                  <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2"></path>
+                </svg>
+              </button>
+            </div>
+          </form>
+
+          <!-- Compliance clearance notice -->
+          <div class="mt-6 pt-5 border-t border-brand-border/60 text-center">
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              Restricted to authorized enforcement officers, marshals, and perimeter administrators. All operations are logged.
+            </p>
+          </div>
+        </div>
+        <!-- END: StaffLoginFormCard -->
+
+        <!-- Return navigation link -->
+        <div class="text-center mt-6">
+          <a
+            class="inline-flex items-center text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors group"
+            href="../"
+          >
+            <svg
+              class="w-4 h-4 mr-1.5 transform group-hover:-translate-x-1 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              viewbox="0 0 24 24"
+            >
+              <path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+            Back to home
+          </a>
+        </div>
+      </div>
     </main>
+    <!-- END: MainContent -->
+
+    <!-- BEGIN: MainFooter -->
+    <footer
+      class="relative z-10 w-full border-t border-brand-border/60 bg-brand-deepBg/90 backdrop-blur-md px-6 py-4 text-xs text-slate-400"
+      data-purpose="site-footer"
+    >
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+        <!-- Legal Notice & System Tag -->
+        <div class="flex items-center space-x-2 text-slate-400">
+          <div
+            class="w-4 h-4 rounded bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">
+            ✓
+          </div>
+          <span>
+            SKPass System — Official Portal of the
+            <strong class="text-slate-200 font-medium">Provincial Government</strong>. Unauthorized access is punishable by law.
+          </span>
+        </div>
+
+        <!-- Standard Gate Policy Links -->
+        <div class="flex items-center space-x-5 text-slate-400 text-xs flex-wrap justify-center">
+          <a
+            class="hover:text-emerald-400 transition-colors"
+            href="#privacy"
+            onclick="alert('Privacy Policy: All staff authentication activities and session tokens are strictly monitored and audited under security protocols.'); return false;"
+          >Privacy Policy</a>
+          <span>•</span>
+          <a
+            class="hover:text-emerald-400 transition-colors"
+            href="#terms"
+            onclick="alert('Terms of Clearance: Guard and administrator credentials must not be shared. Misuse is subject to official disciplinary sanctions.'); return false;"
+          >Terms of Clearance</a>
+          <span>•</span>
+          <a
+            class="hover:text-emerald-400 transition-colors"
+            href="#protocols"
+            onclick="alert('Gate Protocols: Marshals must inspect both digital QR and physical vehicle plates before manual override entry.'); return false;"
+          >Gate Protocols</a>
+        </div>
+      </div>
+    </footer>
+    <!-- END: MainFooter -->
+
+    <!-- Supabase Auth & Core Scripts -->
     <script src="../js/vendor/supabase.js"></script>
     <script type="module" src="../js/login.js"></script>
     <script type="module" src="../js/pwa.js"></script>
-    <skpass-footer></skpass-footer>
-    <script type="module" src="../js/footer.js"></script>
-    <script type="module" src="../js/form-controls.js"></script>
+
+    <script data-purpose="interaction-handlers">
+    document.getElementById("support-link")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      alert(
+        "Provincial Security Operations Center\n\nGate Marshal Support Hotline: (02) 8920-0000 loc. 4421\nEmail: security-clearance@skpass.gov\nHours: 24/7 Gate Patrol Dispatch",
+      );
+    });
+    </script>
   </body>
 </html>

@@ -20,6 +20,26 @@ sb.auth.getSession().then(async ({ data: { session } }) => {
   if (p?.active && HOME[p.role]) location.replace(HOME[p.role]);
 });
 
+// "Forgot key?": email a password-reset link that lands on the /reset/ page.
+document.getElementById("forgot")?.addEventListener("click", async (e) => {
+  e.preventDefault();
+  const email = form.email.value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    return show("Enter your email above first, then choose “Forgot key?” again.");
+  }
+  const redirectTo = new URL("../reset/", location.href).href;
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
+  // Same answer whether or not the account exists, so this cannot be used to probe for accounts.
+  show(
+    error && /fetch|network/i.test(error.message)
+      ? "No connection. Check your internet and try again."
+      : error && /rate|seconds|too many/i.test(error.message)
+      ? "Please wait a minute before asking for another link."
+      : "If that email belongs to a staff account, a reset link is on its way. Check your inbox.",
+    error && /fetch|network|rate|seconds|too many/i.test(error.message) ? "error" : "info",
+  );
+});
+
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   show("");

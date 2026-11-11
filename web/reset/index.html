@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Set a new password · SKPass</title>
+    <meta name="theme-color" content="#090d14" />
+    <meta name="robots" content="noindex" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="icon" href="../icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <style>
+    body {
+      background: #090d14;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 440px;
+      padding: 24px 16px;
+    }
+    .panel {
+      background: #0e1624;
+      border: 1px solid #1f2b40;
+      border-radius: 16px;
+      padding: 28px;
+    }
+    h1 {
+      margin: 12px 0 4px;
+      font-size: 1.5rem;
+      color: #fff;
+      text-align: center;
+    }
+    .sub {
+      text-align: center;
+      color: #94a3b8;
+      margin: 0 0 20px;
+      font-size: 0.95rem;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto;
+      width: 72px;
+      height: auto;
+    }
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 10px;
+      background: #090d14;
+      border: 1px solid #1f2b40;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+    input:focus {
+      outline: 2px solid #10b981;
+      border-color: #10b981;
+    }
+    .hint {
+      color: #94a3b8;
+      font-size: 0.8rem;
+      margin: -6px 0 14px;
+    }
+    .who {
+      text-align: center;
+      color: #34d399;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      margin: 0 0 16px;
+      word-break: break-all;
+    }
+    .alert.error {
+      background: rgba(127, 29, 29, 0.35);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fecaca;
+    }
+    .alert.info {
+      background: rgba(6, 78, 59, 0.35);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+    }
+    .btn {
+      background: #10b981;
+      color: #04210f;
+    }
+    .btn:hover {
+      background: #34d399;
+    }
+    a {
+      color: #34d399;
+    }
+    .center {
+      text-align: center;
+    }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <div class="panel">
+        <img class="logo" src="../icons/logo.png" alt="SKPass" />
+        <h1>Set a new password</h1>
+        <p class="sub">For your SKPass staff account</p>
+
+        <div id="alert" class="alert error" role="alert" hidden></div>
+
+        <form id="reset-form" novalidate hidden>
+          <p id="who" class="who"></p>
+          <label for="password">New password</label>
+          <input id="password" name="password" type="password" autocomplete="new-password"
+            minlength="10" maxlength="72" required />
+          <p class="hint">At least 10 characters, with letters and numbers.</p>
+          <label for="confirm">Confirm new password</label>
+          <input id="confirm" name="confirm" type="password" autocomplete="new-password" required />
+          <button id="submit" class="btn" type="submit">Save new password</button>
+        </form>
+
+        <div id="invalid" hidden>
+          <div class="alert error" role="alert">
+            This reset link is invalid or has expired.
+          </div>
+          <p
+            class="center">Go to <a href="../login/">the login page</a> and choose “Forgot key?” to get a new link.</p>
+        </div>
+
+        <div id="done" hidden>
+          <div class="alert info" role="status">Password updated. Taking you to sign in…</div>
+          <p class="center"><a href="../login/">Continue</a></p>
+        </div>
+      </div>
+    </main>
+    <script src="../js/vendor/supabase.js"></script>
+    <script type="module" src="../js/reset.js"></script>
+  </body>
+</html>
