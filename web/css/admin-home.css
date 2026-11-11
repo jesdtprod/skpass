@@ -160,7 +160,9 @@ html {
 }
 body.admin-home {
   margin: 0;
+  height: auto;
   min-height: 100vh;
+  overflow-x: clip;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
