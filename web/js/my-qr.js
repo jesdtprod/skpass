@@ -120,7 +120,7 @@ function renderStatusBadge(status, expired) {
 
   return h(
     "div",
-    { class: "mb-5" },
+    { class: "pass-approval mb-5" },
     h(
       "span",
       {
@@ -188,7 +188,7 @@ function card(rec, view, note) {
               class:
                 "block mt-0.5 leading-tight text-[10px] text-slate-400 uppercase tracking-widest font-mono",
             },
-            "Terminal Pass ID",
+            [view.color, "Terminal Pass ID"].filter(Boolean).join(" \u00b7 "),
           ),
         ),
       ),
@@ -214,7 +214,7 @@ function card(rec, view, note) {
     kids.push(
       h(
         "div",
-        { class: "mb-4" },
+        { class: "pass-holder mb-4" },
         h(
           "p",
           { class: "text-xs uppercase tracking-wider text-slate-400 font-semibold mb-0.5" },
@@ -259,7 +259,7 @@ function card(rec, view, note) {
   kids.push(
     h(
       "div",
-      { class: "mb-5" },
+      { class: "pass-reference mb-5" },
       h(
         "span",
         { class: "block text-[11px] uppercase tracking-wider text-slate-400 font-mono mb-1" },
@@ -459,7 +459,7 @@ function card(rec, view, note) {
         "div",
         {
           class:
-            "bg-surface-900/90 border border-slate-800/90 rounded-2xl p-5 flex flex-col items-center justify-center qr-container-glow mb-6",
+            "pass-qr-section bg-surface-900/90 border border-slate-800/90 rounded-2xl p-5 flex flex-col items-center justify-center qr-container-glow mb-6",
         },
         h(
           "p",
@@ -588,7 +588,7 @@ function card(rec, view, note) {
 
   kids.push(h("div", { class: "space-y-3" }, actionGroupKids));
 
-  return h(
+  const article = h(
     "article",
     {
       class:
@@ -598,6 +598,23 @@ function card(rec, view, note) {
     },
     kids,
   );
+  const header = article.querySelector(".pass-card-header");
+  const holder = article.querySelector(".pass-holder");
+  const status = article.querySelector(".pass-approval");
+  const qrSection = article.querySelector(".pass-qr-section");
+  const reference = article.querySelector(".pass-reference");
+  const identity = h("div", { class: "pass-holder-panel" });
+  const holderRow = h("div", { class: "pass-holder-row" });
+  if (holder) holderRow.append(holder);
+  if (status) holderRow.append(status);
+  identity.append(holderRow);
+  if (reference) identity.append(reference);
+  const layout = h("div", { class: `pass-identity-layout ${qrSection ? "with-qr" : ""}` });
+  if (qrSection) layout.append(qrSection);
+  layout.append(identity);
+  header.after(layout);
+  article.classList.add("formatted-pass");
+  return article;
 }
 
 async function viewFor(rec) {
