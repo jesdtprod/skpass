@@ -157,8 +157,6 @@ export async function drawPassImage(pass) {
   g.lineWidth = 1;
   g.stroke();
   g.clip();
-  g.fillStyle = "#a3e635";
-  g.fillRect(0, 0, W, 2);
 
   g.fillStyle = "#dce6ec";
   g.font = `700 16px ${SANS}`;
