@@ -1,4 +1,4 @@
-import { TURNSTILE_SITE_KEY } from "./config.js";
+import { mountCaptcha } from "./captcha.js";
 import { registerVehicle } from "./api.js";
 import { saveVehicle } from "./store.js";
 import { shrinkImage } from "./image.js";
@@ -48,28 +48,7 @@ function clearRequestKey() {
 }
 
 // ---- Turnstile
-let widgetId = null;
-let captchaToken = "";
-globalThis.onTurnstileLoad = () => {
-  widgetId = turnstile.render("#captcha", {
-    sitekey: TURNSTILE_SITE_KEY,
-    callback: (t) => captchaToken = t,
-    "expired-callback": () => captchaToken = "",
-    "error-callback": () => captchaToken = "",
-  });
-};
-// Load the Turnstile script only after the onload callback above exists.
-{
-  const s = document.createElement("script");
-  s.src =
-    "https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit";
-  s.async = true;
-  document.head.append(s);
-}
-function resetCaptcha() {
-  captchaToken = "";
-  if (widgetId !== null && globalThis.turnstile) turnstile.reset(widgetId);
-}
+const captcha = mountCaptcha("#captcha");
 
 // ---- messages
 function showAlert(msg) {
@@ -103,14 +82,14 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   showAlert("");
   clearFieldErrors();
-  if (!captchaToken) return showAlert("Please complete the captcha check.");
+  if (!captcha.getToken()) return showAlert("Please complete the captcha check.");
 
   submitBtn.disabled = true;
   submitBtn.textContent = "Submitting…";
   try {
     const fd = new FormData(form);
     fd.set("idempotency_key", requestKey());
-    fd.set("turnstile_token", captchaToken);
+    fd.set("turnstile_token", captcha.getToken());
     const photo = form.photo.files[0];
     fd.delete("photo");
     if (photo) fd.set("photo", await shrinkImage(photo), "photo.jpg");
@@ -135,7 +114,7 @@ form.addEventListener("submit", async (e) => {
     } else {
       showAlert(GENERIC[data.error] ?? "Something went wrong. Please try again.");
     }
-    resetCaptcha();
+    captcha.reset();
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "Submit registration";

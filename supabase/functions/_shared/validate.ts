@@ -155,6 +155,14 @@ export function validateRegistration(
   return Object.keys(errors).length > 0 ? { ok: false, errors } : { ok: true, value };
 }
 
+/** Same normalization as the database's norm_plate / norm_phone. */
+export function normPlate(p: string): string {
+  return p.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+}
+export function normPhone(p: string): string {
+  return p.replace(/[^0-9]/g, "");
+}
+
 /** Photo rules shared by the function and tests. */
 export const PHOTO_MAX_BYTES = 2 * 1024 * 1024;
 export const PHOTO_TYPES: Record<string, string> = {

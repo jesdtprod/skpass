@@ -430,3 +430,6 @@ verify_jwt = false
 
 [functions.my-status]
 verify_jwt = false
+
+[functions.find-my-qr]
+verify_jwt = false

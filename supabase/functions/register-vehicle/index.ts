@@ -6,6 +6,7 @@ import { claimSecretFor, sha256Hex } from "../_shared/crypto.ts";
 import { clientIp, corsHeaders, json } from "../_shared/http.ts";
 import { verifyTurnstile } from "../_shared/turnstile.ts";
 import {
+  normPlate,
   PHOTO_TYPES,
   sniffImageType,
   validatePhoto,
@@ -13,10 +14,6 @@ import {
 } from "../_shared/validate.ts";
 
 const PHOTO_BUCKET = "vehicle-photos";
-
-function normPlate(p: string): string {
-  return p.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-}
 
 export async function handler(req: Request): Promise<Response> {
   const origin = req.headers.get("origin");

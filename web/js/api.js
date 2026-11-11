@@ -23,3 +23,9 @@ export const myStatus = (vehicleId, claimSecret) =>
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ vehicle_id: vehicleId, claim_secret: claimSecret }),
   });
+
+export const findMyQr = (plate, phone, turnstileToken) =>
+  call("find-my-qr", {
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ plate, phone, turnstile_token: turnstileToken }),
+  });

@@ -99,3 +99,9 @@ Deno.test("photo validation", () => {
   assert(validatePhoto("image/png", 0) !== null);
   assert(validatePhoto("image/webp", 3 * 1024 * 1024) !== null);
 });
+
+Deno.test("normPlate / normPhone match the database normalizers", async () => {
+  const { normPlate, normPhone } = await import("./validate.ts");
+  assertEquals(normPlate("abc-123 x"), "ABC123X");
+  assertEquals(normPhone("+63 912-345 6789"), "639123456789");
+});

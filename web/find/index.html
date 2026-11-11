@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Find my QR · SKPass</title>
+    <meta name="theme-color" content="#2d9a0f" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="icon" href="../icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../css/base.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="brand compact">
+        <a href="../"><img src="../icons/logo.png" alt="SKPass" /></a>
+        <h1>Find my QR</h1>
+        <p>Lost your QR? Enter the plate number and mobile number you registered with.</p>
+      </header>
+
+      <div id="alert" class="alert error" role="alert" hidden></div>
+
+      <form id="find-form" class="card" novalidate>
+        <div class="field">
+          <label for="plate">Plate number</label>
+          <input id="plate" name="plate" type="text" autocapitalize="characters" maxlength="15"
+            required />
+        </div>
+        <div class="field">
+          <label for="phone">Mobile number</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="20" required />
+        </div>
+        <div id="captcha" class="captcha"></div>
+        <button id="submit" class="btn" type="submit">Find my QR</button>
+      </form>
+
+      <p
+        class="center"><a href="../my-qr/">Back to My QR</a> · <a href="../register/">Register a vehicle</a></p>
+    </main>
+    <script type="module" src="../js/find.js"></script>
+    <script type="module" src="../js/pwa.js"></script>
+  </body>
+</html>
