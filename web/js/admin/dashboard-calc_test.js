@@ -1,5 +1,6 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import {
+  approvalMetrics,
   attentionItems,
   dailyTotals,
   denialLabel,
@@ -143,4 +144,26 @@ Deno.test("attention: priority order, wording and links", () => {
     longInside: 0,
   });
   assertEquals(one[0].text, "1 registration is waiting for approval");
+});
+
+Deno.test("approvalMetrics counts today's decisions and average wait", () => {
+  const now = new Date("2026-11-11T06:00:00Z"); // 14:00 in Manila
+  const m = approvalMetrics({
+    pending: 2,
+    tz: "Asia/Manila",
+    todayIso: "2026-11-11",
+    now,
+    approved: [
+      { created_at: "2026-11-11T01:00:00Z", approved_at: "2026-11-11T01:10:00Z" }, // 10 min
+      { created_at: "2026-11-11T02:00:00Z", approved_at: "2026-11-11T02:50:00Z" }, // 50 min
+      { created_at: "2026-11-10T01:00:00Z", approved_at: "2026-11-10T01:05:00Z" }, // yesterday
+    ],
+    rejected: [{ updated_at: "2026-11-11T03:00:00Z" }, { updated_at: "2026-11-09T03:00:00Z" }],
+  });
+  assertEquals([m.approvedToday, m.approvedYesterday, m.approvedDelta], [2, 1, 1]);
+  assertEquals(m.rejectedToday, 1);
+  assertEquals(m.avgMs, 30 * 60_000);
+  assertEquals(m.fastPct, 50);
+  assertEquals(m.pendingShare, 40); // 2 of (2 + 3 decided)
+  assertEquals(approvalMetrics({ pending: 0, tz: "UTC", todayIso: "x", now }).avgMs, null);
 });

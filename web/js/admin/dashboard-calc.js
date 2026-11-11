@@ -154,3 +154,34 @@ export function attentionItems({ pending, oldestPendingMs, warnings, blocked, lo
   }
   return out;
 }
+
+/**
+ * Numbers for the Approvals header, all derived from real rows.
+ * approved: [{created_at, approved_at}], rejected: [{updated_at}] (recent decisions only).
+ */
+export function approvalMetrics({ pending, approved, rejected, tz, todayIso, now = new Date() }) {
+  const dayOf = (iso) => localParts(new Date(iso), tz).date;
+  const yIso = localParts(new Date(now.getTime() - 86400_000), tz).date;
+  const ok = (approved ?? []).filter((r) => r.approved_at);
+  const approvedToday = ok.filter((r) => dayOf(r.approved_at) === todayIso);
+  const approvedYesterday = ok.filter((r) => dayOf(r.approved_at) === yIso).length;
+  const rejectedToday = (rejected ?? []).filter((r) => dayOf(r.updated_at) === todayIso).length;
+  const waits = approvedToday.map((r) =>
+    Math.max(0, new Date(r.approved_at) - new Date(r.created_at))
+  );
+  const avgMs = waits.length ? waits.reduce((a, b) => a + b, 0) / waits.length : null;
+  const fast = waits.filter((w) => w < 30 * 60_000).length;
+  const decided = approvedToday.length + rejectedToday;
+  return {
+    pending,
+    approvedToday: approvedToday.length,
+    approvedDelta: approvedToday.length - approvedYesterday,
+    approvedYesterday,
+    rejectedToday,
+    avgMs,
+    fastPct: pct(fast, waits.length),
+    pendingShare: pct(pending, pending + decided),
+    approvedShare: pct(approvedToday.length, decided),
+    rejectedShare: pct(rejectedToday, decided),
+  };
+}

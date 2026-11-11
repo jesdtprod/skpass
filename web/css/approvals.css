@@ -1,0 +1,178 @@
+/* Approvals header: title + pill, actions, and four KPI cards with progress bars. */
+.approvals-view .ap-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ffffff12;
+}
+.approvals-view .ap-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.approvals-view .ap-title h1 {
+  margin: 0;
+}
+.approvals-view .ap-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font: 700 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .04em;
+  text-transform: none;
+  color: #fbbf24;
+  background: #fbbf2414;
+  border: 1px solid #fbbf2455;
+}
+.approvals-view .ap-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.approvals-view .ap-pill.clear {
+  color: #a3e635;
+  background: #a3e63514;
+  border-color: #a3e63555;
+}
+.approvals-view .ap-sub {
+  margin: 6px 0 0;
+  max-width: 560px;
+  color: #8fa1ac;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.approvals-view .ap-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.approvals-view .ap-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font: 700 12px/1.2 "Plus Jakarta Sans", system-ui, sans-serif;
+  text-align: center;
+  color: #e8eef2;
+  background: #ffffff08;
+  border: 1px solid #ffffff1f;
+}
+.approvals-view .ap-btn:hover:not(:disabled) {
+  background: #ffffff12;
+}
+.approvals-view .ap-btn.primary {
+  color: #a3e635;
+  background: #a3e63514;
+  border-color: #a3e63566;
+}
+.approvals-view .ap-btn.primary:hover:not(:disabled) {
+  background: #a3e63524;
+}
+.approvals-view .ap-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+.approvals-view .ap-btn svg {
+  width: 15px;
+  height: 15px;
+}
+.approvals-view .ap-btn[aria-busy="true"] svg {
+  animation: ap-spin 1s linear infinite;
+}
+@keyframes ap-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.approvals-view .ap-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 18px 0 20px;
+}
+.approvals-view .ap-kpi {
+  padding: 16px 16px 14px;
+  border-radius: 12px;
+  background: #1a2227;
+  border: 1px solid #ffffff12;
+  --c: #a3e635;
+}
+.approvals-view .ap-kpi.warn {
+  --c: #fbbf24;
+}
+.approvals-view .ap-kpi.bad {
+  --c: #fb7185;
+}
+.approvals-view .ap-kpi.info {
+  --c: #22d3ee;
+}
+.approvals-view .ap-kpi .k {
+  font: 700 11px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #8fa1ac;
+}
+.approvals-view .ap-kpi .v {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 12px 0 14px;
+  flex-wrap: wrap;
+}
+.approvals-view .ap-kpi .v b {
+  font: 700 28px/1 "Space Grotesk", system-ui, sans-serif;
+  color: #fff;
+}
+.approvals-view .ap-kpi .v b small {
+  font-size: 13px;
+  color: var(--c);
+  margin-left: 2px;
+}
+.approvals-view .ap-kpi .v span {
+  font-size: 12px;
+  color: #8fa1ac;
+  font-weight: 600;
+}
+.approvals-view .ap-kpi .v span.hl {
+  color: var(--c);
+}
+.approvals-view .ap-kpi .bar {
+  height: 4px;
+  border-radius: 4px;
+  background: #ffffff12;
+  overflow: hidden;
+}
+.approvals-view .ap-kpi .bar i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--c);
+  transition: width .4s;
+}
+
+@media (max-width: 1000px) {
+  .approvals-view .ap-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .approvals-view .ap-actions {
+    width: 100%;
+  }
+  .approvals-view .ap-actions .ap-btn {
+    flex: 1;
+  }
+}
