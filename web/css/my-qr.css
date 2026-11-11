@@ -134,6 +134,158 @@ body.my-qr-page {
 .my-qr-page [hidden] {
   display: none !important;
 }
+/* A solid, readable digital pass above the decorative mesh. */
+.my-qr-page #list .card {
+  background: #1a2025;
+  backdrop-filter: none;
+  border-color: #ffffff16;
+  overflow: hidden;
+  padding: 28px;
+}
+.my-qr-page #list .card.loading {
+  opacity: 1;
+}
+.my-qr-page #list .card-head {
+  padding-bottom: 0;
+  border: 0;
+  margin-bottom: 12px;
+}
+.my-qr-page #list .plate {
+  color: #f0f5f7;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: 700 30px/1.2 "Space Grotesk",sans-serif;
+  letter-spacing: .025em;
+}
+.my-qr-page #list .badge.cat {
+  background: #252f35;
+  color: #b9c9d2;
+  border-color: #ffffff12;
+}
+.pass-status-row {
+  margin-bottom: 20px;
+}
+.pass-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: 500 11px/20px "Plus Jakarta Sans",sans-serif;
+  color: #b5c4cc;
+}
+.pass-status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.pass-status.status-pending {
+  color: #e7c57a;
+}
+.pass-status.status-approved {
+  color: #b8ed65;
+}
+.pass-status:is(.status-rejected,.status-blocked,.status-expired) {
+  color: #f4a3a3;
+}
+.pending-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #11181d;
+  border: 1px solid #ffffff0c;
+}
+.pending-icon {
+  position: relative;
+  flex: 0 0 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: #e7c57a0c;
+  color: #e7c57a;
+}
+.pending-icon::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+.pending-icon::after {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 12px;
+  width: 5px;
+  height: 7px;
+  border-left: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+}
+.pending-message h2 {
+  margin: 0 0 5px;
+  font: 600 15px/22px "Space Grotesk",sans-serif;
+  color: #e4edf2;
+}
+.pending-message p {
+  margin: 0;
+  font: 400 12px/20px "Plus Jakarta Sans",sans-serif;
+  color: #a6b6bf;
+}
+.my-qr-page #welcome {
+  padding: 16px 20px;
+  border: 1px solid #a3e63526;
+  border-radius: 12px;
+  background: #1a251c;
+  font: 400 12px/20px "Plus Jakarta Sans",sans-serif;
+  color: #c4d6bf;
+}
+.my-qr-page #welcome strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: #dcefc9;
+}
+.my-qr-page #list .actions {
+  border: 0;
+  padding-top: 0;
+  margin-top: 20px;
+  grid-template-columns: 1fr 1fr;
+}
+.my-qr-page #list .actions .btn {
+  min-height: 44px;
+  font-size: 12px;
+}
+.my-qr-page #list .actions .remove-pass {
+  background: transparent;
+  color: #a7b7c0;
+  border-color: #ffffff16;
+}
+.my-qr-page #list .actions .remove-pass:hover {
+  color: #f4b8b8;
+  border-color: #f4b8b850;
+  background: #f4b8b806;
+}
+.my-qr-page #install-pwa-button {
+  padding: 14px 16px;
+  background: #181f24;
+  border-style: solid;
+  border-color: #ffffff12;
+}
+@media (max-width: 480px) {
+  .my-qr-page #list .card {
+    padding: 20px;
+  }
+  .pending-message {
+    padding: 16px;
+    gap: 12px;
+  }
+  .my-qr-page #list .actions {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
 @media (max-width: 639px) {
   .my-qr-page main {
     padding: 28px 16px 40px;

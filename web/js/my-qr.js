@@ -36,6 +36,21 @@ function card(rec, view, note) {
       h("strong", { class: "plate" }, view.plate ?? rec.plate),
       badge(view.category ?? rec.category, "cat"),
     ),
+    h(
+      "div",
+      { class: "pass-status-row" },
+      h(
+        "span",
+        { class: `pass-status status-${view.expired ? "expired" : s}` },
+        view.expired ? "Expired" : ({
+          pending: "Pending approval",
+          approved: "Approved",
+          rejected: "Not approved",
+          blocked: "Blocked",
+          gone: "Unavailable",
+        }[s] ?? "Checking status"),
+      ),
+    ),
   ];
   if (view.owner_name) kids.push(h("p", { class: "muted" }, view.owner_name));
   if (note) kids.push(h("p", { class: "alert warn" }, note));
@@ -43,9 +58,15 @@ function card(rec, view, note) {
   if (s === "pending") {
     kids.push(
       h(
-        "p",
-        { class: "alert info" },
-        "Waiting for administrator approval. Your QR will appear here once approved.",
+        "div",
+        { class: "pending-message" },
+        h("span", { class: "pending-icon", "aria-hidden": "true" }),
+        h(
+          "div",
+          {},
+          h("h2", {}, "Your registration is being reviewed"),
+          h("p", {}, "Your QR will appear here once approved."),
+        ),
       ),
     );
   } else if (s === "rejected") {
@@ -101,7 +122,7 @@ function card(rec, view, note) {
     );
   }
   actions.push(h("button", {
-    class: "btn ghost",
+    class: "btn ghost remove-pass",
     type: "button",
     onclick: async () => {
       if (
