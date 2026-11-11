@@ -126,9 +126,24 @@ export function start(ctx) {
       "aria-label": "Alerts and notifications",
       "aria-expanded": "false",
     },
-    "🔔",
     els.dot = h("span", { class: "al-dot", hidden: true }),
   );
+  const bellIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  for (
+    const [key, value] of Object.entries({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "1.7",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      "aria-hidden": "true",
+    })
+  ) bellIcon.setAttribute(key, value);
+  const bellPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  bellPath.setAttribute("d", "M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4");
+  bellIcon.append(bellPath);
+  bell.prepend(bellIcon);
   const live = (els.live = h("p", { class: "al-live" }));
   const soundBox = h("input", { type: "checkbox", id: "al-sound" });
   soundBox.checked = !isMuted();

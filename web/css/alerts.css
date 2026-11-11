@@ -13,12 +13,35 @@
   font-family: "Plus Jakarta Sans", sans-serif;
 }
 .al-header .al-bell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 36px;
   height: 36px;
   border-radius: 10px;
   font-size: 18px;
-  background: #202a30;
+  background: #151e23;
+  border-color: #ffffff14;
+  color: #a5b8c4;
   box-shadow: none;
+  transition: background .18s, border-color .18s, color .18s;
+}
+.al-bell svg {
+  width: 18px;
+  height: 18px;
+}
+.al-header .al-bell:hover,
+.al-header .al-bell[aria-expanded="true"] {
+  background: #a3e6350a;
+  border-color: #a3e63535;
+  color: #b2eb65;
+}
+.al-header .al-dot {
+  width: 6px;
+  height: 6px;
+  top: 6px;
+  right: 6px;
+  box-shadow: 0 0 0 2px #151e23;
 }
 .al-header .al-panel {
   left: auto;
