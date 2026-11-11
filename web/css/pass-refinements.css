@@ -98,6 +98,24 @@ body.pass-page {
 .pass-holder-panel {
   min-width: 0;
 }
+.pass-vehicle-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0 0 20px;
+}
+.pass-vehicle-fields dt {
+  color: #94a3b8;
+  font: 500 10px/18px "JetBrains Mono", monospace;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.pass-vehicle-fields dd {
+  margin: 0;
+  color: #e2e8f0;
+  font: 500 13px/20px "Plus Jakarta Sans", sans-serif;
+  overflow-wrap: anywhere;
+}
 .pass-holder-panel .pass-card-header {
   padding-bottom: 16px;
   margin-bottom: 16px;

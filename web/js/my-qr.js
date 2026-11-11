@@ -307,8 +307,6 @@ function card(rec, view, note) {
   }
 
   const details = [
-    ["Vehicle type", typeNames[view.vehicle_type] ?? view.vehicle_type],
-    ["Color", view.color],
     ["Office / Department", view.office],
     ["Position / Title", view.position],
     ["Agency / Office", view.agency],
@@ -616,6 +614,19 @@ function card(rec, view, note) {
   if (holder) holderRow.append(holder);
   if (status) holderRow.append(status);
   identity.append(holderRow);
+  identity.append(
+    h(
+      "dl",
+      { class: "pass-vehicle-fields" },
+      h(
+        "div",
+        {},
+        h("dt", {}, "Vehicle type"),
+        h("dd", {}, typeNames[view.vehicle_type] ?? view.vehicle_type ?? "Not available"),
+      ),
+      h("div", {}, h("dt", {}, "Color"), h("dd", {}, view.color || "Not available")),
+    ),
+  );
   if (reference) identity.append(reference);
   const layout = h("div", { class: `pass-identity-layout ${qrSection ? "with-qr" : ""}` });
   if (qrSection) layout.append(qrSection);
