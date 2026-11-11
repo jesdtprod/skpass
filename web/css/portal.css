@@ -321,8 +321,21 @@ body.portal-page {
   padding-bottom: 16px;
 }
 .portal-page [data-purpose="gate-status-dashboard"] {
+  width: min(1120px, calc(100% - 64px));
+  max-width: none;
+  padding-inline: 0;
   padding-top: 8px;
   padding-bottom: 16px;
+}
+@media (max-width: 1023px) {
+  .portal-page [data-purpose="gate-status-dashboard"] {
+    width: min(560px, calc(100% - 48px));
+  }
+}
+@media (max-width: 480px) {
+  .portal-page [data-purpose="gate-status-dashboard"] {
+    width: calc(100% - 32px);
+  }
 }
 
 /* The mesh follows the pointer; content remains on a stationary layer. */
