@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My QR · SKPass</title>
+    <meta name="theme-color" content="#2d9a0f" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="icon" href="../icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../css/base.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="brand compact">
+        <a href="../"><img src="../icons/logo.png" alt="SKPass" /></a>
+        <h1>My QR</h1>
+      </header>
+
+      <div id="welcome" class="alert info" hidden>
+        <strong>Registration received.</strong> Keep this page: it is saved on this device and will show your QR once approved.
+      </div>
+
+      <div id="list"></div>
+
+      <div id="empty" class="card center" hidden>
+        <p>No vehicles saved on this device.</p>
+        <a class="btn" href="../register/">Register a vehicle</a>
+        <p class="muted">Already approved? <a href="../find/">Find my QR</a></p>
+      </div>
+
+      <button class="btn ghost" data-install hidden>Add to Home Screen</button>
+      <p
+        class="center"><a href="../register/">Register another vehicle</a> · <a href="../find/">Find my QR</a></p>
+    </main>
+    <script src="../js/vendor/qrcode.js"></script>
+    <script type="module" src="../js/my-qr.js"></script>
+    <script type="module" src="../js/pwa.js"></script>
+  </body>
+</html>

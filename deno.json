@@ -7,15 +7,35 @@
     "serve": "deno run --allow-net --allow-read jsr:@std/http/file-server web --port 8137"
   },
   "fmt": {
-    "include": ["web/", "supabase/functions/", "docs/"],
-    "exclude": ["web/icons/"],
+    "include": [
+      "web/",
+      "supabase/functions/",
+      "docs/"
+    ],
+    "exclude": [
+      "web/icons/",
+      "web/js/vendor/"
+    ],
     "lineWidth": 100,
     "indentWidth": 2,
     "singleQuote": false
   },
   "lint": {
-    "include": ["web/", "supabase/functions/"],
-    "rules": { "tags": ["recommended"] }
+    "include": [
+      "web/",
+      "supabase/functions/"
+    ],
+    "rules": {
+      "tags": [
+        "recommended"
+      ]
+    },
+    "exclude": [
+      "web/js/vendor/"
+    ]
   },
-  "exclude": ["supabase/.temp/", "node_modules/"]
+  "exclude": [
+    "supabase/.temp/",
+    "node_modules/"
+  ]
 }

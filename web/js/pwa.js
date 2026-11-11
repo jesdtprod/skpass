@@ -3,7 +3,8 @@ let deferredPrompt = null;
 
 if ("serviceWorker" in navigator) {
   globalThis.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch((err) => {
+    // Resolve relative to this module so it works from any page depth (/sw.js, root scope).
+    navigator.serviceWorker.register(new URL("../sw.js", import.meta.url)).catch((err) => {
       console.warn("Service worker registration failed", err);
     });
   });

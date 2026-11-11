@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register a vehicle · SKPass</title>
+    <meta name="theme-color" content="#2d9a0f" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="icon" href="../icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../css/base.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="brand compact">
+        <a href="../"><img src="../icons/logo.png" alt="SKPass" /></a>
+        <h1>Register a vehicle</h1>
+        <p>Your pass is issued after an administrator approves your request.</p>
+      </header>
+
+      <div id="alert" class="alert error" role="alert" hidden></div>
+
+      <form id="reg-form" class="card" novalidate>
+        <fieldset class="field">
+          <legend>I am a</legend>
+          <div class="segmented">
+            <label><input type="radio" name="category" value="employee" checked /><span>Employee</span></label>
+            <label><input type="radio" name="category" value="official" /><span>Official</span></label>
+            <label><input type="radio" name="category" value="visitor" /><span>Visitor</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="owner_name">Full name</label>
+          <input id="owner_name" name="owner_name" type="text" autocomplete="name" maxlength="100"
+            required />
+        </div>
+        <div class="field">
+          <label for="phone">Mobile number</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="20" required />
+        </div>
+
+        <div data-cat="employee">
+          <div class="field">
+            <label for="office">Office</label>
+            <input id="office" name="office" type="text" maxlength="100" />
+          </div>
+          <div class="field">
+            <label for="id_number">Employee ID <span class="muted">(optional)</span></label>
+            <input id="id_number" name="id_number" type="text" maxlength="40" />
+          </div>
+        </div>
+        <div data-cat="official" hidden>
+          <div class="field">
+            <label for="position">Position</label>
+            <input id="position" name="position" type="text" maxlength="100" />
+          </div>
+          <div class="field">
+            <label for="agency">Agency</label>
+            <input id="agency" name="agency" type="text" maxlength="100" />
+          </div>
+        </div>
+        <div data-cat="visitor" hidden>
+          <div class="field">
+            <label for="host_name">Who are you visiting?</label>
+            <input id="host_name" name="host_name" type="text" maxlength="100" />
+          </div>
+          <div class="field">
+            <label for="purpose">Purpose of visit</label>
+            <input id="purpose" name="purpose" type="text" maxlength="200" />
+          </div>
+          <div class="row">
+            <div class="field">
+              <label for="valid_from">From</label>
+              <input id="valid_from" name="valid_from" type="date" />
+            </div>
+            <div class="field">
+              <label for="valid_to">Until</label>
+              <input id="valid_to" name="valid_to" type="date" />
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="plate">Plate number</label>
+          <input id="plate" name="plate" type="text" autocapitalize="characters" maxlength="15"
+            required />
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="vehicle_type">Vehicle type</label>
+            <select id="vehicle_type" name="vehicle_type" required>
+              <option value="car">Car</option>
+              <option value="suv">SUV</option>
+              <option value="van">Van</option>
+              <option value="truck">Truck</option>
+              <option value="motorcycle">Motorcycle</option>
+              <option value="tricycle">Tricycle</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="color">Color <span class="muted">(optional)</span></label>
+            <input id="color" name="color" type="text" maxlength="30" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="photo">Vehicle photo <span class="muted">(optional)</span></label>
+          <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/webp" />
+        </div>
+
+        <div id="captcha" class="captcha"></div>
+        <button id="submit" class="btn" type="submit">Submit registration</button>
+      </form>
+
+      <p class="center"><a href="../my-qr/">Already registered? Open My QR</a></p>
+    </main>
+    <script type="module" src="../js/register.js"></script>
+    <script type="module" src="../js/pwa.js"></script>
+  </body>
+</html>
