@@ -365,24 +365,23 @@
         </div>
         <!-- END: Empty State Card -->
 
-        <!-- Bottom Secondary Navigation -->
-        <div class="mt-2 text-center">
-          <nav class="inline-flex items-center gap-2 text-xs font-medium text-slate-400">
-            <a
-              class="hover:text-brand-400 transition-colors underline-offset-4 hover:underline"
-              href="../register/"
-            >
-              Register another vehicle
-            </a>
-            <span class="text-slate-600">&bull;</span>
-            <a
-              class="hover:text-brand-400 transition-colors underline-offset-4 hover:underline"
-              href="../find/"
-            >
-              Find my QR
-            </a>
-          </nav>
-        </div>
+        <nav class="pass-navigation" aria-label="Other vehicle pass actions">
+          <a href="../register/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>Register another vehicle</span>
+          </a>
+          <a href="../find/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="m16 16 5 5" />
+            </svg>
+            <span>Find my QR</span>
+          </a>
+        </nav>
       </div>
     </main>
     <!-- END: MainContentContainer -->
