@@ -18,6 +18,7 @@ function iconBtn(kind, label, path, onclick) {
     type: "button",
     title: label,
     "aria-label": label,
+    "aria-haspopup": "dialog",
     onclick: async () => {
       if (button.disabled) return;
       button.disabled = true;
@@ -353,18 +354,24 @@ export async function render(root, ctx) {
     refreshBtn.removeAttribute("aria-busy");
   });
   approveAll.addEventListener("click", async () => {
+    if (approveAll.disabled) return;
     const list = [...queue];
     if (!list.length) return;
+    approveAll.disabled = true;
     const visitors = list.filter((v) => v.category === "visitor").length;
     const okGo = await confirmBox({
       title: `Approve all ${list.length} registrations?`,
-      message: `A QR code is created and sent to each owner.${
+      message: `Confirm approval of ${list.length} pending registration${
+        list.length === 1 ? "" : "s"
+      }. Each vehicle will receive an access pass.${
         visitors ? ` The ${visitors} visitor pass(es) use the dates the visitor entered.` : ""
-      } Review the list first if unsure.`,
+      }`,
       okText: `Approve ${list.length}`,
     });
-    if (!okGo) return;
-    approveAll.disabled = true;
+    if (!okGo) {
+      approveAll.disabled = !queue.length;
+      return;
+    }
     let done = 0;
     const failed = [];
     for (const v of list) {
