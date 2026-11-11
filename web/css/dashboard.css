@@ -1568,3 +1568,35 @@
     margin-left: 35px;
   }
 }
+
+/* Denser operational lists with a tighter start below the panel heading. */
+.dashboard-view .dash-grid > .panel:has(> .rows) .panel-head {
+  margin-bottom: 6px;
+}
+.dashboard-view .dash-grid > .panel > .rows {
+  margin-top: 0;
+  gap: 4px;
+}
+.dashboard-view .rows li {
+  padding: 6px 9px;
+  gap: 9px;
+}
+.dashboard-view .rows .row-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+}
+.dashboard-view .rows .row-icon svg {
+  width: 14px;
+  height: 14px;
+}
+.dashboard-view .rows .t {
+  line-height: 16px;
+}
+.dashboard-view .rows .s {
+  margin-top: 1px;
+  line-height: 14px;
+}
+.dashboard-view .rows .end {
+  line-height: 14px;
+}
