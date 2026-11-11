@@ -16,15 +16,7 @@
 }
 footer {
   position: relative;
-  background: linear-gradient(
-    0deg,
-    rgba(11, 16, 19, 0.96) 0%,
-    rgba(11, 16, 19, 0.92) 55%,
-    rgba(11, 16, 19, 0.75) 85%,
-    rgba(11, 16, 19, 0.4) 100%
-  );
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #10141a; /* identical to the header and the page */
   border-top: none;
   padding: 16px 24px;
   font: 500 12px/1.5 "Plus Jakarta Sans", sans-serif;

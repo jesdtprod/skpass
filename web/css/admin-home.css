@@ -157,7 +157,7 @@ body.admin-home {
   flex-direction: column;
   flex-wrap: nowrap;
   font-family: "Plus Jakarta Sans",sans-serif;
-  background: radial-gradient(ellipse at 20% 20%,#a3e6350a,transparent 50%),#10141a;
+  background: #10141a;
 }
 body.admin-home {
   background: #10141a;
@@ -482,7 +482,7 @@ body.admin-home {
   gap: 12px;
   padding: 5px 24px;
   border-top: 1px solid #ffffff14;
-  background: #0b1013;
+  background: #10141a;
   color: #8fa4b0;
   font: 400 9px/18px "JetBrains Mono",monospace;
   text-transform: uppercase;

@@ -369,20 +369,59 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding-bottom: 16px;
+  padding-bottom: 14px;
   margin-bottom: 18px;
-  border-bottom: 1px solid #ffffff0c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
-.dashboard-view .panel-head h2 {
+.dashboard-view .panel-title-wrap {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
+}
+.dashboard-view .panel-head h2,
+.dashboard-view .panel-title {
   margin: 0 !important;
   padding: 0 !important;
   border: 0 !important;
-  font: 600 16px/24px "Space Grotesk", sans-serif;
+  font: 600 15px/22px "Space Grotesk", sans-serif;
+  letter-spacing: -0.02em;
   color: var(--dv-text);
 }
 .dashboard-view .panel-head .sub-note {
-  font: 500 12px "Plus Jakarta Sans", sans-serif;
+  font: 500 12px/16px "Plus Jakarta Sans", sans-serif;
   color: var(--dv-dim);
+}
+.panel-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #9dafba;
+  text-decoration: none;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+.panel-action-btn:hover {
+  background: rgba(163, 230, 53, 0.12);
+  border-color: rgba(163, 230, 53, 0.35);
+  color: #a3e635;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(163, 230, 53, 0.18);
+}
+.panel-action-btn:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 2px;
+}
+.panel-action-btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }
 .row-link {
   color: var(--dv-lime);
@@ -393,23 +432,216 @@
 .row-link:hover {
   text-decoration: underline;
 }
+
+/* Totals KPI Chips */
 .totals {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
-  margin: 0 0 14px;
+  margin: 0 0 16px;
 }
-.totals span {
+.total-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 5px 10px;
-  border-radius: 999px;
-  border: 1px solid #ffffff12;
-  background: #ffffff06;
-  font: 500 12px "Plus Jakarta Sans", sans-serif;
-  color: var(--dv-muted);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  font: 500 12px/16px "Plus Jakarta Sans", sans-serif;
+  color: #94a3b8;
+  transition: all 0.15s ease;
 }
-.totals b {
-  color: var(--dv-text);
+.total-chip:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+.total-chip b {
+  font-family: "JetBrains Mono", monospace;
   font-weight: 700;
+  color: #f1f5f9;
+  font-size: 12px;
+}
+.total-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a3e635;
+  box-shadow: 0 0 8px rgba(163, 230, 53, 0.6);
+  flex-shrink: 0;
+}
+.total-arrow {
+  font-weight: 700;
+  font-size: 11px;
+}
+.total-lbl {
+  font-size: 11px;
+  color: #8da2af;
+  letter-spacing: 0.02em;
+}
+.total-sub {
+  font-size: 10px;
+  color: #64748b;
+  font-family: "JetBrains Mono", monospace;
+}
+.total-chip.total-in {
+  background: rgba(163, 230, 53, 0.06);
+  border-color: rgba(163, 230, 53, 0.2);
+}
+.total-chip.total-in .total-arrow {
+  color: #a3e635;
+}
+.total-chip.total-in b {
+  color: #c4f378;
+}
+.total-chip.total-out {
+  background: rgba(116, 137, 149, 0.08);
+  border-color: rgba(116, 137, 149, 0.22);
+}
+.total-chip.total-out .total-arrow {
+  color: #94a3b8;
+}
+.total-chip.total-out b {
+  color: #cbd5e1;
+}
+
+/* Modern Gate Bars Component */
+.gate-bars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 6px 0 14px;
+}
+.gate-row-card {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transition: all 0.18s ease;
+}
+.gate-row-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(163, 230, 53, 0.25);
+}
+.gate-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.gate-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.gate-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.gate-status-dot.active {
+  background: #a3e635;
+  box-shadow: 0 0 8px rgba(163, 230, 53, 0.7);
+}
+.gate-status-dot.idle {
+  background: #64748b;
+  opacity: 0.6;
+}
+.gate-name {
+  font: 600 13px/18px "Plus Jakarta Sans", sans-serif;
+  color: #f1f5f9;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gate-counts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.gate-chip {
+  padding: 2px 7px;
+  border-radius: 6px;
+  font: 600 10px/14px "JetBrains Mono", monospace;
+  letter-spacing: 0.02em;
+}
+.gate-chip.in {
+  background: rgba(163, 230, 53, 0.1);
+  border: 1px solid rgba(163, 230, 53, 0.25);
+  color: #a3e635;
+}
+.gate-chip.out {
+  background: rgba(116, 137, 149, 0.12);
+  border: 1px solid rgba(116, 137, 149, 0.25);
+  color: #cbd5e1;
+}
+.gate-progress-track {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  display: flex;
+}
+.gate-bar-in {
+  height: 100%;
+  background: #a3e635;
+  border-radius: 999px 0 0 999px;
+  transition: width 0.3s ease;
+}
+.gate-bar-out {
+  height: 100%;
+  background: #748995;
+  border-radius: 0 999px 999px 0;
+  transition: width 0.3s ease;
+}
+.gate-idle-indicator {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font: 500 11px/16px "Plus Jakarta Sans", sans-serif;
+  color: #8da2af;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* Chart text styling */
+.dashboard-view .chart text {
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  user-select: none;
+}
+.chart-col-hit:hover {
+  fill: rgba(255, 255, 255, 0.03);
 }
 .panel-empty {
   padding: 28px 8px;

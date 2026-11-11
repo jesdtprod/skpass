@@ -185,7 +185,9 @@ body.pass-page {
   cursor: wait;
 }
 @media (prefers-reduced-motion: reduce) {
-  .pass-page .pass-action-row > button { transition: none; }
+  .pass-page .pass-action-row > button {
+    transition: none;
+  }
 }
 .pass-page main > div {
   max-width: 700px;

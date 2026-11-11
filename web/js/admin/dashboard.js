@@ -82,8 +82,18 @@ const legend = () =>
   h(
     "div",
     { class: "legend" },
-    h("span", {}, h("i", { style: "background:#a3e635" }), "Entries (IN)"),
-    h("span", {}, h("i", { style: "background:#748995" }), "Exits (OUT)"),
+    h(
+      "span",
+      { class: "legend-item" },
+      h("i", { class: "legend-dot in", style: "background:#a3e635" }),
+      "Entries (IN)",
+    ),
+    h(
+      "span",
+      { class: "legend-item" },
+      h("i", { class: "legend-dot out", style: "background:#748995" }),
+      "Exits (OUT)",
+    ),
   );
 
 function ensureCss() {
@@ -176,22 +186,71 @@ async function fetchAll(sb, days) {
 }
 
 // ------------------------------------------------------------------ small building blocks
-const panel = (cls, title, note, linkHref, linkText, ...body) =>
-  h(
-    "section",
-    { class: `panel ${cls}` },
+function actionIconFor(href) {
+  if (href === "#/gates") {
+    // Manage / gate settings icon (sliders)
+    return svgIcon(
+      "M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4",
+      "1.8",
+    );
+  }
+  if (href === "#/logs") {
+    // Table logs / list lines icon
+    return svgIcon("M4 6h16M4 10h16M4 14h16M4 18h16", "1.8");
+  }
+  if (href === "#/vehicles") {
+    // Car icon
+    return svgIcon(
+      "M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1",
+      "1.8",
+    );
+  }
+  if (href === "#/pending") {
+    // Approvals check
+    return svgIcon("M5 13l4 4L19 7", "2.2");
+  }
+  if (href === "#/inside") {
+    // Inside now
+    return svgIcon(
+      "M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1",
+      "1.8",
+    );
+  }
+  // Default: arrow-up-right
+  return svgIcon("M7 17L17 7M7 7h10v10", "2");
+}
+
+const panel = (cls, title, note, linkHref, linkText, ...body) => {
+  const headKids = [
     h(
       "div",
-      { class: "panel-head" },
-      h("h2", {}, title),
-      linkHref
-        ? h("a", { class: "row-link", href: linkHref }, linkText)
-        : note
-        ? h("span", { class: "sub-note" }, note)
-        : null,
+      { class: "panel-title-wrap" },
+      h("h2", { class: "panel-title" }, title),
+      note ? h("span", { class: "sub-note" }, note) : null,
     ),
+  ];
+  if (linkHref) {
+    const cleanLabel = (linkText ?? "View").replace("→", "").trim();
+    headKids.push(
+      h(
+        "a",
+        {
+          class: "panel-action-btn",
+          href: linkHref,
+          title: cleanLabel,
+          "aria-label": cleanLabel,
+        },
+        actionIconFor(linkHref),
+      ),
+    );
+  }
+  return h(
+    "section",
+    { class: `panel ${cls}` },
+    h("div", { class: "panel-head" }, headKids),
     ...body,
   );
+};
 
 const failed = (what) => h("div", { class: "panel-error" }, `Could not load ${what}.`);
 const empty = (text) => h("div", { class: "panel-empty" }, text);
@@ -508,17 +567,40 @@ function paint(d, ctx, days) {
     h(
       "div",
       { class: "totals" },
-      h("span", {}, h("b", {}, tot.total), " movements"),
-      h("span", {}, "IN ", h("b", {}, tot.in)),
-      h("span", {}, "OUT ", h("b", {}, tot.out)),
-      h("span", {}, h("b", {}, tot.avg), " per day"),
+      h(
+        "div",
+        { class: "total-chip total-all" },
+        h("span", { class: "total-dot" }),
+        h("b", {}, tot.total),
+        h("span", { class: "total-lbl" }, "movements"),
+      ),
+      h(
+        "div",
+        { class: "total-chip total-in" },
+        h("span", { class: "total-arrow" }, "↑"),
+        h("b", {}, tot.in),
+        h("span", { class: "total-lbl" }, "IN"),
+      ),
+      h(
+        "div",
+        { class: "total-chip total-out" },
+        h("span", { class: "total-arrow" }, "↓"),
+        h("b", {}, tot.out),
+        h("span", { class: "total-lbl" }, "OUT"),
+      ),
+      h(
+        "div",
+        { class: "total-chip total-avg" },
+        h("b", {}, tot.avg),
+        h("span", { class: "total-lbl" }, "/ day"),
+      ),
       tot.busiest
         ? h(
-          "span",
-          {},
-          "Busiest ",
+          "div",
+          { class: "total-chip total-peak" },
+          h("span", { class: "total-lbl" }, "Peak:"),
           h("b", {}, shortDay(tot.busiest.day)),
-          ` (${tot.busiest.in + tot.busiest.out})`,
+          h("span", { class: "total-sub" }, `(${tot.busiest.in + tot.busiest.out})`),
         )
         : null,
     ),

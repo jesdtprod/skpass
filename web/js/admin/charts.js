@@ -27,14 +27,25 @@ export function dailyChart(rows) {
   for (let i = 0; i <= 4; i++) {
     const v = Math.round((niceMax / 4) * i);
     const y = padT + plotH - (v / niceMax) * plotH;
-    svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: y, y2: y, stroke: "#ffffff0d" }));
+    svg.append(
+      svgEl("line", {
+        x1: padL,
+        x2: W - padR,
+        y1: y,
+        y2: y,
+        stroke: i === 0 ? "rgba(255, 255, 255, 0.12)" : "rgba(255, 255, 255, 0.05)",
+        ...(i > 0 ? { "stroke-dasharray": "3 3" } : {}),
+      }),
+    );
     svg.append(
       svgEl("text", {
-        x: padL - 6,
+        x: padL - 8,
         y: y + 4,
         "text-anchor": "end",
         "font-size": 11,
-        fill: "#94a3b8",
+        "font-family": "'Plus Jakarta Sans', sans-serif",
+        "font-weight": "500",
+        fill: "#64748b",
       }, v),
     );
   }
@@ -44,28 +55,68 @@ export function dailyChart(rows) {
     const hIn = (r.in / niceMax) * plotH;
     const g = svgEl("g");
     g.append(svgEl("title", {}, `${r.day}: ${r.in} in, ${r.out} out`));
-    g.append(
-      svgEl("rect", { x, y: padT + plotH - hIn, width: bw, height: hIn, fill: COLORS.in, rx: 2 }),
-    );
+
+    // Full column slot hover hit area
     g.append(
       svgEl("rect", {
-        x,
-        y: padT + plotH - hIn - hOut,
-        width: bw,
-        height: hOut,
-        fill: COLORS.out,
-        rx: 2,
+        x: padL + slot * i,
+        y: padT,
+        width: slot,
+        height: plotH,
+        fill: "transparent",
+        class: "chart-col-hit",
       }),
     );
+
+    if (r.in === 0 && r.out === 0) {
+      // Subtle baseline slot marker for 0-movement days
+      g.append(
+        svgEl("rect", {
+          x,
+          y: padT + plotH - 3,
+          width: bw,
+          height: 3,
+          fill: "rgba(255, 255, 255, 0.08)",
+          rx: 1.5,
+        }),
+      );
+    } else {
+      if (hIn > 0) {
+        g.append(
+          svgEl("rect", {
+            x,
+            y: padT + plotH - hIn,
+            width: bw,
+            height: hIn,
+            fill: COLORS.in,
+            rx: hOut > 0 ? 0 : 3,
+          }),
+        );
+      }
+      if (hOut > 0) {
+        g.append(
+          svgEl("rect", {
+            x,
+            y: padT + plotH - hIn - hOut,
+            width: bw,
+            height: hOut,
+            fill: COLORS.out,
+            rx: 3,
+          }),
+        );
+      }
+    }
     svg.append(g);
     if (rows.length <= 10 || i % Math.ceil(rows.length / 7) === 0 || i === rows.length - 1) {
       svg.append(
         svgEl("text", {
           x: x + bw / 2,
-          y: H - padB + 16,
+          y: H - padB + 18,
           "text-anchor": "middle",
           "font-size": 11,
-          fill: "#94a3b8",
+          "font-family": "'Plus Jakarta Sans', sans-serif",
+          "font-weight": "500",
+          fill: "#889ba8",
         }, r.day.slice(5)),
       );
     }
@@ -73,46 +124,79 @@ export function dailyChart(rows) {
   return svg;
 }
 
-/** Horizontal bars per gate for today. rows: [{ gate, in, out }] */
+/** Horizontal gate breakdown cards for today. rows: [{ gate, in, out }] */
 export function gateBars(rows) {
-  const rowH = 34, W = 400, padL = 92;
-  const H = Math.max(rowH, rows.length * rowH) + 8;
-  const svg = svgEl("svg", {
-    viewBox: `0 0 ${W} ${H}`,
-    role: "img",
-    "aria-label": "Today by gate",
-    class: "chart",
-  });
+  const container = document.createElement("div");
+  container.className = "gate-bars-list";
   const max = Math.max(1, ...rows.map((r) => r.in + r.out));
-  const plotW = W - padL - 96;
-  rows.forEach((r, i) => {
-    const y = 4 + i * rowH;
-    svg.append(
-      svgEl("text", {
-        x: padL - 8,
-        y: y + 17,
-        "text-anchor": "end",
-        "font-size": 14,
-        fill: "#f1f5f9",
-      }, r.gate),
-    );
-    const wIn = (r.in / max) * plotW;
-    const wOut = (r.out / max) * plotW;
-    svg.append(
-      svgEl("rect", { x: padL, y: y + 4, width: wIn, height: 18, fill: COLORS.in, rx: 2 }),
-    );
-    svg.append(
-      svgEl("rect", { x: padL + wIn, y: y + 4, width: wOut, height: 18, fill: COLORS.out, rx: 2 }),
-    );
-    svg.append(
-      svgEl(
-        "text",
-        { x: padL + wIn + wOut + 8, y: y + 18, "font-size": 13, fill: "#94a3b8" },
-        `${r.in} in · ${r.out} out`,
-      ),
-    );
+
+  rows.forEach((r) => {
+    const total = r.in + r.out;
+    const card = document.createElement("div");
+    card.className = "gate-row-card";
+
+    // Header: Gate Name & Live Counts
+    const top = document.createElement("div");
+    top.className = "gate-row-top";
+
+    const nameWrap = document.createElement("div");
+    nameWrap.className = "gate-name-wrap";
+
+    const dot = document.createElement("span");
+    dot.className = `gate-status-dot ${total > 0 ? "active" : "idle"}`;
+    dot.setAttribute("aria-hidden", "true");
+
+    const name = document.createElement("span");
+    name.className = "gate-name";
+    name.textContent = r.gate;
+
+    nameWrap.append(dot, name);
+
+    const counts = document.createElement("div");
+    counts.className = "gate-counts";
+
+    const inChip = document.createElement("span");
+    inChip.className = "gate-chip in";
+    inChip.textContent = `${r.in} IN`;
+
+    const outChip = document.createElement("span");
+    outChip.className = "gate-chip out";
+    outChip.textContent = `${r.out} OUT`;
+
+    counts.append(inChip, outChip);
+    top.append(nameWrap, counts);
+
+    // Progress Bar Track
+    const track = document.createElement("div");
+    track.className = "gate-progress-track";
+
+    if (total > 0) {
+      const pIn = (r.in / max) * 100;
+      const pOut = (r.out / max) * 100;
+
+      if (r.in > 0) {
+        const fillIn = document.createElement("div");
+        fillIn.className = "gate-bar-in";
+        fillIn.style.width = `${pIn}%`;
+        track.append(fillIn);
+      }
+      if (r.out > 0) {
+        const fillOut = document.createElement("div");
+        fillOut.className = "gate-bar-out";
+        fillOut.style.width = `${pOut}%`;
+        track.append(fillOut);
+      }
+    } else {
+      const idleTrack = document.createElement("div");
+      idleTrack.className = "gate-idle-indicator";
+      track.append(idleTrack);
+    }
+
+    card.append(top, track);
+    container.append(card);
   });
-  return svg;
+
+  return container;
 }
 
 /**
@@ -143,6 +227,8 @@ export function hourChart(buckets, { nowHour = null, peak = null } = {}) {
         y: y + 4,
         "text-anchor": "end",
         "font-size": 10,
+        "font-family": "'Plus Jakarta Sans', sans-serif",
+        "font-weight": "500",
         fill: "#7f93a0",
       }, v),
     );
@@ -195,6 +281,8 @@ export function hourChart(buckets, { nowHour = null, peak = null } = {}) {
           y: H - padB + 15,
           "text-anchor": "middle",
           "font-size": 10,
+          "font-family": "'Plus Jakarta Sans', sans-serif",
+          "font-weight": "500",
           fill: "#7f93a0",
         }, String(h).padStart(2, "0")),
       );
@@ -208,6 +296,7 @@ export function hourChart(buckets, { nowHour = null, peak = null } = {}) {
         y: padT + 2,
         "text-anchor": "middle",
         "font-size": 10,
+        "font-family": "'Plus Jakarta Sans', sans-serif",
         "font-weight": 600,
         fill: "#a3e635",
       }, `peak ${peak.count}`),

@@ -1,6 +1,6 @@
 /* SKPass public portal: charcoal, lime, and the original white-centered identity. */
 body.portal-page {
-  background: radial-gradient(ellipse at 18% 26%, #385c191f, transparent 48%), #0b1013;
+  background: #10141a;
   background-attachment: fixed;
   color: #e9eef0;
 }
@@ -337,8 +337,7 @@ body.portal-page {
   mask-image: linear-gradient(transparent, #000 100px, #000 calc(100% - 32px), transparent);
 }
 body.portal-page {
-  background: radial-gradient(ellipse at 15% 25%, #a3e63512, transparent 45%),
-    radial-gradient(ellipse at 90% 80%, #a3e63510, transparent 40%), #10141a;
+  background: #10141a;
 }
 
 /* DINKSLOT typography: geometric headings, readable body, technical labels. */
@@ -443,4 +442,14 @@ body.portal-page {
     animation: none !important;
     display: none !important;
   }
+}
+
+/* One chrome colour: the page, the header and the footer are the same solid colour.
+   !important because several pages still carry their own tinted body backgrounds. */
+html,
+body.site-theme,
+body.portal-page,
+body.admin-home,
+body.tech-grid-bg {
+  background: #10141a !important;
 }
