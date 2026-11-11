@@ -14,7 +14,8 @@
     "jsr:@std/net@^1.0.7": "1.0.7",
     "jsr:@std/path@^1.1.6": "1.1.6",
     "jsr:@std/streams@^1.2.0": "1.2.0",
-    "npm:@supabase/supabase-js@2": "2.119.0"
+    "npm:@supabase/supabase-js@2": "2.119.0",
+    "npm:http_ece@1.2.0": "1.2.0"
   },
   "jsr": {
     "@std/assert@1.0.19": {
@@ -116,6 +117,9 @@
         "@supabase/realtime-js",
         "@supabase/storage-js"
       ]
+    },
+    "http_ece@1.2.0": {
+      "integrity": "sha512-JrF8SSLVmcvc5NducxgyOrKXe3EsyHMgBFgSaIUGmArKe+rwr0uphRkRXvwiom3I+fpIfoItveHrfudL8/rxuA=="
     },
     "iceberg-js@0.8.1": {
       "integrity": "sha512-1dhVQZXhcHje7798IVM+xoo/1ZdVfzOMIc8/rgVSijRK38EDqOJoGula9N/8ZI5RD8QTxNQtK/Gozpr+qUqRRA=="

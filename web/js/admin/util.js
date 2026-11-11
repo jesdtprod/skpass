@@ -34,6 +34,7 @@ export function toast(msg, kind = "ok") {
   const t = h("div", { class: `toast ${kind}`, role: "status" }, msg);
   box.append(t);
   setTimeout(() => t.remove(), kind === "error" ? 7000 : 3500);
+  return t;
 }
 
 /** Make a database/RPC/function error readable. */

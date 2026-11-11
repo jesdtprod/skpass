@@ -163,4 +163,11 @@ async function route() {
   ctx.refreshBadge();
 }
 addEventListener("hashchange", route);
+// Live changes (new registrations, other admins' decisions) re-render the lists and numbers.
+addEventListener("skpass:refresh", () => {
+  if (/^#\/(dashboard|pending|vehicles|inside|health)?$/.test(location.hash || "#/dashboard")) {
+    route();
+  }
+});
 route();
+import("./alerts.js").then((m) => m.start(ctx)).catch((e) => console.warn("alerts unavailable", e));

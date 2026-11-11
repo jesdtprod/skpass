@@ -1,6 +1,7 @@
 import { myStatus } from "./api.js";
 import { downloadQr, drawQr } from "./qr.js";
 import { listVehicles, removeVehicle, updateVehicle } from "./store.js";
+import { announceDecision, mountNotifyCard, refreshNotifyCard } from "./owner-alerts.js";
 
 const list = document.getElementById("list");
 const empty = document.getElementById("empty");
@@ -598,6 +599,14 @@ function card(rec, view, note) {
 async function viewFor(rec) {
   const { status, data } = await myStatus(rec.vehicle_id, rec.claim_secret);
   if (status === 200) {
+    const wasPending = (rec.status ?? "pending") === "pending";
+    if (wasPending && (data.status === "approved" || data.status === "rejected")) {
+      announceDecision({
+        vehicle_id: rec.vehicle_id,
+        status: data.status,
+        plate: data.plate ?? rec.plate,
+      });
+    }
     await updateVehicle(rec.vehicle_id, {
       status: data.status,
       token: data.token ?? null,
@@ -645,4 +654,22 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") render();
 });
 
-render();
+// While this page is open, check pending registrations every 20 s so a decision shows (and
+// sounds) within seconds, even without push notifications.
+setInterval(async () => {
+  if (document.hidden) return;
+  for (const r of await listVehicles()) {
+    if ((r.status ?? "pending") === "pending") await refresh(r.vehicle_id);
+  }
+}, 20000);
+
+// A push that arrives while the page is open: update straight away.
+navigator.serviceWorker?.addEventListener("message", (e) => {
+  if (e.data?.type === "skpass-push" && e.data.kind === "decision" && e.data.vehicle_id) {
+    refresh(e.data.vehicle_id);
+  }
+});
+
+mountNotifyCard(list, listVehicles);
+await render();
+refreshNotifyCard();

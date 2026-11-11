@@ -23,8 +23,8 @@ function tick() {
 document.getElementById("statusbar-connection").textContent = location.protocol === "https:"
   ? "Connection: HTTPS"
   : "Connection: local HTTP";
-window.addEventListener("online", updateNetwork);
-window.addEventListener("offline", updateNetwork);
+globalThis.addEventListener("online", updateNetwork);
+globalThis.addEventListener("offline", updateNetwork);
 updateNetwork();
 tick();
 setInterval(tick, 1000);

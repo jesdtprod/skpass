@@ -1,6 +1,7 @@
 // Vehicle detail panel + the admin actions on a vehicle (shared by Approvals and Vehicles).
 import { downloadQr, drawQr } from "../qr.js";
 import { ask, confirmBox, panel } from "./dialog.js";
+import { notifyDecision } from "./notify-owner.js";
 import { attempt, fmtTime, h, toast } from "./util.js";
 
 export const COLS =
@@ -34,6 +35,7 @@ export async function approveVehicle(ctx, v) {
     () => ctx.sb.rpc("approve_vehicle", { p_vehicle_id: v.id, p_valid_from: from, p_valid_to: to }),
     `${v.plate} approved. The QR is now available.`,
   );
+  if (r) notifyDecision(ctx, v.id); // push the decision to the owner (not awaited)
   return !!r;
 }
 
@@ -53,10 +55,12 @@ export async function rejectVehicle(ctx, v) {
     }],
   });
   if (!a) return false;
-  return !!(await attempt(
+  const r = await attempt(
     () => ctx.sb.rpc("reject_vehicle", { p_vehicle_id: v.id, p_reason: a.reason }),
     `${v.plate} rejected.`,
-  ));
+  );
+  if (r) notifyDecision(ctx, v.id); // push the decision to the owner (not awaited)
+  return !!r;
 }
 
 function rows(v, tz) {

@@ -1,6 +1,6 @@
 // Service worker: caches the static app shell only.
 // Supabase / Turnstile (cross-origin) requests are never cached.
-const CACHE = "skpass-shell-v12";
+const CACHE = "skpass-shell-v13";
 const SHELL = [
   "./",
   "./index.html",
@@ -32,6 +32,7 @@ const SHELL = [
   "./js/scan.js",
   "./js/scan-ui.js",
   "./js/offline-queue.js",
+  "./js/alert-sound.js",
   "./js/auth.js",
   "./js/vendor/supabase.js",
   "./js/vendor/jsQR.js",
@@ -73,5 +74,90 @@ self.addEventListener("fetch", (event) => {
           hit || (req.mode === "navigate" ? caches.match("./index.html") : Response.error())
         )
       ),
+  );
+});
+
+// ---------------------------------------------------------------- Web Push
+// A push arrives even when no SKPass page is open. We always show a notification (browsers
+// require it), keep it on screen until acted on, and ask any open page to play the alert sound,
+// because a service worker cannot play audio itself.
+const PUSH_ICON = "./icons/icon-192.png";
+
+/** Only same-scope URLs are ever opened, whatever the payload says. */
+function scopedUrl(raw) {
+  const scope = self.registration.scope;
+  try {
+    const u = new URL(String(raw || "./"), scope);
+    return u.href.startsWith(scope) ? u.href : scope;
+  } catch {
+    return scope;
+  }
+}
+
+self.addEventListener("push", (event) => {
+  let d = {};
+  try {
+    d = event.data ? event.data.json() : {};
+  } catch {
+    d = { body: event.data ? event.data.text() : "" };
+  }
+  const title = String(d.title || "SKPass").slice(0, 80);
+  const body = String(d.body || "").slice(0, 200);
+  const options = {
+    body,
+    icon: PUSH_ICON,
+    badge: PUSH_ICON,
+    tag: String(d.tag || "skpass").slice(0, 60),
+    renotify: true, // alert again even when replacing a notification with the same tag
+    requireInteraction: true, // stay until the person taps or dismisses it
+    vibrate: [500, 200, 500, 200, 500], // three long buzzes (Android)
+    timestamp: Date.now(),
+    data: {
+      url: scopedUrl(d.url),
+      kind: d.kind || null,
+      status: d.status || null,
+      vehicle_id: d.vehicle_id || null,
+    },
+  };
+  event.waitUntil((async () => {
+    await self.registration.showNotification(title, options);
+    const pages = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    for (const c of pages) {
+      c.postMessage({
+        type: "skpass-push",
+        kind: d.kind || null,
+        status: d.status || null,
+        vehicle_id: d.vehicle_id || null,
+        title,
+        body,
+      });
+    }
+  })());
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = event.notification.data?.url || self.registration.scope;
+  event.waitUntil((async () => {
+    const pages = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    const path = new URL(target).pathname;
+    // Reuse a tab that is already on that page; never navigate away from some other page
+    // (the person might be in the middle of a form).
+    const same = pages.find((c) => new URL(c.url).pathname === path);
+    if (same) {
+      await same.focus();
+      if (same.url !== target && "navigate" in same) await same.navigate(target).catch(() => {});
+      return;
+    }
+    await self.clients.openWindow(target);
+  })());
+});
+
+// The browser may rotate a subscription; open pages re-register themselves.
+self.addEventListener("pushsubscriptionchange", (event) => {
+  event.waitUntil(
+    self.clients.matchAll({ includeUncontrolled: true }).then((pages) =>
+      pages.forEach((c) => c.postMessage({ type: "skpass-resubscribe" }))
+    ),
   );
 });

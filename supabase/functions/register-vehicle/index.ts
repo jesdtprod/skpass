@@ -5,6 +5,8 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { claimSecretFor, sha256Hex } from "../_shared/crypto.ts";
 import { clientIp, corsHeaders, json } from "../_shared/http.ts";
 import { verifyTurnstile } from "../_shared/turnstile.ts";
+import { notifyAdmins, supabaseStore, vapidFromEnv } from "../_shared/notify.ts";
+import { newRegistrationMessage } from "../_shared/push-messages.ts";
 import {
   normPlate,
   PHOTO_TYPES,
@@ -138,6 +140,19 @@ export async function handler(req: Request): Promise<Response> {
     }
     console.error("insert failed", insErr?.message);
     return json(500, { error: "server_error" }, origin);
+  }
+
+  // Tell the admins' devices about the new registration. Fire-and-forget: a push problem must never
+  // slow down or fail the owner's registration.
+  const vapid = vapidFromEnv();
+  if (vapid) {
+    const task = notifyAdmins(
+      supabaseStore(db),
+      newRegistrationMessage({ id: row.id, category: v.category, plate: v.plate }),
+      vapid,
+    ).catch((e) => console.error("admin push failed", e instanceof Error ? e.message : e));
+    (globalThis as { EdgeRuntime?: { waitUntil(p: Promise<unknown>): void } }).EdgeRuntime
+      ?.waitUntil(task);
   }
 
   return json(201, { vehicle_id: row.id, claim_secret: claimSecret, status: row.status }, origin);

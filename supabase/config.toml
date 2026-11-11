@@ -439,3 +439,9 @@ verify_jwt = false
 
 [functions.report-error]
 verify_jwt = false
+
+[functions.push-subscribe]
+verify_jwt = false
+
+[functions.notify-owner]
+verify_jwt = false
