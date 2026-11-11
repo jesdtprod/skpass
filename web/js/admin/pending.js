@@ -259,7 +259,28 @@ export async function render(root, ctx) {
           "data-search": `${v.plate} ${v.owner_name} ${v.phone} ${v.category} ${v.color ?? ""}`
             .toLocaleLowerCase(),
         },
-        h("td", {}, h("span", { class: "ap-plate" }, v.plate)),
+        h(
+          "td",
+          {},
+          h(
+            "div",
+            { class: "ap-vehicle" },
+            h("span", { class: "ap-plate" }, v.plate),
+            h(
+              "small",
+              {},
+              ({
+                car: "Car",
+                suv: "SUV / Crossover",
+                van: "Van / MPV",
+                truck: "Truck",
+                motorcycle: "Motorcycle",
+                tricycle: "Tricycle",
+                other: "Other",
+              })[v.vehicle_type] ?? v.vehicle_type ?? "Type not provided",
+            ),
+          ),
+        ),
         h(
           "td",
           {},

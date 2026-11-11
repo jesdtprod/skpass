@@ -467,3 +467,13 @@
     width: 158px;
   }
 }
+.approvals-view .ap-vehicle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+}
+.approvals-view .ap-vehicle small {
+  color: #7d909b;
+  font: 500 11px/14px "Plus Jakarta Sans", sans-serif;
+}

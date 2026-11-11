@@ -29,11 +29,72 @@ export function fmtTime(iso, tz) {
   }
 }
 
-export function toast(msg, kind = "ok") {
+export function toast(
+  msg,
+  kind = "ok",
+  title = kind === "error" ? "Unable to complete action" : "System notification",
+) {
   const box = document.getElementById("toasts");
-  const t = h("div", { class: `toast ${kind}`, role: "status" }, msg);
+  if (!box) return null;
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  for (
+    const [key, value] of Object.entries({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "1.8",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      "aria-hidden": "true",
+    })
+  ) icon.setAttribute(key, value);
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute(
+    "d",
+    kind === "error"
+      ? "m12 3 10 18H2L12 3Zm0 6v5m0 3h.01"
+      : "M9 12l2 2 4-4M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0",
+  );
+  icon.append(path);
+  const close = h("button", {
+    class: "toast-close",
+    type: "button",
+    "aria-label": "Dismiss notification",
+  }, "×");
+  const t = h(
+    "div",
+    { class: `toast ${kind}`, role: kind === "error" ? "alert" : "status" },
+    h("span", { class: "toast-icon" }, icon),
+    h("div", { class: "toast-copy" }, h("strong", {}, title), h("p", {}, msg)),
+    close,
+  );
+  let remaining = kind === "error" ? 8000 : 6000;
+  let started, timer;
+  const dismiss = () => {
+    clearTimeout(timer);
+    t.remove();
+  };
+  const pause = () => {
+    if (!timer) return;
+    clearTimeout(timer);
+    remaining -= performance.now() - started;
+    timer = null;
+  };
+  const resume = () => {
+    if (timer || t.matches(":hover") || t.contains(document.activeElement)) return;
+    started = performance.now();
+    timer = setTimeout(dismiss, Math.max(0, remaining));
+  };
+  close.addEventListener("click", (event) => {
+    event.stopPropagation();
+    dismiss();
+  });
+  t.addEventListener("pointerenter", pause);
+  t.addEventListener("pointerleave", resume);
+  t.addEventListener("focusin", pause);
+  t.addEventListener("focusout", () => queueMicrotask(resume));
   box.append(t);
-  setTimeout(() => t.remove(), kind === "error" ? 7000 : 3500);
+  resume();
   return t;
 }
 

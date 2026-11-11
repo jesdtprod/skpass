@@ -43,7 +43,7 @@ export async function approveVehicle(ctx, v) {
   }
   const r = await attempt(
     () => ctx.sb.rpc("approve_vehicle", { p_vehicle_id: v.id, p_valid_from: from, p_valid_to: to }),
-    `${v.plate} approved. The QR is now available.`,
+    `Registration approved for ${v.plate}. The vehicle access pass is now available.`,
   );
   if (r) notifyDecision(ctx, v.id); // push the decision to the owner (not awaited)
   return !!r;
