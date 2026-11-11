@@ -269,7 +269,7 @@ export async function render(root, ctx) {
             h("span", { class: "ap-plate" }, v.plate),
             h(
               "small",
-              {},
+              { class: "ap-type" },
               ({
                 car: "Car",
                 suv: "SUV / Crossover",
@@ -288,7 +288,12 @@ export async function render(root, ctx) {
           h("div", { class: "ap-owner" }, h("b", {}, v.owner_name), h("small", {}, v.phone)),
         ),
         h("td", {}, h("span", { class: `ap-cat ${v.category}` }, v.category)),
-        h("td", { class: "ap-color" }, v.color?.trim() || "Not provided"),
+        h(
+          "td",
+          { class: "ap-color" },
+          v.color?.trim().toLowerCase().replace(/\b\w/g, (letter) => letter.toUpperCase()) ||
+            "Not provided",
+        ),
         h(
           "td",
           { class: "ap-visit" },
