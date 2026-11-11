@@ -416,7 +416,13 @@
   text-align: right;
 }
 .approvals-view .ap-table td:last-child {
-  width: 122px;
+  width: 132px;
+}
+.approvals-view .ap-table .row-actions {
+  flex-wrap: nowrap;
+}
+.approvals-view .ap-icon {
+  flex-shrink: 0;
 }
 .approvals-view .ap-plate {
   font-size: 13px;
