@@ -1,6 +1,5 @@
 import { dailyChart, gateBars, hourChart } from "./charts.js";
 import {
-  attentionItems,
   dailyTotals,
   denialLabel,
   fmtDuration,
@@ -439,8 +438,6 @@ function paint(d, ctx, days) {
   const now = Date.now();
   const inside = d.inside.data ?? [];
   const longest = inside[0] ?? null; // ordered oldest entry first
-  const longInside =
-    inside.filter((r) => now - new Date(r.entered_at).getTime() > LONG_INSIDE_MS).length;
   const pend = d.pending.data ?? [];
   const oldestPendingMs = pend[0] ? now - new Date(pend[0].created_at).getTime() : 0;
   const daily = s.daily ?? [];
@@ -451,30 +448,6 @@ function paint(d, ctx, days) {
     yesterday ? yesterday.in + yesterday.out : null,
   );
   const totalVehicles = s.approved + s.pending + s.blocked;
-
-  // ---- needs attention
-  const items = attentionItems({
-    pending: s.pending,
-    oldestPendingMs,
-    warnings: s.warnings_today,
-    blocked: s.blocked,
-    longInside,
-  });
-  const attention = h(
-    "section",
-    { class: "attention", "aria-label": "Needs attention" },
-    h("span", { class: "attention-label" }, "Needs attention"),
-    items.length
-      ? items.map((i) =>
-        h(
-          "a",
-          { class: `chip ${i.tone}`, href: i.href },
-          i.text,
-          h("span", { class: "cta" }, `${i.cta} →`),
-        )
-      )
-      : h("span", { class: "chip ok" }, "All clear. Nothing needs your attention right now."),
-  );
 
   // ---- quick actions
   const act = (href, icon, title, hint, hot = false) =>
@@ -856,7 +829,6 @@ function paint(d, ctx, days) {
 
   return [
     stats,
-    attention,
     actions,
     h(
       "div",
