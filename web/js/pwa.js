@@ -1,3 +1,4 @@
+import "./error-report.js";
 // Registers the service worker and exposes the "Add to Home Screen" prompt.
 let deferredPrompt = null;
 

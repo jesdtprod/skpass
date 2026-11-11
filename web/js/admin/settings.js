@@ -26,6 +26,15 @@ const DEFS = [
   },
   { key: "visitor_max_days", label: "Longest visitor pass (days)", kind: "int", min: 1, max: 365 },
   {
+    key: "offline_max_age_hours",
+    label: "Offline scan age limit (hours)",
+    kind: "int",
+    min: 1,
+    max: 168,
+    hint:
+      "Scans saved on a phone while offline keep their real time if they sync within this limit. Older ones are recorded with the sync time instead.",
+  },
+  {
     key: "log_retention_days",
     label: "Log retention (days)",
     kind: "int",

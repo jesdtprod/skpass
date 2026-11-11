@@ -436,3 +436,6 @@ verify_jwt = false
 
 [functions.create-staff]
 verify_jwt = false
+
+[functions.report-error]
+verify_jwt = false

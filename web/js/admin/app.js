@@ -78,6 +78,12 @@ const ROUTES = [
     load: () => import("./staff.js"),
   },
   {
+    id: "health",
+    label: "System health",
+    icon: makeIcon("M3 12h4l3-8 4 16 3-8h4"),
+    load: () => import("./health.js"),
+  },
+  {
     id: "settings",
     label: "Settings",
     icon: makeIcon(

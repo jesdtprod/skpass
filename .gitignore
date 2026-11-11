@@ -11,3 +11,6 @@ node_modules/
 
 # browser-automation tool logs (can contain page content from other sites)
 .playwright-mcp/
+
+# database/photo backups contain personal data and password hashes
+backups/
