@@ -1,3 +1,4 @@
+import { tableSkeleton } from "./skeleton.js";
 import { fmtTime, h } from "./util.js";
 import { openVehicle } from "./vehicle-detail.js";
 
@@ -10,7 +11,14 @@ function since(iso) {
 
 export async function render(root, ctx) {
   const count = h("span", { class: "muted" });
-  const box = h("div");
+  const box = h(
+    "div",
+    {},
+    tableSkeleton({
+      cols: ["90px", "140px", "80px", "120px", "100px", "110px", "70px"],
+      rows: 6,
+    }),
+  );
   root.append(
     h("h1", {}, "Inside now"),
     h(
