@@ -1703,3 +1703,39 @@
   height: 100%;
   margin: 0;
 }
+
+/* Use the category panel's remaining height for useful registration context. */
+.dashboard-view .category-panel .catlist {
+  flex: 1;
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+.dashboard-view .category-panel .catlist li {
+  grid-template-rows: auto auto auto minmax(4px, 1fr) auto;
+}
+.dashboard-view .category-panel .cat-progress {
+  align-self: end;
+}
+.dashboard-view .cat-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 12px;
+  padding: 10px 0;
+  border-top: 1px solid #ffffff0b;
+}
+.dashboard-view .cat-overview dt {
+  color: #8098a7;
+  font: 500 10px/15px "Plus Jakarta Sans", sans-serif;
+}
+.dashboard-view .cat-overview dd {
+  margin: 4px 0 0;
+  color: #b2eb65;
+  font: 600 16px/20px "Space Grotesk", sans-serif;
+}
+.dashboard-view .cat-overview .warn dd {
+  color: #e7c57a;
+}
+.dashboard-view .cat-overview .blocked dd {
+  color: #efa4a4;
+}

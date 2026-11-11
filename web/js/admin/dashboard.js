@@ -693,7 +693,7 @@ function paint(d, ctx, days) {
   const cats = d.categories;
   const catTotal = (cats.employee ?? 0) + (cats.official ?? 0) + (cats.visitor ?? 0);
   const catPanel = panel(
-    "span-5",
+    "span-5 category-panel",
     "Approved vehicles by category",
     null,
     "#/vehicles",
@@ -732,6 +732,28 @@ function paint(d, ctx, days) {
               }, h("span", { style: `width:${pct(cats[k] ?? 0, catTotal)}%` })),
               h("span", { class: "cat-context" }, `Of ${catTotal} total approved`),
             )
+          ),
+        ),
+        h(
+          "dl",
+          { class: "cat-overview", "aria-label": "Registration overview" },
+          h(
+            "div",
+            {},
+            h("dt", {}, "Approved past 7 days"),
+            h("dd", {}, d.new7 == null ? "—" : String(d.new7)),
+          ),
+          h(
+            "div",
+            { class: "warn" },
+            h("dt", {}, "Pending review"),
+            h("dd", {}, String(s.pending)),
+          ),
+          h(
+            "div",
+            { class: "blocked" },
+            h("dt", {}, "Blocked vehicles"),
+            h("dd", {}, String(s.blocked)),
           ),
         ),
         h(
