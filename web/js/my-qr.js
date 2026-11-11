@@ -188,7 +188,7 @@ function card(rec, view, note) {
               class:
                 "block mt-0.5 leading-tight text-[10px] text-slate-400 uppercase tracking-widest font-mono",
             },
-            [view.color, "Terminal Pass ID"].filter(Boolean).join(" \u00b7 "),
+            "Terminal Pass ID",
           ),
         ),
       ),
@@ -599,6 +599,13 @@ function card(rec, view, note) {
     kids,
   );
   const header = article.querySelector(".pass-card-header");
+  const vehicleSummary = [typeNames[view.vehicle_type] ?? view.vehicle_type, view.color]
+    .filter(Boolean).join(" \u00b7 ");
+  if (vehicleSummary) {
+    header.firstElementChild.lastElementChild.append(
+      h("span", { class: "pass-vehicle-summary" }, vehicleSummary),
+    );
+  }
   const holder = article.querySelector(".pass-holder");
   const status = article.querySelector(".pass-approval");
   const qrSection = article.querySelector(".pass-qr-section");
@@ -613,6 +620,7 @@ function card(rec, view, note) {
   if (qrSection) layout.append(qrSection);
   layout.append(identity);
   header.after(layout);
+  identity.prepend(header);
   article.classList.add("formatted-pass");
   return article;
 }

@@ -18,6 +18,18 @@ body.pass-page {
 .pass-holder-panel {
   min-width: 0;
 }
+.pass-holder-panel .pass-card-header {
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #ffffff12;
+  flex-wrap: wrap;
+}
+.pass-vehicle-summary {
+  display: block;
+  margin-top: 6px;
+  font: 400 11px/18px "Plus Jakarta Sans",sans-serif;
+  color: #b3c4ce;
+}
 .pass-holder-row {
   display: flex;
   align-items: flex-start;
