@@ -389,17 +389,15 @@
   outline-offset: 2px;
 }
 @media (max-width: 720px) {
-  .approvals-view .ap-table th:nth-child(4),
-  .approvals-view .ap-table td:nth-child(4),
-  .approvals-view .ap-table th:nth-child(5),
-  .approvals-view .ap-table td:nth-child(5) {
+  .approvals-view .ap-table .ap-visit,
+  .approvals-view .ap-table .ap-submitted {
     display: none;
   }
 }
 
 /* Standard menu-sized text, compact rows and clear icon-only actions. */
 .approvals-view .ap-table {
-  font: 500 13px/18px "Plus Jakarta Sans", sans-serif;
+  font: 500 12px/18px "Plus Jakarta Sans", sans-serif;
 }
 .approvals-view .ap-table th {
   padding: 10px 12px;
@@ -407,9 +405,9 @@
   letter-spacing: .04em;
 }
 .approvals-view .ap-table td {
-  padding: 6px 12px;
-  height: 44px;
-  font-size: 13px;
+  padding: 10px 12px;
+  height: 60px;
+  font-size: 12px;
   line-height: 18px;
 }
 .approvals-view .ap-table th:last-child {
@@ -425,19 +423,22 @@
   flex-shrink: 0;
 }
 .approvals-view .ap-plate {
-  font-size: 13px;
+  font-size: 12px;
   padding: 3px 7px;
   border-color: #ffffff16;
 }
 .approvals-view .ap-owner {
-  gap: 4px 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 .approvals-view .ap-owner small {
-  font-size: 13px;
+  font-size: 11px;
+  line-height: 14px;
   font-variant-numeric: tabular-nums;
 }
 .approvals-view .ap-cat {
-  font-size: 13px;
+  font-size: 11px;
   line-height: 18px;
   font-weight: 500;
   padding: 2px 8px;

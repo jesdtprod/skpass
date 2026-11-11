@@ -233,7 +233,7 @@ export async function render(root, ctx) {
   async function load() {
     const { data, error } = await ctx.sb.from("vehicles")
       .select(
-        "id,plate,owner_name,phone,category,vehicle_type,valid_from,valid_to,created_at,photo_path",
+        "id,plate,owner_name,phone,category,vehicle_type,color,valid_from,valid_to,created_at,photo_path",
       )
       .eq("status", "pending").order("created_at", { ascending: true });
     if (error) {
@@ -256,7 +256,8 @@ export async function render(root, ctx) {
         "tr",
         {
           "data-category": v.category,
-          "data-search": `${v.plate} ${v.owner_name} ${v.phone}`.toLocaleLowerCase(),
+          "data-search": `${v.plate} ${v.owner_name} ${v.phone} ${v.category} ${v.color ?? ""}`
+            .toLocaleLowerCase(),
         },
         h("td", {}, h("span", { class: "ap-plate" }, v.plate)),
         h(
@@ -265,12 +266,13 @@ export async function render(root, ctx) {
           h("div", { class: "ap-owner" }, h("b", {}, v.owner_name), h("small", {}, v.phone)),
         ),
         h("td", {}, h("span", { class: `ap-cat ${v.category}` }, v.category)),
+        h("td", { class: "ap-color" }, v.color?.trim() || "Not provided"),
         h(
           "td",
-          {},
+          { class: "ap-visit" },
           v.category === "visitor" ? `${v.valid_from ?? "?"} to ${v.valid_to ?? "?"}` : "—",
         ),
-        h("td", {}, fmtTime(v.created_at, ctx.tz)),
+        h("td", { class: "ap-submitted" }, fmtTime(v.created_at, ctx.tz)),
         h(
           "td",
           {},
@@ -307,8 +309,13 @@ export async function render(root, ctx) {
             h(
               "tr",
               {},
-              ["Plate", "Owner", "Category", "Visit dates", "Submitted", "Actions"].map((t) =>
-                h("th", { scope: "col" }, t)
+              ["Plate", "Owner", "Category", "Color", "Visit dates", "Submitted", "Actions"].map((
+                t,
+              ) =>
+                h("th", {
+                  scope: "col",
+                  class: t === "Visit dates" ? "ap-visit" : t === "Submitted" ? "ap-submitted" : "",
+                }, t)
               ),
             ),
           ),
