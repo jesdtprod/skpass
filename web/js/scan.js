@@ -585,7 +585,9 @@ function dismiss() {
   maybeShowReport();
   if (overlay.hidden) (started ? $("stop") : startBtn).focus({ preventScroll: true });
 }
-overlay.addEventListener("click", dismiss);
+overlay.addEventListener("click", (event) => {
+  if (event.target === overlay || event.target.closest("#ov-continue")) dismiss();
+});
 overlay.addEventListener("keydown", (event) => {
   if (event.key === "Escape") dismiss();
   if (event.key === "Tab") {

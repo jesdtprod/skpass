@@ -6,7 +6,32 @@ import {
   isForbidden,
   isNetworkError,
   isToken,
+  resultVehicleDetails,
 } from "./scan-ui.js";
+
+Deno.test("result vehicle details use readable labels without inventing missing values", () => {
+  assertEquals(
+    resultVehicleDetails({ vehicle_type: "motorcycle", color: "black", category: "employee" }),
+    {
+      type: "Motorcycle / Scooter",
+      color: "Black",
+      category: "Employee",
+    },
+  );
+  assertEquals(
+    resultVehicleDetails({ vehicle_type: "suv", color: "light blue", category: "visitor" }),
+    {
+      type: "SUV / Crossover",
+      color: "Light Blue",
+      category: "Visitor",
+    },
+  );
+  assertEquals(resultVehicleDetails(null), {
+    type: "Not provided",
+    color: "Not provided",
+    category: "",
+  });
+});
 
 Deno.test("isToken accepts the 22-char token and rejects anything else", () => {
   assert(isToken("wpnZ3aUdNTMBQUHqES0NzQ"));
