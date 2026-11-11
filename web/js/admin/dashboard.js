@@ -214,38 +214,19 @@ async function fetchAll(sb, days) {
 }
 
 // ------------------------------------------------------------------ small building blocks
-function actionIconFor(href) {
-  if (href === "#/gates") {
-    // Manage / gate settings icon (sliders)
-    return svgIcon(
-      "M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4",
-      "1.8",
-    );
-  }
-  if (href === "#/logs") {
-    // Table logs / list lines icon
-    return svgIcon("M4 6h16M4 10h16M4 14h16M4 18h16", "1.8");
-  }
-  if (href === "#/vehicles") {
-    // Car icon
-    return svgIcon(
-      "M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1",
-      "1.8",
-    );
-  }
-  if (href === "#/pending") {
-    // Approvals check
-    return svgIcon("M5 13l4 4L19 7", "2.2");
-  }
-  if (href === "#/inside") {
-    // Inside now
-    return svgIcon(
-      "M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1",
-      "1.8",
-    );
-  }
-  // Default: arrow-up-right
-  return svgIcon("M7 17L17 7M7 7h10v10", "2");
+const panelIcons = {
+  "Activity": "M4 19h16M7 15v-4m5 4V5m5 10v-7",
+  "Today by gate": "M3 21h18M5 21V7l7-4 7 4v14M9 21V10h6v11",
+  "Today by hour": "M12 8v4l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0",
+  "Approved vehicles": statIcons["Approved vehicles"],
+  "Recent activity": "M3 12h4l3-7 4 14 3-7h4",
+  "Waiting for approval": statIcons["Waiting for approval"],
+  "Longest inside": "M3 21h18M5 21V3h10v18M9 11h2m6-3 4 4-4 4m-3-4h7",
+  "Denied scans": "M12 3 3 7v5c0 5 9 9 9 9s9-4 9-9V7l-9-4ZM9 9l6 6m0-6-6 6",
+};
+function panelIcon(title) {
+  const key = Object.keys(panelIcons).find((key) => title.startsWith(key));
+  return svgIcon(panelIcons[key] ?? "M4 19h16M7 15v-4m5 4V5m5 10v-7");
 }
 
 const panel = (cls, title, note, linkHref, linkText, ...body) => {
@@ -253,6 +234,7 @@ const panel = (cls, title, note, linkHref, linkText, ...body) => {
     h(
       "div",
       { class: "panel-title-wrap" },
+      h("span", { class: "panel-heading-icon", "aria-hidden": "true" }, panelIcon(title)),
       h("h2", { class: "panel-title" }, title),
       note ? h("span", { class: "sub-note" }, note) : null,
     ),
@@ -268,7 +250,7 @@ const panel = (cls, title, note, linkHref, linkText, ...body) => {
           title: cleanLabel,
           "aria-label": cleanLabel,
         },
-        actionIconFor(linkHref),
+        svgIcon("M7 17 17 7M7 7h10v10"),
       ),
     );
   }
@@ -281,7 +263,23 @@ const panel = (cls, title, note, linkHref, linkText, ...body) => {
 };
 
 const failed = (what) => h("div", { class: "panel-error" }, `Could not load ${what}.`);
-const empty = (text) => h("div", { class: "panel-empty" }, text);
+const empty = (text) =>
+  h(
+    "div",
+    { class: "panel-empty" },
+    h(
+      "span",
+      { class: "empty-icon", "aria-hidden": "true" },
+      svgIcon(
+        text.includes("denied")
+          ? panelIcons["Denied scans"]
+          : text.includes("inside")
+          ? statIcons["Approved vehicles"]
+          : panelIcons["Recent activity"],
+      ),
+    ),
+    h("span", {}, text),
+  );
 const emptyChart = (title, detail) =>
   h(
     "div",
@@ -768,7 +766,11 @@ function paint(d, ctx, days) {
           return h(
             "li",
             {},
-            h("span", { class: "lead dot warn", "aria-hidden": "true" }),
+            h(
+              "span",
+              { class: "lead row-icon warn", "aria-hidden": "true" },
+              svgIcon(statIcons["Waiting for approval"]),
+            ),
             h(
               "div",
               { class: "main" },
@@ -845,7 +847,11 @@ function paint(d, ctx, days) {
           h(
             "li",
             {},
-            h("span", { class: "lead dot red", "aria-hidden": "true" }),
+            h(
+              "span",
+              { class: "lead row-icon red", "aria-hidden": "true" },
+              svgIcon(panelIcons["Denied scans"]),
+            ),
             h(
               "div",
               { class: "main" },
