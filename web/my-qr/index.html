@@ -20,10 +20,6 @@
     <!-- Google Fonts: Inter & JetBrains Mono -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
 
     <!-- Tailwind CSS CDN with Forms & Container Queries -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -52,7 +48,7 @@
           },
           fontFamily: {
             sans: [
-              "Inter",
+              "Plus Jakarta Sans",
               "system-ui",
               "-apple-system",
               "Segoe UI",
@@ -112,9 +108,10 @@
     </style>
     <link rel="stylesheet" href="../css/portal.css" />
     <link rel="stylesheet" href="../css/pass-refinements.css" />
+    <link rel="stylesheet" href="../css/theme.css" />
   </head>
   <body
-    class="pass-page min-h-screen text-slate-200 antialiased flex flex-col justify-between selection:bg-brand-500 selection:text-black"
+    class="site-theme pass-page min-h-screen text-slate-200 antialiased flex flex-col justify-between selection:bg-brand-500 selection:text-black"
   >
     <canvas class="portal-pattern" aria-hidden="true"></canvas>
     <script type="module" src="../js/background.js?v=convex-2"></script>
@@ -129,13 +126,13 @@
         <!-- Registration Success Notification Banner -->
         <div
           id="welcome"
-          class="p-4 rounded-2xl border border-emerald-500/40 bg-emerald-950/40 text-emerald-200 text-xs font-medium shadow-lg"
+          class="p-4 rounded-2xl border border-lime-500/40 bg-lime-950/40 text-lime-200 text-xs font-medium shadow-lg"
           role="alert"
           hidden
         >
           <div class="flex items-start gap-3">
             <div
-              class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5"
+              class="w-5 h-5 rounded-full bg-lime-500/20 text-lime-400 flex items-center justify-center flex-shrink-0 mt-0.5"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -165,7 +162,7 @@
 
           <!-- Ambient corner highlight -->
           <div
-            class="absolute -top-16 -right-16 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"
+            class="absolute -top-16 -right-16 w-32 h-32 bg-lime-500/10 rounded-full blur-2xl pointer-events-none"
           ></div>
 
           <!-- Wireframe Empty QR Illustration -->
@@ -173,10 +170,10 @@
             <div class="relative w-36 h-36 flex items-center justify-center">
               <!-- Radar Scan Animation Rings -->
               <div
-                class="absolute inset-0 rounded-2xl border border-emerald-500/30 scanner-radar-ring pointer-events-none"
+                class="absolute inset-0 rounded-2xl border border-lime-500/30 scanner-radar-ring pointer-events-none"
               ></div>
               <div
-                class="absolute inset-2 rounded-xl border border-dashed border-emerald-500/20 pointer-events-none"
+                class="absolute inset-2 rounded-xl border border-dashed border-lime-500/20 pointer-events-none"
               ></div>
 
               <!-- Stylized QR Placeholder Framework -->
@@ -190,7 +187,7 @@
                   <div class="w-full h-full bg-slate-700/60 rounded-xs"></div>
                 </div>
                 <div class="border border-slate-800/60 flex items-center justify-center">
-                  <div class="w-1.5 h-1.5 bg-emerald-500/40 rounded-full animate-ping"></div>
+                  <div class="w-1.5 h-1.5 bg-lime-500/40 rounded-full animate-ping"></div>
                 </div>
                 <div
                   class="border-2 border-slate-700 rounded p-0.5 flex items-center justify-center"
@@ -201,9 +198,9 @@
 
                 <!-- Center Car / Pass Silhouette -->
                 <div
-                  class="bg-emerald-950/60 border border-emerald-500/40 rounded flex items-center justify-center"
+                  class="bg-lime-950/60 border border-lime-500/40 rounded flex items-center justify-center"
                 >
-                  <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4 text-lime-400" fill="currentColor" viewBox="0 0 24 24">
                     <path
                       d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.77l.11.34V17z"
                     ></path>
@@ -234,7 +231,7 @@
           <!-- Primary CTA: "Register a vehicle" -->
           <div class="space-y-4">
             <a
-              class="group relative w-full flex items-center justify-between px-5 py-3.5 bg-brand-bright hover:bg-brand-400 text-slate-950 font-bold rounded-xl transition duration-200 shadow-lg shadow-emerald-950/40 focus:outline-none focus:ring-2 focus:ring-brand-400 cursor-pointer"
+              class="group relative w-full flex items-center justify-between px-5 py-3.5 bg-brand-bright hover:bg-brand-400 text-slate-950 font-bold rounded-xl transition duration-200 shadow-lg shadow-lime-950/40 focus:outline-none focus:ring-2 focus:ring-brand-400 cursor-pointer"
               data-purpose="register-vehicle-button"
               href="../register/"
             >

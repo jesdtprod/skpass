@@ -1,0 +1,137 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+@import url("./radii.css");
+
+/* Shared visual foundation for all app routes. Page files handle layout only. */
+:root {
+  --green: #a3e635;
+  --green-dark: #8bd222;
+  --accent: #b2eb65;
+  --bg: #10141a;
+  --card: #1c2328;
+  --charcoal: #11171c;
+  --text: #e9eef0;
+  --muted: #9baeb8;
+  --line: #37434b;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+  --font-heading: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+body.site-theme {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--text);
+  font-family: var(--font-body);
+  background-color: var(--bg);
+}
+.site-theme :is(h1,h2,h3) {
+  font-family: var(--font-heading);
+}
+.site-theme :is(button,input,select,textarea) {
+  font-family: var(--font-body);
+}
+.site-theme .font-mono {
+  font-family: var(--font-mono);
+}
+.site-theme > skpass-header,
+.site-theme > skpass-footer {
+  flex-shrink: 0;
+  align-self: stretch;
+}
+.site-theme > skpass-footer {
+  margin-top: auto;
+}
+.site-theme :is(a,button):focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 3px;
+}
+/* Legacy utility pages use the same surfaces and controls as the home portal. */
+.site-theme.utility-page {
+  align-items: stretch;
+  justify-content: flex-start;
+  background: radial-gradient(ellipse at 15% 25%,#a3e63512,transparent 45%),#10141a;
+}
+.utility-page > main {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  flex: 1;
+  margin-inline: auto;
+  padding-block: 40px;
+}
+.utility-page :is(.card,.panel) {
+  background: linear-gradient(145deg,#20272b,#171d21);
+  color: #e9eef0;
+  border: 1px solid #ffffff16;
+  border-radius: 20px;
+  box-shadow: 0 24px 64px #0002;
+}
+.utility-page .brand h1 {
+  color: #f0f5f7;
+  font-size: 32px;
+  letter-spacing: -.04em;
+}
+.utility-page .brand img {
+  object-fit: contain;
+}
+.utility-page :is(.brand p,.sub,.hint) {
+  color: #9baeb8;
+}
+.utility-page a {
+  color: #b2eb65;
+}
+.utility-page .field :is(input,select),
+.utility-page #reset-form input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid #37434b;
+  border-radius: 12px;
+  background: #10171b;
+  color: #e9eef0;
+  font-size: 16px;
+}
+.utility-page :is(input,select):focus {
+  outline: none;
+  border-color: #a3e635;
+  box-shadow: none;
+}
+.utility-page .btn {
+  background: #a3e635;
+  color: #19280e;
+  border: 0;
+  min-height: 48px;
+  border-radius: 12px;
+}
+.utility-page .btn:hover {
+  background: #b3ee53;
+}
+.utility-page .alert.error {
+  background: #391c22;
+  border-color: #ef444440;
+  color: #fecaca;
+}
+.utility-page .alert.info {
+  background: #1e2b1d;
+  border-color: #a3e63530;
+  color: #d1e9b4;
+}
+.site-theme.scan-page .bar {
+  background: #1c2328;
+  border-bottom: 1px solid #ffffff12;
+}
+.site-theme.scan-page .bar img {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.site-theme.scan-page .bar select {
+  background: #10171b;
+  color: #e9eef0;
+  border-color: #37434b;
+  color-scheme: dark;
+}
+.site-theme.scan-page .bar .link {
+  color: #b2eb65;
+}

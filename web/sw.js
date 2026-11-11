@@ -16,6 +16,7 @@ const SHELL = [
   "./css/header.css",
   "./css/footer.css",
   "./css/radii.css",
+  "./css/theme.css",
   "./css/control-shapes.css",
   "./js/background.js",
   "./manifest.webmanifest",
