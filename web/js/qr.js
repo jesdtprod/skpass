@@ -112,7 +112,7 @@ function loadLogo() {
   });
 }
 
-function pill(g, text, right, y, { color, bg, border, font }) {
+function pill(g, text, right, y, { color, bg, border, font, radius = 13 }) {
   g.font = font;
   const w = g.measureText(text).width + 24;
   const x = right - w;
@@ -120,7 +120,7 @@ function pill(g, text, right, y, { color, bg, border, font }) {
   g.strokeStyle = border;
   g.lineWidth = 1;
   g.beginPath();
-  g.roundRect(x, y, w, 26, 13);
+  g.roundRect(x, y, w, 26, radius);
   g.fill();
   g.stroke();
   g.fillStyle = color;
@@ -136,31 +136,29 @@ function pill(g, text, right, y, { color, bg, border, font }) {
  * pass: { token, plate, category, holder, vehicleType, color, status, reference, validity }
  */
 export async function drawPassImage(pass) {
+  await document.fonts?.ready;
   const S = 2; // render at 2x so it stays sharp on phones
-  const W = 700;
-  const extra = pass.validity ? 54 : 0;
-  const H = 336 + extra;
+  const W = 674;
+  const H = 302;
   const c = document.createElement("canvas");
   c.width = W * S;
   c.height = H * S;
   const g = c.getContext("2d");
   g.scale(S, S);
-  g.fillStyle = "#12181c"; // opaque: JPEG has no transparency
+  g.fillStyle = "#1a2227"; // same opaque surface as the on-screen pass
   g.fillRect(0, 0, W, H);
-  g.fillStyle = "#a3e63533"; // top accent line
-  g.fillRect(0, 0, W, 2);
 
   // ---- left panel: QR
-  g.fillStyle = "#1a2227";
-  g.strokeStyle = "#ffffff1a";
+  g.fillStyle = "#11181d";
+  g.strokeStyle = "#36424a";
   g.beginPath();
-  g.roundRect(16, 16, 220, H - 32, 16);
+  g.roundRect(12, 16, 220, H - 32, 16);
   g.fill();
   g.stroke();
   g.fillStyle = "#8fa1ac";
   g.font = `700 10px ${MONO}`;
   g.textAlign = "center";
-  g.fillText("VEHICLE GATE PASS", 126, 42);
+  g.fillText("VEHICLE GATE PASS", 122, 39);
   const qrCanvas = document.createElement("canvas");
   drawQr(qrCanvas, pass.token, null);
   const logo = await loadLogo();
@@ -174,91 +172,104 @@ export async function drawPassImage(pass) {
     q.fill();
     q.drawImage(logo, pos, pos, size, size);
   }
-  const boxH = 196;
-  const boxY = 54 + Math.max(0, (H - 32 - 54 - 56 - boxH) / 2);
+  const boxH = 194;
+  const boxY = 54;
   g.fillStyle = "#fff";
   g.beginPath();
-  g.roundRect(32, boxY, 188, boxH, 14);
+  g.roundRect(25, boxY, 194, boxH, 20);
   g.fill();
-  g.drawImage(qrCanvas, 40, boxY + 8, 172, 172 + 16 - 16);
+  g.save();
+  g.clip();
+  g.drawImage(qrCanvas, 25, boxY, 194, 194);
+  g.restore();
   g.fillStyle = "#8fa1ac";
   g.font = `500 10px ${SANS}`;
-  g.fillText("Show this QR to the guard at the gate.", 126, H - 30);
+  g.fillText("Show this QR to the guard at the gate.", 122, 271);
   g.textAlign = "left";
 
   // ---- right: identity
-  const x0 = 264;
-  g.fillStyle = "#222c32";
-  g.strokeStyle = "#a3e63540";
+  const x0 = 252;
+  g.fillStyle = "#142029";
+  g.strokeStyle = "#14b8a644";
   g.beginPath();
-  g.roundRect(x0, 28, 52, 52, 14);
+  g.roundRect(x0, 30, 48, 48, 14);
   g.fill();
   g.stroke();
-  if (logo) g.drawImage(logo, x0 + 9, 37, 34, 34);
+  // Vehicle outline, matching the pass header rather than repeating the logo.
+  g.save();
+  g.translate(x0 + 14, 44);
+  g.scale(20 / 24, 20 / 24);
+  g.strokeStyle = "#00d6a0";
+  g.lineWidth = 1.8;
+  g.lineCap = "round";
+  g.lineJoin = "round";
+  g.stroke(
+    new Path2D(
+      "M5 10l2-5h10l2 5M3 17v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5H3M5 17v3m14-3v3M8 13h.01m8 0h.01",
+    ),
+  );
+  g.restore();
   g.fillStyle = "#fff";
-  g.font = `800 34px ${MONO}`;
-  g.fillText(pass.plate, x0 + 68, 58);
+  g.font = `800 30px ${MONO}`;
+  g.fillText(pass.plate, x0 + 62, 44, 230);
   g.fillStyle = "#8fa1ac";
   g.font = `700 10px ${MONO}`;
-  g.fillText("TERMINAL PASS ID", x0 + 68, 76);
+  g.fillText("TERMINAL PASS ID", x0 + 62, 63);
   const summary = [pass.vehicleType, pass.color].filter(Boolean).join(" · ");
   g.font = `500 12px ${SANS}`;
-  g.fillText(summary, x0 + 68, 96);
-  pill(g, pass.category.toUpperCase(), W - 24, 30, {
-    color: "#a3e635",
-    bg: "#a3e6351a",
-    border: "#a3e63566",
+  g.fillText(summary, x0 + 62, 85, 250);
+  pill(g, String(pass.category || "Vehicle").toUpperCase(), W - 20, 39, {
+    color: "#b5cda0",
+    bg: "#a3e63509",
+    border: "#a3e63533",
     font: `700 11px ${MONO}`,
+    radius: 6,
   });
 
   // ---- holder + status
+  g.strokeStyle = "#ffffff12";
+  g.beginPath();
+  g.moveTo(x0, 102);
+  g.lineTo(W - 20, 102);
+  g.stroke();
   g.fillStyle = "#8fa1ac";
   g.font = `700 10px ${MONO}`;
-  g.fillText("AUTHORIZED HOLDER", x0, 138);
+  g.fillText("AUTHORIZED HOLDER", x0, 127);
   g.fillStyle = "#fff";
-  g.font = `800 19px ${SANS}`;
-  g.fillText((pass.holder || "").toUpperCase(), x0, 166);
-  pill(g, `● ${pass.status}`, W - 24, 144, {
-    color: "#4ade80",
-    bg: "#22c55e1f",
-    border: "#22c55e77",
-    font: `700 12px ${SANS}`,
+  g.font = `800 16px ${SANS}`;
+  g.fillText((pass.holder || "").toUpperCase(), x0, 152, 300);
+  pill(g, `● ${pass.status}`, W - 20, 116, {
+    color: "#25dca8",
+    bg: "#052a22",
+    border: "#00b98c55",
+    font: `700 10px ${SANS}`,
   });
 
   // ---- vehicle type / color
   g.fillStyle = "#8fa1ac";
   g.font = `700 10px ${MONO}`;
-  g.fillText("VEHICLE TYPE", x0, 204);
-  g.fillText("COLOR", x0 + 210, 204);
+  g.fillText("VEHICLE TYPE", x0, 185);
+  g.fillText("COLOR", x0 + 210, 185);
   g.fillStyle = "#fff";
   g.font = `700 14px ${SANS}`;
-  g.fillText(pass.vehicleType || "Not available", x0, 226);
-  g.fillText(pass.color || "Not available", x0 + 210, 226);
+  g.fillText(pass.vehicleType || "Not available", x0, 210, 195);
+  g.fillText(pass.color || "Not available", x0 + 210, 210, 190);
 
-  let y = 258;
-  if (pass.validity) {
-    g.fillStyle = "#8fa1ac";
-    g.font = `700 10px ${MONO}`;
-    g.fillText("VALID", x0, y);
-    g.fillStyle = "#fff";
-    g.font = `700 14px ${SANS}`;
-    g.fillText(pass.validity, x0, y + 22);
-    y += extra;
-  }
+  const y = 239;
 
   // ---- reference
   g.fillStyle = "#8fa1ac";
   g.font = `700 10px ${MONO}`;
   g.fillText("PASS REFERENCE", x0, y);
-  g.fillStyle = "#1a2227";
-  g.strokeStyle = "#ffffff1a";
+  g.fillStyle = "#11181d";
+  g.strokeStyle = "#36424a";
   g.beginPath();
-  g.roundRect(x0, y + 10, W - 24 - x0, 38, 10);
+  g.roundRect(x0, y + 10, W - 20 - x0, 38, 8);
   g.fill();
   g.stroke();
   g.fillStyle = "#e8eef2";
   g.font = `700 13px ${MONO}`;
-  g.fillText(pass.reference, x0 + 14, y + 34);
+  g.fillText(pass.reference, x0 + 14, y + 34, W - x0 - 70);
   return c;
 }
 
