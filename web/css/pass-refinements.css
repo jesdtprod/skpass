@@ -3,6 +3,29 @@ body.pass-page {
     at 90% 80%,#a3e63510,transparent 40%),#10141a;
   background-attachment: fixed;
 }
+.pass-action-row {
+  display: grid;
+  grid-template-columns: repeat(var(--action-count, 3), minmax(0, 1fr));
+  gap: 12px;
+}
+.pass-action-row > button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 8px;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0;
+}
+@media (max-width: 480px) {
+  .pass-action-row {
+    gap: 6px;
+  }
+  .pass-action-row > button {
+    font-size: 10px;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+}
 .pass-section-title {
   margin: 0;
   color: #dce6ec;

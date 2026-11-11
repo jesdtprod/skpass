@@ -586,17 +586,14 @@ function card(rec, view, note) {
     ),
   );
 
-  actionGroupKids.push(
+  actionGroupKids.push(...secondaryGridKids);
+  kids.push(
     h(
       "div",
-      {
-        class: `grid ${secondaryGridKids.length > 1 ? "grid-cols-2" : "grid-cols-1"} gap-3 pt-1`,
-      },
-      secondaryGridKids,
+      { class: "pass-action-row", style: `--action-count: ${actionGroupKids.length}` },
+      actionGroupKids,
     ),
   );
-
-  kids.push(h("div", { class: "space-y-3" }, actionGroupKids));
 
   const article = h(
     "article",
