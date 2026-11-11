@@ -17,6 +17,15 @@ export const statusBadge = (s) => h("span", { class: `st ${s}` }, s);
 /** Approve: visitors need a date range, so ask for it; everyone else is one click. */
 export async function approveVehicle(ctx, v) {
   let from = null, to = null;
+  if (v.category !== "visitor") {
+    const sure = await confirmBox({
+      title: `Approve ${v.plate}?`,
+      message:
+        `${v.owner_name} will get a QR pass and be notified. You can still block the vehicle later.`,
+      okText: "Approve",
+    });
+    if (!sure) return false;
+  }
   if (v.category === "visitor") {
     const a = await ask({
       title: `Approve ${v.plate}`,
@@ -41,8 +50,8 @@ export async function approveVehicle(ctx, v) {
 
 export async function rejectVehicle(ctx, v) {
   const a = await ask({
-    title: `Reject ${v.plate}`,
-    intro: "The owner will see this reason on their My QR page.",
+    title: `Reject ${v.plate}?`,
+    intro: "Confirm the rejection. The owner will see this reason on their My QR page.",
     okText: "Reject",
     danger: true,
     fields: [{

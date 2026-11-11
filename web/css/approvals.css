@@ -256,3 +256,143 @@
     flex: 1;
   }
 }
+
+/* ---- compact modern table ---- */
+.approvals-view .tablewrap {
+  border: 1px solid #ffffff12;
+  border-radius: 14px;
+  background: #151b20;
+  overflow: hidden;
+}
+.approvals-view .ap-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.approvals-view .ap-table th {
+  padding: 10px 14px;
+  font: 700 10px/1 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #7d909b;
+  background: #ffffff05;
+  border-bottom: 1px solid #ffffff12;
+  text-align: left;
+}
+.approvals-view .ap-table th:last-child {
+  text-align: right;
+}
+.approvals-view .ap-table td {
+  padding: 7px 14px;
+  height: 44px;
+  font-size: 13px;
+  color: #cfd9df;
+  border-bottom: 1px solid #ffffff0a;
+  vertical-align: middle;
+}
+.approvals-view .ap-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.approvals-view .ap-table tbody tr:hover td {
+  background: #ffffff06;
+}
+.approvals-view .ap-plate {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 7px;
+  background: #0b1013;
+  border: 1px solid #ffffff1f;
+  font: 700 12px/1.3 "JetBrains Mono", ui-monospace, monospace;
+  letter-spacing: .04em;
+  color: #fff;
+  white-space: nowrap;
+}
+.approvals-view .ap-owner {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.approvals-view .ap-owner b {
+  font-weight: 600;
+  color: #eef3f6;
+}
+.approvals-view .ap-owner small {
+  color: #7d909b;
+  font-size: 12px;
+}
+.approvals-view .ap-cat {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: #a3e635;
+  background: #a3e6351a;
+  border: 1px solid #a3e63540;
+}
+.approvals-view .ap-cat.official {
+  color: #e7c57a;
+  background: #e7c57a1a;
+  border-color: #e7c57a44;
+}
+.approvals-view .ap-cat.visitor {
+  color: #7dd3fc;
+  background: #7dd3fc1a;
+  border-color: #7dd3fc44;
+}
+.approvals-view .ap-table .row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.approvals-view .ap-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  color: #cfd9df;
+  background: #ffffff08;
+  border: 1px solid #ffffff1a;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.approvals-view .ap-icon svg {
+  width: 16px;
+  height: 16px;
+}
+.approvals-view .ap-icon:hover {
+  background: #ffffff14;
+  color: #fff;
+}
+.approvals-view .ap-icon.approve {
+  color: #a3e635;
+  background: #a3e6351a;
+  border-color: #a3e63555;
+}
+.approvals-view .ap-icon.approve:hover {
+  background: #a3e63533;
+}
+.approvals-view .ap-icon.reject {
+  color: #fb7185;
+  background: #fb71851a;
+  border-color: #fb718555;
+}
+.approvals-view .ap-icon.reject:hover {
+  background: #fb718533;
+}
+.approvals-view .ap-icon:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 2px;
+}
+@media (max-width: 720px) {
+  .approvals-view .ap-table th:nth-child(4),
+  .approvals-view .ap-table td:nth-child(4),
+  .approvals-view .ap-table th:nth-child(5),
+  .approvals-view .ap-table td:nth-child(5) {
+    display: none;
+  }
+}

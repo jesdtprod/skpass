@@ -7,6 +7,20 @@ import { approveVehicle, openVehicle, rejectVehicle } from "./vehicle-detail.js"
 const ICON_REFRESH =
   "M4 4v6h6M20 20v-6h-6M5.6 9a8 8 0 0 1 13.6-2.4L20 10M18.4 15a8 8 0 0 1-13.6 2.4L4 14";
 const ICON_CHECK = "M5 13l4 4L19 7";
+const ICON_X = "M6 6l12 12M18 6L6 18";
+const ICON_EYE =
+  "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z";
+
+/** Icon-only action with an accessible name and a tooltip. */
+function iconBtn(kind, label, path, onclick) {
+  return h("button", {
+    class: `ap-icon ${kind}`,
+    type: "button",
+    title: label,
+    "aria-label": label,
+    onclick,
+  }, svgIcon(path));
+}
 
 function svgIcon(d) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -233,9 +247,13 @@ export async function render(root, ctx) {
           "data-category": v.category,
           "data-search": `${v.plate} ${v.owner_name} ${v.phone}`.toLocaleLowerCase(),
         },
-        h("td", {}, h("strong", {}, v.plate)),
-        h("td", {}, v.owner_name, h("div", { class: "muted small" }, v.phone)),
-        h("td", { class: "cat" }, v.category),
+        h("td", {}, h("span", { class: "ap-plate" }, v.plate)),
+        h(
+          "td",
+          {},
+          h("div", { class: "ap-owner" }, h("b", {}, v.owner_name), h("small", {}, v.phone)),
+        ),
+        h("td", {}, h("span", { class: `ap-cat ${v.category}` }, v.category)),
         h(
           "td",
           {},
@@ -248,23 +266,19 @@ export async function render(root, ctx) {
           h(
             "div",
             { class: "row-actions" },
-            h("button", {
-              class: "btn sm ghost",
-              type: "button",
-              onclick: () => openVehicle(ctx, v.id, load),
-            }, "View"),
-            h("button", {
-              class: "btn sm",
-              type: "button",
-              onclick: async () =>
-                await approveVehicle(ctx, v) && (await load(), ctx.refreshBadge()),
-            }, "Approve"),
-            h("button", {
-              class: "btn sm danger",
-              type: "button",
-              onclick: async () =>
-                await rejectVehicle(ctx, v) && (await load(), ctx.refreshBadge()),
-            }, "Reject"),
+            iconBtn("view", "View details", ICON_EYE, () => openVehicle(ctx, v.id, load)),
+            iconBtn(
+              "approve",
+              `Approve ${v.plate}`,
+              ICON_CHECK,
+              async () => await approveVehicle(ctx, v) && (await load(), ctx.refreshBadge()),
+            ),
+            iconBtn(
+              "reject",
+              `Reject ${v.plate}`,
+              ICON_X,
+              async () => await rejectVehicle(ctx, v) && (await load(), ctx.refreshBadge()),
+            ),
           ),
         ),
       ));
@@ -275,14 +289,14 @@ export async function render(root, ctx) {
         { class: "tablewrap" },
         h(
           "table",
-          { class: "data" },
+          { class: "data ap-table" },
           h(
             "thead",
             {},
             h(
               "tr",
               {},
-              ["Plate", "Owner", "Category", "Visit dates", "Submitted", ""].map((t) =>
+              ["Plate", "Owner", "Category", "Visit dates", "Submitted", "Actions"].map((t) =>
                 h("th", {}, t)
               ),
             ),

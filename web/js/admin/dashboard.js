@@ -52,7 +52,7 @@ function svgIcon(d, stroke = "1.7") {
 }
 
 /** One metric card. `sub` is the context line shown under the number. */
-function stat(href, n, label, cls = "", sub = null, total = 0, basis = "registered vehicles") {
+function stat(href, n, label, cls = "", _sub = null, total = 0, basis = "registered vehicles") {
   const ratio = total > 0 ? Math.min(100, Math.max(0, n / total * 100)) : 0;
   const totalLabel = basis === "registered vehicles"
     ? "registered vehicles"
