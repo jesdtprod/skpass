@@ -666,7 +666,12 @@ async function viewFor(rec) {
   if (status === 404) return { view: { status: "gone" } };
   // offline or server problem: fall back to what this device last saw
   if (rec.view) {
-    return { view: rec.view, note: "You appear to be offline. Showing your last saved pass." };
+    const note = navigator.onLine === false
+      ? "You are offline. Showing your last saved pass."
+      : status === 429
+      ? "Status checks are temporarily limited. Your saved pass is shown; try again shortly."
+      : "Could not refresh the latest status. Showing your last saved pass.";
+    return { view: rec.view, note };
   }
   return {
     view: { status: rec.status ?? "pending" },

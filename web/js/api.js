@@ -1,11 +1,15 @@
 // Thin client for the public Edge Functions. Never throws: returns { status, data }.
-import { SUPABASE_URL } from "./config.js";
+import { SUPABASE_ANON_KEY, SUPABASE_URL } from "./config.js";
 
 const BASE = `${SUPABASE_URL}/functions/v1`;
 
 async function call(name, init) {
   try {
-    const res = await fetch(`${BASE}/${name}`, { method: "POST", ...init });
+    const res = await fetch(`${BASE}/${name}`, {
+      method: "POST",
+      ...init,
+      headers: { apikey: SUPABASE_ANON_KEY, ...init?.headers },
+    });
     let data = {};
     try {
       data = await res.json();
