@@ -102,12 +102,12 @@ body.register-page {
   margin-bottom: 12px;
 }
 .register-page #reg-form .role-btn {
-  border-radius: 10px;
+  border-radius: 12px;
   min-height: 44px;
   font-weight: 600;
 }
 .register-page #reg-form [data-purpose="user-role-selection"] > .grid {
-  border-radius: 14px;
+  border-radius: 16px;
 }
 .register-page #reg-form .personal-fields {
   display: grid;
