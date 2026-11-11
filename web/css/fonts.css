@@ -1,37 +1,25 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
-
+/* Self-hosted variable fonts (latin). One small file per family covers every weight we use,
+   so the page makes no third-party font requests and works offline.
+   Licences: SIL Open Font License (see fonts/OFL-Plus-Jakarta-Sans.txt; Space Grotesk and
+   JetBrains Mono are also OFL). */
 @font-face {
   font-family: 'Plus Jakarta Sans';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 200 800;
   font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-400.ttf) format('truetype');
+  src: url(../fonts/plus-jakarta-sans-var.woff2) format('woff2');
 }
 @font-face {
-  font-family: 'Plus Jakarta Sans';
+  font-family: 'Space Grotesk';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 300 700;
   font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-500.ttf) format('truetype');
+  src: url(../fonts/space-grotesk-var.woff2) format('woff2');
 }
 @font-face {
-  font-family: 'Plus Jakarta Sans';
+  font-family: 'JetBrains Mono';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 100 800;
   font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-600.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-700.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-800.ttf) format('truetype');
+  src: url(../fonts/jetbrains-mono-var.woff2) format('woff2');
 }

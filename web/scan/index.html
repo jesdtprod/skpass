@@ -73,17 +73,29 @@
       </details>
     </main>
 
-    <div id="overlay" class="overlay" role="alert" hidden>
-      <div id="ov-dir" class="ov-dir"></div>
-      <img id="ov-photo" class="ov-photo" alt="Vehicle photo" hidden />
-      <div id="ov-plate" class="ov-plate"></div>
-      <div id="ov-owner" class="ov-owner"></div>
-      <span id="ov-cat" class="badge"></span>
-      <div id="ov-msg" class="ov-msg"></div>
-      <div id="ov-meta" class="ov-meta"></div>
-      <ul id="ov-list" class="ov-list" hidden></ul>
-      <div id="ov-gate" class="ov-gate"></div>
-      <div class="ov-tap">Tap to continue</div>
+    <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="ov-dir"
+      aria-describedby="ov-msg" hidden>
+      <section class="scan-result-card">
+        <div
+          class="result-heading"><span class="result-eyebrow">Gate scan result</span><span id="ov-dir" class="ov-dir"></span></div>
+        <div id="ov-msg" class="ov-msg" role="status"></div>
+        <div id="ov-media" class="result-media">
+          <img id="ov-photo" class="ov-photo" alt="Vehicle photo" hidden />
+          <div id="ov-photo-empty"
+            class="result-photo-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 10 2-5h10l2 5M3 17v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5H3M5 17v3m14-3v3M8 13h.01m8 0h.01"/></svg><span id="ov-photo-status">Vehicle photo unavailable</span></div>
+        </div>
+        <div id="ov-identity" class="result-identity">
+          <div class="result-plate-row"><div><span class="result-label">Plate number</span><div id="ov-plate" class="ov-plate"></div></div><span id="ov-cat" class="badge"></span></div>
+          <span class="result-label">Registered owner</span><div id="ov-owner" class="ov-owner"></div>
+          <dl class="result-specs"><div><dt>Vehicle type</dt><dd id="ov-type"></dd></div><div><dt>Color</dt><dd id="ov-color"></dd></div></dl>
+        </div>
+        <div id="ov-meta" class="ov-meta"></div>
+        <ul id="ov-list" class="ov-list" hidden></ul>
+        <div id="ov-gate-row"
+          class="result-gate"><span class="result-label">Gate</span><div id="ov-gate" class="ov-gate"></div></div>
+        <button id="ov-continue" class="result-continue"
+          type="button">Continue scanning <span aria-hidden="true">→</span></button>
+      </section>
     </div>
 
     <script src="../js/vendor/supabase.js"></script>

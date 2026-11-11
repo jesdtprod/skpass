@@ -26,53 +26,8 @@
     />
 
     <!-- Tailwind CSS CDN with Forms & Container Queries -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
     <!-- Custom Tailwind Configuration -->
-    <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              400: "#4ade80",
-              500: "#22c55e",
-              600: "#16a34a",
-              accent: "#84cc16",
-              bright: "#a3e635",
-            },
-            surface: {
-              900: "#070b11",
-              850: "#0d131f",
-              800: "#111827",
-              750: "#151e2e",
-              700: "#1c2638",
-            },
-          },
-          fontFamily: {
-            sans: [
-              "Inter",
-              "system-ui",
-              "-apple-system",
-              "Segoe UI",
-              "Roboto",
-              "sans-serif",
-            ],
-            mono: [
-              '"JetBrains Mono"',
-              "ui-monospace",
-              "SFMono-Regular",
-              "Menlo",
-              "Monaco",
-              "Consolas",
-              "monospace",
-            ],
-          },
-        },
-      },
-    };
-    </script>
 
     <!-- Styling: Background Grid & Custom Accents -->
     <style data-purpose="background-pattern">
@@ -113,6 +68,7 @@
     <link rel="stylesheet" href="../css/find-colors.css" />
     <link rel="stylesheet" href="../css/viewport-fit.css" />
     <link rel="stylesheet" href="../css/background.css" />
+    <link rel="stylesheet" href="../css/tw/find.css?v=static-1" />
   </head>
   <body
     class="tech-grid-bg min-h-screen text-slate-200 antialiased flex flex-col justify-between selection:bg-brand-500 selection:text-black"
@@ -137,7 +93,7 @@
               class="absolute inset-0 bg-brand-500/10 rounded-2xl blur-lg pointer-events-none"
             ></div>
             <img
-              src="../icons/logo.png"
+              src="../icons/logo.webp"
               alt="SKPass Logo"
               class="w-full h-full object-contain relative select-none"
             />

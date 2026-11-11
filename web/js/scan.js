@@ -14,6 +14,7 @@ import {
   isNetworkError,
   isToken,
   queuedResult,
+  resultVehicleDetails,
   SOUNDS,
   syncBarState,
   VIBRATION,
@@ -469,24 +470,33 @@ $("signout").addEventListener("click", async () => {
 });
 
 // ------------------------------------------------------------------ result screen
+let resultVersion = 0;
 function showResult(r, fromServer = false) {
+  const version = ++resultVersion;
   const d = describeResult(r);
   overlay.className = `overlay ${d.tone}`;
+  overlay.dataset.direction = r.direction ?? "";
   $("ov-dir").textContent = d.title;
   $("ov-msg").textContent = r.message ?? "";
   $("ov-gate").textContent = r.gate?.name ?? "";
   const v = r.vehicle;
+  const details = resultVehicleDetails(v);
+  $("ov-identity").hidden = !v;
+  $("ov-media").hidden = !v;
+  $("ov-gate-row").hidden = !r.gate?.name;
+  $("ov-type").textContent = details.type;
+  $("ov-color").textContent = details.color;
   $("ov-plate").textContent = v?.plate ?? "";
   $("ov-owner").textContent = v?.owner_name ?? "";
   const cat = $("ov-cat");
-  cat.textContent = v ? v.category : "";
+  cat.textContent = details.category;
   cat.className = `badge cat-${v?.category ?? "none"}`;
   cat.hidden = !v;
   const meta = [];
-  if (v?.vehicle_type) meta.push(v.vehicle_type + (v.color ? `, ${v.color}` : ""));
   if (v?.category === "visitor" && v.host_name) meta.push(`Visiting ${v.host_name}`);
   if (v?.valid_to) meta.push(`Valid until ${v.valid_to}`);
   $("ov-meta").textContent = meta.join(" · ");
+  $("ov-meta").hidden = !meta.length;
   const list = $("ov-list");
   list.replaceChildren();
   for (const line of r.list ?? []) {
@@ -498,18 +508,38 @@ function showResult(r, fromServer = false) {
   const photo = $("ov-photo");
   photo.hidden = true;
   photo.removeAttribute("src");
-  photo.onerror = () => photo.hidden = true; // never show a broken-image box to the guard
+  photo.alt = v?.plate ? `Registered vehicle ${v.plate}` : "Registered vehicle";
+  $("ov-photo-empty").hidden = false;
+  $("ov-photo-status").textContent = fromServer && v?.photo_path
+    ? "Loading vehicle photo…"
+    : "No vehicle photo provided";
+  photo.onload = () => {
+    if (version !== resultVersion || overlay.hidden) return;
+    photo.hidden = false;
+    $("ov-photo-empty").hidden = true;
+  };
+  photo.onerror = () => {
+    if (version !== resultVersion) return;
+    photo.hidden = true;
+    $("ov-photo-empty").hidden = false;
+    $("ov-photo-status").textContent = "Vehicle photo unavailable";
+  };
   overlay.hidden = false;
+  $("ov-continue").focus({ preventScroll: true });
 
   play(SOUNDS[d.sound]);
   navigator.vibrate?.(VIBRATION[d.sound]);
 
   if (fromServer && v?.photo_path) {
     sb.storage.from("vehicle-photos").createSignedUrl(v.photo_path, 60).then(({ data }) => {
-      if (data?.signedUrl && !overlay.hidden) {
+      if (version !== resultVersion || overlay.hidden) return;
+      if (data?.signedUrl) {
         photo.src = data.signedUrl;
-        photo.hidden = false;
+      } else {
+        $("ov-photo-status").textContent = "Vehicle photo unavailable";
       }
+    }).catch(() => {
+      if (version === resultVersion) $("ov-photo-status").textContent = "Vehicle photo unavailable";
     });
   }
   clearTimeout(overlayTimer);
@@ -550,10 +580,19 @@ function maybeShowReport() {
 function dismiss() {
   clearTimeout(overlayTimer);
   overlay.hidden = true;
+  resultVersion++;
   busy = false;
   maybeShowReport();
+  if (overlay.hidden) (started ? $("stop") : startBtn).focus({ preventScroll: true });
 }
 overlay.addEventListener("click", dismiss);
+overlay.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") dismiss();
+  if (event.key === "Tab") {
+    event.preventDefault();
+    $("ov-continue").focus();
+  }
+});
 
 startBtn.addEventListener("click", async () => {
   if (startBtn.disabled) return;

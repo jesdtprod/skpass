@@ -10,7 +10,7 @@ export function describeResult(r) {
   const dir = r.direction ?? null;
   switch (r.result) {
     case "ok":
-      return { tone: "ok", title: dir === "IN" ? "IN" : "OUT", hold: 2500, sound: "ok" };
+      return { tone: "ok", title: dir === "IN" ? "IN" : "OUT", hold: 5000, sound: "ok" };
     case "warning":
       return { tone: "warn", title: dir === "IN" ? "IN" : "OUT", hold: 4500, sound: "warn" };
     case "duplicate":
@@ -27,6 +27,29 @@ export function describeResult(r) {
     default:
       return { tone: "deny", title: "DENIED", hold: 5000, sound: "deny" };
   }
+}
+
+/** Display registration details without substituting invented vehicle data. */
+export function resultVehicleDetails(vehicle) {
+  const proper = (value) =>
+    String(value ?? "").trim().toLocaleLowerCase().replace(
+      /\b\p{L}/gu,
+      (letter) => letter.toLocaleUpperCase(),
+    );
+  const types = {
+    car: "Car (Sedan / Hatchback)",
+    suv: "SUV / Crossover",
+    van: "Van / MPV",
+    truck: "Pickup / Truck",
+    motorcycle: "Motorcycle / Scooter",
+    tricycle: "Tricycle / Three-Wheeler",
+    other: "Other",
+  };
+  return {
+    type: types[vehicle?.vehicle_type] ?? (proper(vehicle?.vehicle_type) || "Not provided"),
+    color: proper(vehicle?.color) || "Not provided",
+    category: proper(vehicle?.category),
+  };
 }
 
 /** Overlay content for failures that are not a server decision (offline, expired session...). */

@@ -21,52 +21,13 @@
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=fullcolor-2" />
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link rel="preload" href="fonts/plus-jakarta-sans-var.woff2" as="font" type="font/woff2"
+      crossorigin />
+    <link rel="stylesheet" href="css/fonts.css?v=self-1" />
 
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
     <!-- Tailwind Configuration -->
-    <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', "sans-serif"],
-            mono: ['"JetBrains Mono"', "monospace"],
-          },
-          colors: {
-            brand: {
-              50: "#f3ffe5",
-              100: "#e5ffc2",
-              200: "#d0ff9b",
-              300: "#bcf569",
-              400: "#a3e635",
-              500: "#91df16", // Emerald primary
-              600: "#70ba0b",
-              700: "#438509",
-              800: "#2c590b",
-              900: "#1e3c0a",
-              glow: "rgba(145, 223, 22, 0.35)",
-            },
-            surface: {
-              base: "#0a0e14",
-              card: "#1c2026",
-              cardHighlight: "#262b30",
-              border: "#30363b",
-              borderLight: "#42494e",
-            },
-          },
-          boxShadow: {
-            "glow-emerald": "0 0 35px -5px rgba(145, 223, 22, 0.3)",
-            "glow-card": "0 20px 50px -15px rgba(2, 6, 23, 0.8), 0 0 20px 0 rgba(145, 223, 22, 0.05)",
-          },
-        },
-      },
-    };
-    </script>
 
     <!-- Custom Styles for Ambience & Animations -->
     <link rel="stylesheet" href="css/portal.css?v=fonts-7" />
@@ -115,6 +76,7 @@
     <link rel="stylesheet" href="css/theme.css" />
     <link rel="stylesheet" href="css/viewport-fit.css" />
     <link rel="stylesheet" href="css/background.css" />
+    <link rel="stylesheet" href="css/tw/home.css?v=static-1" />
   </head>
   <body
     class="site-theme portal-page min-h-screen text-slate-200 antialiased flex flex-col justify-between relative selection:bg-brand-500 selection:text-slate-950 font-sans"
@@ -138,7 +100,7 @@
           data-purpose="portal-branding"
         >
           <div class="portal-logo" data-purpose="system-logo">
-            <img src="icons/logo.png?v=original-1" width="184" height="204"
+            <img src="icons/logo.webp" width="184" height="204"
               alt="SKPass vehicle gate pass logo" />
           </div>
 

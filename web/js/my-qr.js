@@ -496,7 +496,7 @@ function card(rec, view, note) {
                 class: "qr-logo-backing bg-white flex items-center justify-center relative",
               },
               h("img", {
-                src: new URL("../icons/logo.png", import.meta.url).href,
+                src: new URL("../icons/logo.webp", import.meta.url).href,
                 alt: "SKPass Security Seal",
                 class: "w-full h-full object-contain filter drop-shadow-sm select-none",
                 draggable: "false",

@@ -19,7 +19,7 @@ class SKPassHeader extends HTMLElement {
     const template = document.createElement("template");
     template.innerHTML = `<header><div class="inner">
       <a class="brand" href="${base.href}" aria-label="SKPass home">
-        <img src="${new URL("icons/logo.png", base).href}" width="40" height="40" alt="SKPass" />
+        <img src="${new URL("icons/logo.webp", base).href}" width="40" height="40" alt="SKPass" />
         <span><strong>Provincial Government</strong><small>Digital Access &amp; Security Division</small></span>
       </a>
       <nav aria-label="Site navigation">

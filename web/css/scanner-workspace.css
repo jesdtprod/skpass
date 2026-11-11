@@ -333,3 +333,223 @@
     height: 180px;
   }
 }
+
+/* Readable, direction-aware scan result. The overlay covers the site header. */
+.scan-page .overlay {
+  --result-accent: #a3e635;
+  --result-tint: #a3e6350d;
+  z-index: 100;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  background: #080e13ed;
+  backdrop-filter: blur(8px);
+  cursor: default;
+  text-align: left;
+}
+.scan-page .overlay.ok {
+  --result-accent: #34d399;
+  --result-tint: #34d39912;
+}
+.scan-page .overlay.ok[data-direction="OUT"],
+.scan-page .overlay.deny {
+  --result-accent: #fb7185;
+  --result-tint: #fb718512;
+}
+.scan-page .overlay.warn,
+.scan-page .overlay.queued {
+  --result-accent: #fbbf24;
+  --result-tint: #fbbf2412;
+}
+.scan-page .overlay.dup {
+  --result-accent: #7dd3fc;
+  --result-tint: #7dd3fc12;
+}
+.scan-result-card {
+  width: min(100%, 460px);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  padding: 20px;
+  border: 1px solid #ffffff1c;
+  border-top: 3px solid var(--result-accent);
+  border-radius: 20px;
+  background: #1a2227;
+  box-shadow: 0 24px 80px #0007;
+  scrollbar-width: thin;
+}
+.result-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.result-eyebrow {
+  font: 600 10px/16px "JetBrains Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #91a7b4;
+}
+.scan-page .ov-dir {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--result-tint);
+  color: var(--result-accent);
+  border: 1px solid color-mix(in srgb, var(--result-accent) 25%, transparent);
+  font: 700 22px/26px "Space Grotesk", sans-serif;
+  letter-spacing: 0;
+  text-align: right;
+}
+.scan-page .overlay.warn[data-direction="OUT"] .ov-dir {
+  color: #fb7185;
+  background: #fb718512;
+  border-color: #fb718533;
+}
+.scan-page .overlay.warn[data-direction="IN"] .ov-dir {
+  color: #34d399;
+  background: #34d39912;
+  border-color: #34d39933;
+}
+.scan-page .ov-msg {
+  font-size: 12px;
+  line-height: 19px;
+  color: #d0dce4;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  border: 1px solid color-mix(in srgb, var(--result-accent) 20%, transparent);
+  border-radius: 10px;
+  background: var(--result-tint);
+  opacity: 1;
+}
+.result-media {
+  height: clamp(150px, 24dvh, 220px);
+  overflow: hidden;
+  border: 1px solid #ffffff10;
+  border-radius: 12px;
+  background: #10171b;
+  margin-bottom: 16px;
+}
+.scan-page .ov-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  object-fit: contain;
+  background: #10171b;
+}
+.result-photo-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+  color: #7f98a7;
+  font-size: 11px;
+}
+.result-photo-empty svg {
+  width: 40px;
+  height: 40px;
+  color: #a3b7c3;
+}
+.result-plate-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.result-label,
+.result-specs dt {
+  display: block;
+  color: #839caa;
+  font: 500 10px/16px "Plus Jakarta Sans", sans-serif;
+  margin-bottom: 3px;
+}
+.scan-page .ov-plate {
+  color: #f0f5f7;
+  font: 700 clamp(23px, 6vw, 30px)/1.15 "JetBrains Mono", monospace;
+  letter-spacing: .025em;
+  overflow-wrap: anywhere;
+}
+.scan-page .overlay .badge {
+  color: #b9cbd6;
+  background: #ffffff05;
+  border: 1px solid #ffffff14;
+  border-radius: 7px;
+  padding: 4px 8px;
+  font: 600 10px/16px "Plus Jakarta Sans", sans-serif;
+}
+.scan-page .ov-owner {
+  font: 700 15px/22px "Plus Jakarta Sans", sans-serif;
+  color: #e9eef0;
+  overflow-wrap: anywhere;
+}
+.result-specs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid #ffffff0b;
+  border-radius: 10px;
+  background: #11181d;
+}
+.result-specs dd {
+  margin: 0;
+  color: #dce7ee;
+  font: 600 12px/18px "Plus Jakarta Sans", sans-serif;
+  overflow-wrap: anywhere;
+}
+.scan-page .ov-meta {
+  margin: 10px 0;
+  font: 500 11px/18px "Plus Jakarta Sans", sans-serif;
+  color: #92a9b7;
+  opacity: 1;
+}
+.result-gate {
+  padding: 12px 0;
+  margin-bottom: 12px;
+  border-top: 1px solid #ffffff0b;
+}
+.scan-page .ov-gate {
+  color: #b4c8d3;
+  font: 600 12px/18px "Plus Jakarta Sans", sans-serif;
+  opacity: 1;
+}
+.result-continue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--result-accent) 30%, transparent);
+  border-radius: 10px;
+  background: var(--result-tint);
+  color: var(--result-accent);
+  font: 700 12px/18px "Plus Jakarta Sans", sans-serif;
+  cursor: pointer;
+}
+.result-continue:hover {
+  background: color-mix(in srgb, var(--result-accent) 16%, #1a2227);
+}
+.result-continue:focus-visible {
+  outline: 2px solid var(--result-accent);
+  outline-offset: 2px;
+}
+.scan-page .ov-list {
+  max-height: 180px;
+  margin: 12px 0;
+  font-size: 11px;
+  line-height: 18px;
+}
+@media (max-width: 480px) {
+  .scan-result-card {
+    padding: 16px;
+    border-radius: 17px;
+  }
+  .scan-page .ov-dir {
+    font-size: 20px;
+  }
+}

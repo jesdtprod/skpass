@@ -18,59 +18,13 @@
     <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
 
     <!-- Google Fonts: Inter & JetBrains Mono -->
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link rel="preload" href="../fonts/plus-jakarta-sans-var.woff2" as="font" type="font/woff2"
+      crossorigin />
+    <link rel="stylesheet" href="../css/fonts.css?v=self-1" />
 
     <!-- Tailwind CSS CDN with Forms & Container Plugins -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
     <!-- Tailwind Configuration to Match SKPass Brand -->
-    <script>
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: "#f3ffe5",
-              100: "#e5ffc2",
-              400: "#a3e635",
-              500: "#91df16",
-              600: "#70ba0b",
-              700: "#438509",
-            },
-            dark: {
-              950: "#0a0e14",
-              900: "#10141a",
-              850: "#15191e",
-              800: "#1c2026",
-              750: "#252c31",
-              700: "#30383e",
-              600: "#424b52",
-            },
-          },
-          fontFamily: {
-            sans: [
-              "Plus Jakarta Sans",
-              "system-ui",
-              "-apple-system",
-              "BlinkMacSystemFont",
-              "Segoe UI",
-              "Roboto",
-              "sans-serif",
-            ],
-            mono: [
-              "JetBrains Mono",
-              "ui-monospace",
-              "SFMono-Regular",
-              "Menlo",
-              "monospace",
-            ],
-          },
-        },
-      },
-    };
-    </script>
 
     <link rel="stylesheet" href="../css/portal.css" />
     <link rel="stylesheet" href="../css/register.css?v=modern-4" />
@@ -105,6 +59,7 @@
     <link rel="stylesheet" href="../css/form-controls.css?v=1" />
     <link rel="stylesheet" href="../css/control-shapes.css" />
     <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/tw/register.css?v=static-1" />
   </head>
   <body
     class="site-theme register-page text-slate-200 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white antialiased"
