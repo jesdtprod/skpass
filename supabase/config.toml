@@ -427,3 +427,6 @@ enabled = true
 
 [functions.register-vehicle]
 verify_jwt = false
+
+[functions.my-status]
+verify_jwt = false
