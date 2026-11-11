@@ -175,7 +175,12 @@ export function start(ctx) {
     ),
   );
   const wrap = h("div", { class: "al-wrap" }, panel, bell);
-  document.body.append(wrap);
+  const header = document.querySelector("skpass-header");
+  if (header) {
+    wrap.slot = "header-actions";
+    wrap.classList.add("al-header");
+    header.append(wrap);
+  } else document.body.append(wrap);
 
   bell.addEventListener("click", () => {
     panel.hidden = !panel.hidden;
@@ -183,7 +188,7 @@ export function start(ctx) {
     if (!panel.hidden) syncPush();
   });
   document.addEventListener("click", (e) => {
-    if (!panel.hidden && !wrap.contains(e.target)) {
+    if (!panel.hidden && !e.composedPath().includes(wrap)) {
       panel.hidden = true;
       bell.setAttribute("aria-expanded", "false");
     }

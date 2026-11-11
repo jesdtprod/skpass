@@ -24,6 +24,7 @@ class SKPassHeader extends HTMLElement {
               <path d="M11 22h3" />
             </svg><span>Support Desk</span></a>
         <a class="staff" href="${new URL("login/", base).href}">Official Staff Portal &rarr;</a>
+        <slot name="header-actions"></slot>
       </nav>
     </div></header>`;
     root.append(template.content.cloneNode(true));
