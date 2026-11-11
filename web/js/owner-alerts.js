@@ -68,16 +68,22 @@ export function announceDecision({ vehicle_id, status, plate }) {
   ensureCss();
   const [title, body] = TEXT[status];
   document.getElementById("decision-banner")?.remove();
-  const banner = el(
-    "div",
-    { id: "decision-banner", class: `oa-banner ${status}`, role: "alert" },
-    el("strong", {}, title),
-    el("span", {}, plate ? `${plate} · ${body}` : body),
-    el("button", { type: "button", "aria-label": "Dismiss", onclick: () => banner.remove() }, "✕"),
-  );
-  const anchor = document.getElementById("list");
-  anchor?.parentElement?.insertBefore(banner, anchor);
-  banner.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+  if (status !== "approved") {
+    const banner = el(
+      "div",
+      { id: "decision-banner", class: `oa-banner ${status}`, role: "alert" },
+      el("strong", {}, title),
+      el("span", {}, plate ? `${plate} · ${body}` : body),
+      el(
+        "button",
+        { type: "button", "aria-label": "Dismiss", onclick: () => banner.remove() },
+        "✕",
+      ),
+    );
+    const anchor = document.getElementById("list");
+    anchor?.parentElement?.insertBefore(banner, anchor);
+    banner.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+  }
   playAlert(status === "approved" ? "approved" : "rejected");
   if (document.hidden) {
     showLocalNotification({
