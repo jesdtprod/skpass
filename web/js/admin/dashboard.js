@@ -1,7 +1,6 @@
 import { dailyChart, gateBars, hourChart } from "./charts.js";
 import {
   dailyTotals,
-  denialLabel,
   fmtDuration,
   greeting,
   hourBuckets,
@@ -170,7 +169,7 @@ async function fetchAll(sb, days) {
   const approvedIn = (cat) =>
     sb.from("vehicles").select("id", { count: "exact", head: true })
       .is("deleted_at", null).eq("status", "approved").eq("category", cat);
-  const [stats, inside, pending, activity, hourly, denials, e, o, v, new7, gates] = await Promise
+  const [stats, inside, pending, activity, hourly, e, o, v, new7, gates] = await Promise
     .all([
       sb.rpc("admin_stats", { p_days: days }),
       sb.from("v_vehicles_inside").select("vehicle_id,plate,owner_name,category,gate_id,entered_at")
@@ -183,8 +182,6 @@ async function fetchAll(sb, days) {
       sb.from("gate_logs").select("scanned_at,direction").is("deleted_at", null)
         .gte("scanned_at", ago(36 * 3600_000))
         .order("scanned_at", { ascending: false }).limit(5000),
-      sb.from("audit_logs").select("created_at,entity_id,after").eq("action", "scan_denied")
-        .gte("created_at", ago(24 * 3600_000)).order("created_at", { ascending: false }).limit(5),
       approvedIn("employee"),
       approvedIn("official"),
       approvedIn("visitor"),
@@ -192,21 +189,12 @@ async function fetchAll(sb, days) {
         .eq("status", "approved").gte("approved_at", ago(7 * 86400_000)),
       sb.from("gates").select("id,name").is("deleted_at", null),
     ]);
-  // plates for the denied scans (they only store the vehicle id)
-  const ids = [...new Set((denials.data ?? []).map((d) => d.entity_id).filter(Boolean))];
-  const plates = new Map();
-  if (ids.length) {
-    const { data } = await sb.from("vehicles").select("id,plate").in("id", ids);
-    for (const r of data ?? []) plates.set(r.id, r.plate);
-  }
   return {
     stats,
     inside,
     pending,
     activity,
     hourly,
-    denials,
-    plates,
     categories: { employee: e.count, official: o.count, visitor: v.count },
     new7: new7.error ? null : new7.count,
     gates: new Map((gates.data ?? []).map((g) => [g.id, g.name])),
@@ -750,51 +738,6 @@ function paint(d, ctx, days) {
       : empty("No movements recorded yet."),
   );
 
-  // ---- approval queue
-  const queue = panel(
-    "span-6",
-    "Waiting for approval",
-    s.pending > pend.length ? `Showing ${pend.length} of ${s.pending}` : null,
-    "#/pending",
-    "Review all →",
-    d.pending.error ? failed("the approval queue") : pend.length
-      ? h(
-        "ul",
-        { class: "rows" },
-        pend.map((v) => {
-          const waited = now - new Date(v.created_at).getTime();
-          return h(
-            "li",
-            {},
-            h(
-              "span",
-              { class: "lead row-icon warn", "aria-hidden": "true" },
-              svgIcon(statIcons["Waiting for approval"]),
-            ),
-            h(
-              "div",
-              { class: "main" },
-              h("div", { class: "t" }, h("span", { class: "plate" }, v.plate), catTag(v.category)),
-              h(
-                "div",
-                { class: "s" },
-                v.category === "visitor" && v.valid_from
-                  ? `${v.owner_name} · visit ${v.valid_from} to ${v.valid_to ?? "?"}`
-                  : v.owner_name,
-              ),
-            ),
-            h(
-              "div",
-              { class: "end" },
-              h("b", { class: waited > 24 * 3600_000 ? "long" : "" }, fmtDuration(waited)),
-              "waiting",
-            ),
-          );
-        }),
-      )
-      : empty("Nothing is waiting. New registrations appear here instantly."),
-  );
-
   // ---- longest inside
   const lon = inside.slice(0, 5);
   const insidePanel = panel(
@@ -831,40 +774,6 @@ function paint(d, ctx, days) {
       : empty("No vehicles are inside right now."),
   );
 
-  // ---- recent denials
-  const den = d.denials.data ?? [];
-  const denialPanel = panel(
-    "span-6",
-    "Denied scans, last 24 hours",
-    null,
-    null,
-    null,
-    d.denials.error ? failed("denied scans") : den.length
-      ? h(
-        "ul",
-        { class: "rows" },
-        den.map((r) =>
-          h(
-            "li",
-            {},
-            h(
-              "span",
-              { class: "lead row-icon red", "aria-hidden": "true" },
-              svgIcon(panelIcons["Denied scans"]),
-            ),
-            h(
-              "div",
-              { class: "main" },
-              h("div", { class: "t" }, denialLabel(r.after?.code)),
-              h("div", { class: "s" }, d.plates.get(r.entity_id) ?? "Unknown QR code"),
-            ),
-            h("div", { class: "end" }, relTime(r.created_at, now)),
-          )
-        ),
-      )
-      : empty("No denied scans in the last 24 hours."),
-  );
-
   return [
     stats,
     actions,
@@ -876,9 +785,7 @@ function paint(d, ctx, days) {
       hourPanel,
       catPanel,
       activityFeed,
-      queue,
       insidePanel,
-      denialPanel,
     ),
   ];
 }
