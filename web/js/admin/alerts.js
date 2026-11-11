@@ -116,6 +116,10 @@ export function start(ctx) {
         refreshIfIdle();
       }
     })
+    .on("postgres_changes", { event: "INSERT", schema: "public", table: "gate_logs" }, () => {
+      ctx.refreshBadge?.();
+      refreshIfIdle(); // a guard just scanned a vehicle: dashboard, Inside now and logs catch up
+    })
     .subscribe((status) => {
       state.live = status === "SUBSCRIBED" ? "live" : status === "CLOSED" ? "closed" : "problem";
       ctx.live = state.live;
@@ -142,6 +146,7 @@ export function start(ctx) {
     const m = e.data;
     if (m?.type === "skpass-resubscribe") syncPush(true);
     if (m?.type !== "skpass-push") return;
+    refreshIfIdle(); // any push means something changed: let the open page catch up
     if (m.kind === "new_registration") announceNew({ id: m.vehicle_id });
     else if (m.kind === "test") {
       playTestSound();

@@ -165,7 +165,8 @@ async function route() {
 addEventListener("hashchange", route);
 // Live changes (new registrations, other admins' decisions) re-render the lists and numbers.
 addEventListener("skpass:refresh", () => {
-  if (/^#\/(dashboard|pending|vehicles|inside|health)?$/.test(location.hash || "#/dashboard")) {
+  // (the dashboard listens for this event itself and updates in place, without a flicker)
+  if (/^#\/(pending|vehicles|inside|health)$/.test(location.hash)) {
     route();
   }
 });

@@ -17,7 +17,7 @@ const DAY_KEY = "skpass.dash.days";
 const CATEGORY_COLORS = { employee: "#a3e635", official: "#e7c57a", visitor: "#7dd3fc" };
 const CATEGORY_LABEL = { employee: "Employees", official: "Officials", visitor: "Visitors" };
 const LONG_INSIDE_MS = 12 * 3600_000;
-const AUTO_REFRESH_MS = 60_000;
+const AUTO_REFRESH_MS = 30_000;
 const LOG_SELECT =
   "id,direction,result,warning,scanned_at,vehicles!inner(plate,category),gates(name),profiles:scanned_by(full_name)";
 
@@ -442,13 +442,38 @@ export async function render(root, ctx) {
       ctx.refreshBadge?.();
     }
   }, AUTO_REFRESH_MS);
+  // Live pushes (realtime scans/registrations, service-worker push messages) refresh in place.
+  // Several events in a burst collapse into one reload; one arriving mid-load triggers a re-run.
+  let timer = 0;
+  let again = false;
+  const soon = () => {
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      if (busy) again = true;
+      else {
+        await load();
+        if (again) {
+          again = false;
+          load();
+        }
+      }
+    }, 800);
+  };
+  const onVisible = () => !document.hidden && soon(); // timers are throttled while hidden
+  addEventListener("skpass:refresh", soon);
+  addEventListener("online", soon);
+  document.addEventListener("visibilitychange", onVisible);
   await load();
 
   return () => {
     chartObserver?.disconnect();
     clearInterval(clock);
     clearInterval(auto);
+    clearTimeout(timer);
     removeEventListener("skpass:live", onLive);
+    removeEventListener("skpass:refresh", soon);
+    removeEventListener("online", soon);
+    document.removeEventListener("visibilitychange", onVisible);
   };
 }
 
