@@ -6,7 +6,7 @@ class SKPassHeader extends HTMLElement {
     const base = new URL("../", import.meta.url);
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = new URL("css/header.css", base).href;
+    css.href = new URL("css/header.css?v=fade-1", base).href;
     root.append(css);
     const template = document.createElement("template");
     template.innerHTML = `<header><div class="inner">

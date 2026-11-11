@@ -6,6 +6,7 @@ import { shrinkImage } from "./image.js";
 const form = document.getElementById("reg-form");
 const submitBtn = document.getElementById("submit");
 const alertBox = document.getElementById("alert");
+const submittingSkeleton = document.getElementById("submitting-skeleton");
 const now = new Date();
 const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${
   String(now.getDate()).padStart(2, "0")
@@ -89,6 +90,10 @@ form.addEventListener("submit", async (e) => {
 
   submitBtn.disabled = true;
   submitBtn.textContent = "Submitting…";
+  if (submittingSkeleton) {
+    submittingSkeleton.hidden = false;
+    submittingSkeleton.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
   try {
     const fd = new FormData(form);
     fd.set("idempotency_key", requestKey());
@@ -134,6 +139,7 @@ form.addEventListener("submit", async (e) => {
     captcha.reset();
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = "Submit registration";
+    submitBtn.textContent = "Submit for Approval";
+    if (submittingSkeleton) submittingSkeleton.hidden = true;
   }
 });

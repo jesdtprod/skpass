@@ -5,6 +5,7 @@ import { mountCaptcha } from "./captcha.js";
 const form = document.getElementById("find-form");
 const alertBox = document.getElementById("alert");
 const btn = document.getElementById("submit");
+const skeleton = document.getElementById("search-skeleton");
 const captcha = mountCaptcha("#captcha");
 
 const initialPlate = new URLSearchParams(location.search).get("plate");
@@ -37,6 +38,10 @@ form.addEventListener("submit", async (e) => {
   if (!captcha.getToken()) return show("Please complete the captcha check.");
   btn.disabled = true;
   btn.textContent = "Searching…";
+  if (skeleton) {
+    skeleton.hidden = false;
+    skeleton.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
   try {
     const { status, data } = await findMyQr(form.plate.value, form.phone.value, captcha.getToken());
     if (status === 200 && data.found) {
@@ -62,6 +67,7 @@ form.addEventListener("submit", async (e) => {
       location.href = `../my-qr/?v=${encodeURIComponent(data.vehicle_id)}`;
       return;
     }
+    if (skeleton) skeleton.hidden = true;
     if (status === 200) {
       show(
         "No approved vehicle matches those details. Check the plate and number. If you registered recently, your request may still be waiting for approval.",
@@ -70,6 +76,10 @@ form.addEventListener("submit", async (e) => {
     } else {
       show(MESSAGES[data.error] ?? "Something went wrong. Please try again.");
     }
+    captcha.reset();
+  } catch (_err) {
+    if (skeleton) skeleton.hidden = true;
+    show("No connection. Check your internet and try again.");
     captcha.reset();
   } finally {
     btn.disabled = false;

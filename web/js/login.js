@@ -3,6 +3,15 @@ import { HOME, myProfile, sb } from "./auth.js";
 const form = document.getElementById("login-form");
 const alertBox = document.getElementById("alert");
 const btn = document.getElementById("submit");
+const sessionSkeleton = document.getElementById("session-skeleton");
+const authCard = document.getElementById("auth-card");
+const toggleBtn = document.getElementById("toggle-password");
+
+toggleBtn?.addEventListener("click", () => {
+  if (form?.password) {
+    form.password.type = form.password.type === "password" ? "text" : "password";
+  }
+});
 
 function show(msg, kind = "error") {
   alertBox.textContent = msg;
@@ -15,9 +24,23 @@ if (reason === "noaccess") show("This account does not have access to staff page
 
 // Already signed in with a valid staff profile? Go straight in.
 sb.auth.getSession().then(async ({ data: { session } }) => {
-  if (!session) return;
+  if (!session) {
+    if (sessionSkeleton) sessionSkeleton.hidden = true;
+    if (authCard) authCard.hidden = false;
+    return;
+  }
+  if (sessionSkeleton) sessionSkeleton.hidden = false;
+  if (authCard) authCard.hidden = true;
   const p = await myProfile(session.user.id);
-  if (p?.active && HOME[p.role]) location.replace(HOME[p.role]);
+  if (p?.active && HOME[p.role]) {
+    location.replace(HOME[p.role]);
+    return;
+  }
+  if (sessionSkeleton) sessionSkeleton.hidden = true;
+  if (authCard) authCard.hidden = false;
+}).catch(() => {
+  if (sessionSkeleton) sessionSkeleton.hidden = true;
+  if (authCard) authCard.hidden = false;
 });
 
 // "Forgot key?": email a password-reset link that lands on the /reset/ page.
