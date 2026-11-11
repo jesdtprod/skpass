@@ -690,9 +690,9 @@ function paint(d, ctx, days) {
           Object.keys(CATEGORY_COLORS).map((k) =>
             h(
               "li",
-              {},
+              { style: `--category-color:${CATEGORY_COLORS[k]}` },
               h("i", { style: `background:${CATEGORY_COLORS[k]}` }),
-              h("span", {}, CATEGORY_LABEL[k]),
+              h("span", { class: "cat-label" }, CATEGORY_LABEL[k]),
               h("span", { class: "n" }, String(cats[k] ?? 0)),
               h("span", { class: "p" }, `${pct(cats[k] ?? 0, catTotal)}%`),
             )
