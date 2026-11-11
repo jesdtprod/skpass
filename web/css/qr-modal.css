@@ -71,6 +71,33 @@ body.qr-embedded {
 .qr-embedded main > div {
   max-width: 100%;
 }
+.qr-fit-root,
+.qr-fit-root body {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+.qr-fit-root .qr-embedded main {
+  flex: none;
+  width: 100%;
+  padding: 8px 12px !important;
+  transform-origin: top center;
+}
+.qr-fit-root main > div {
+  gap: 8px;
+}
+.qr-fit-root #install-pwa-button,
+.qr-fit-root main > div > .mt-5,
+.qr-fit-root main > div > .mt-6 {
+  display: none;
+}
+.qr-fit-root .qr-paper {
+  max-width: 220px;
+}
+.qr-fit-root .qr-container-glow {
+  padding: 12px;
+  margin-bottom: 12px;
+}
 @media (max-width:480px) {
   dialog.qr-modal {
     width: calc(100vw - 16px);
