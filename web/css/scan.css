@@ -1,0 +1,177 @@
+.scan-page {
+  background: #14171a;
+  color: #fff;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  background: var(--charcoal);
+}
+.bar img {
+  width: 36px;
+  height: 36px;
+  padding: 3px;
+  background: #fff;
+  border-radius: 9px;
+}
+.bar select {
+  flex: 1;
+  min-width: 0;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #555;
+  background: #fff;
+  color: var(--text);
+}
+.bar .who {
+  font-size: 0.8rem;
+  color: #bbb;
+  max-width: 28%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bar .link {
+  background: none;
+  border: 0;
+  color: #9be37f;
+  font-size: 0.9rem;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.banner {
+  background: #8a1c1c;
+  color: #fff;
+  text-align: center;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+.stage {
+  padding: 12px;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  max-height: 70vh;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.viewport video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.reticle {
+  position: absolute;
+  inset: 18% 18%;
+  border: 3px solid rgba(155, 227, 127, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+body:not(.scanning) .reticle {
+  display: none;
+}
+
+.startbox {
+  text-align: center;
+  padding: 16px 0;
+}
+.startbox p {
+  color: #ccc;
+}
+.torch {
+  margin-top: 12px;
+}
+.scan-page .btn.ghost {
+  color: #fff;
+  border-color: #555;
+}
+
+/* ---- result screen ---- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  color: #fff;
+  cursor: pointer;
+}
+.overlay.ok {
+  background: #1b8a2e;
+}
+.overlay.warn {
+  background: #c27a00;
+}
+.overlay.deny {
+  background: #b3261e;
+}
+.overlay.dup {
+  background: #3b4a57;
+}
+.ov-dir {
+  font-size: clamp(3rem, 18vw, 6rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.ov-photo {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 4px solid rgba(255, 255, 255, 0.85);
+}
+.ov-plate {
+  font-size: clamp(2rem, 11vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+.ov-owner {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+.ov-msg {
+  font-size: 1.15rem;
+  opacity: 0.95;
+}
+.ov-meta,
+.ov-gate {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+.ov-tap {
+  position: absolute;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+.overlay .badge {
+  font-size: 1rem;
+  padding: 4px 16px;
+  background: rgba(0, 0, 0, 0.35);
+}
+.overlay .badge.cat-official {
+  background: #d4a017;
+  color: #1c1400;
+  font-weight: 800;
+}

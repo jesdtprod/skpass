@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Scanner · SKPass</title>
+    <meta name="theme-color" content="#2b2f33" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="icon" href="../icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/scan.css" />
+  </head>
+  <body class="scan-page">
+    <header class="bar">
+      <img src="../icons/logo.png" alt="SKPass" />
+      <select id="gate" aria-label="Gate"></select>
+      <span id="who" class="who"></span>
+      <button id="signout" class="link" type="button">Sign out</button>
+    </header>
+
+    <div id="banner" class="banner" role="status" hidden></div>
+
+    <main class="stage">
+      <div class="viewport">
+        <video id="video" playsinline muted></video>
+        <div class="reticle" aria-hidden="true"></div>
+      </div>
+
+      <div id="startbox" class="startbox">
+        <p>Choose your gate, then start the camera.</p>
+        <button id="start" class="btn" type="button" disabled>Start scanning</button>
+        <p id="camerr" class="alert error" role="alert" hidden></p>
+      </div>
+
+      <button id="torch" class="btn ghost torch" type="button" hidden>Torch: off</button>
+    </main>
+
+    <div id="overlay" class="overlay" role="alert" hidden>
+      <div id="ov-dir" class="ov-dir"></div>
+      <img id="ov-photo" class="ov-photo" alt="Vehicle photo" hidden />
+      <div id="ov-plate" class="ov-plate"></div>
+      <div id="ov-owner" class="ov-owner"></div>
+      <span id="ov-cat" class="badge"></span>
+      <div id="ov-msg" class="ov-msg"></div>
+      <div id="ov-meta" class="ov-meta"></div>
+      <div id="ov-gate" class="ov-gate"></div>
+      <div class="ov-tap">Tap to continue</div>
+    </div>
+
+    <script src="../js/vendor/supabase.js"></script>
+    <script src="../js/vendor/jsQR.js"></script>
+    <script type="module" src="../js/scan.js"></script>
+    <script type="module" src="../js/pwa.js"></script>
+  </body>
+</html>
