@@ -117,7 +117,7 @@ nav {
 }
 nav > a {
   white-space: nowrap;
-  padding: 4px 0;
+  padding: 0;
 }
 .divider {
   color: #475569;
@@ -130,7 +130,7 @@ nav > a {
   white-space: nowrap;
   border: 1px solid #1e293b;
   background: #0f172a;
-  padding: 6px 12px;
+  padding: 2px 12px;
   border-radius: 999px;
   color: #cbd5e1;
 }
@@ -144,17 +144,17 @@ nav > a {
   background: #f59e0b;
 }
 .legal {
-  margin: 2px 0 0;
+  margin: 0;
   padding: 0;
   border: 0;
   font-size: 11px;
   color: #64748b;
-  text-align: right;
+  text-align: left;
 }
 .footer-links {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: flex-start;
 }
 a:hover {
   color: #e9eef0;
