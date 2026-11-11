@@ -79,10 +79,120 @@ body.admin-home {
   color: #eaf0f4;
 }
 .admin-home .nav-item.active {
+  background: #a3e6350e;
+  color: #c2f17b;
+  border-color: #a3e63525;
+  box-shadow: none;
+}
+.admin-home .sidebar-identity {
+  padding: 24px 20px 20px;
+  border-color: #ffffff0c;
+  gap: 12px;
+}
+.admin-home .sidebar-identity img {
+  width: 40px;
+  height: 44px;
+  border-radius: 0;
+  object-fit: contain;
+}
+.admin-home .sidebar-identity .font-mono {
+  font: 700 20px/26px "Space Grotesk",sans-serif;
+  letter-spacing: -.04em;
+}
+.admin-home .sidebar-identity p {
+  margin-top: 3px;
+  color: #8296a2;
+  font-size: 10px;
+}
+.admin-home .sidebar-identity span:last-child:not(:first-child) {
+  font-family: "JetBrains Mono",monospace;
+  font-size: 9px;
+  letter-spacing: .06em;
+  border-radius: 5px;
+  padding: 2px 5px;
+}
+.admin-home #nav {
+  padding: 16px 12px;
+  gap: 4px;
+}
+.admin-home #nav .nav-item {
+  position: relative;
+  margin: 0;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.admin-home #nav .nav-item .ic {
+  color: #8195a1;
+  width: 20px;
+  height: 20px;
+}
+.admin-home #nav .nav-item.active .ic {
+  color: #a3e635;
+}
+.admin-home #nav .nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  border-radius: 2px;
+  background: #a3e635;
+}
+.admin-home #nav .pill {
   background: #a3e635;
   color: #19280e;
-  border-color: #c0fa7266;
-  box-shadow: 0 8px 24px #80ca1212;
+  border-radius: 6px;
+  font-size: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+.admin-home .sidebar-account {
+  background: #11171c !important;
+  border-color: #ffffff10;
+  padding: 12px;
+}
+.admin-home .sidebar-account > div:first-child {
+  padding: 12px 8px;
+  background: #ffffff03;
+  border: 1px solid #ffffff0a;
+  border-radius: 12px;
+}
+.admin-home #avatar-initials {
+  border-radius: 10px;
+  background: #a3e63512;
+  color: #c2f17b;
+  border: 1px solid #a3e63525;
+  box-shadow: none;
+  width: 34px;
+  height: 34px;
+}
+.admin-home .sidebar-account #who {
+  font-size: 11px;
+  font-weight: 600;
+}
+.admin-home .sidebar-account .text-\[10px\] {
+  font-size: 9px;
+}
+.admin-home #signout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+.admin-home #signout:hover {
+  background: #ef44440a;
+  border-color: #ef444425;
+  color: #f4aaaa;
+}
+.admin-home .sidebar-account > div:last-child {
+  margin-top: 12px;
+  padding-inline: 4px;
+  color: #748995;
 }
 .admin-home #content {
   max-width: 1440px;
