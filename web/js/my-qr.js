@@ -26,6 +26,29 @@ function h(tag, props = {}, ...kids) {
 function badge(text, cls) {
   return h("span", { class: `badge ${cls}` }, text);
 }
+function icon(kind) {
+  const paths = {
+    car: "m5 10 2-5h10l2 5M3 17v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5H3Zm2 0v3m14-3v3M6 13h2m8 0h2",
+    refresh: "M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-2l2 7M4 12l2 7a7 7 0 0 0 12-2",
+    remove: "M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7m4-7v7",
+  };
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  for (
+    const [key, value] of Object.entries({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "1.7",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      "aria-hidden": "true",
+    })
+  ) svg.setAttribute(key, value);
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", paths[kind]);
+  svg.append(path);
+  return svg;
+}
 
 function card(rec, view, note) {
   const s = view.status;
@@ -33,7 +56,12 @@ function card(rec, view, note) {
     h(
       "div",
       { class: "card-head" },
-      h("strong", { class: "plate" }, view.plate ?? rec.plate),
+      h(
+        "div",
+        { class: "plate-identity" },
+        h("span", { class: "vehicle-icon" }, icon("car")),
+        h("strong", { class: "plate" }, view.plate ?? rec.plate),
+      ),
       badge(view.category ?? rec.category, "cat"),
     ),
     h(
@@ -114,25 +142,35 @@ function card(rec, view, note) {
   const actions = [];
   if (s !== "gone") {
     actions.push(
-      h("button", {
-        class: "btn ghost",
-        type: "button",
-        onclick: () => refresh(rec.vehicle_id),
-      }, "Refresh"),
+      h(
+        "button",
+        {
+          class: "btn refresh-pass",
+          type: "button",
+          onclick: () => refresh(rec.vehicle_id),
+        },
+        icon("refresh"),
+        "Refresh",
+      ),
     );
   }
-  actions.push(h("button", {
-    class: "btn ghost remove-pass",
-    type: "button",
-    onclick: async () => {
-      if (
-        confirm("Remove this vehicle from this device? You can get the QR back with Find my QR.")
-      ) {
-        await removeVehicle(rec.vehicle_id);
-        render();
-      }
+  actions.push(h(
+    "button",
+    {
+      class: "btn ghost remove-pass",
+      type: "button",
+      onclick: async () => {
+        if (
+          confirm("Remove this vehicle from this device? You can get the QR back with Find my QR.")
+        ) {
+          await removeVehicle(rec.vehicle_id);
+          render();
+        }
+      },
     },
-  }, "Remove from this device"));
+    icon("remove"),
+    "Remove from this device",
+  ));
   kids.push(h("div", { class: "actions" }, actions));
 
   return h("section", { class: "card", "data-id": rec.vehicle_id }, kids);

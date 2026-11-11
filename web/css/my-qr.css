@@ -136,11 +136,85 @@ body.my-qr-page {
 }
 /* A solid, readable digital pass above the decorative mesh. */
 .my-qr-page #list .card {
-  background: #1a2025;
+  background: linear-gradient(145deg, #20272b, #171d21);
+  box-shadow: 0 32px 80px #0004, inset 0 1px #ffffff06;
   backdrop-filter: none;
   border-color: #ffffff16;
   overflow: hidden;
   padding: 28px;
+}
+.plate-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.vehicle-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #a3e6350a;
+  border: 1px solid #a3e63524;
+  color: #b2eb65;
+}
+.vehicle-icon svg {
+  width: 24px;
+  height: 24px;
+}
+.my-qr-page #list .card > .muted {
+  margin: 12px 0 20px;
+  font-size: 12px;
+}
+.my-qr-page #list .actions .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.my-qr-page #list .actions .btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.my-qr-page #list .actions .refresh-pass {
+  background: #a3e635;
+  color: #19280e;
+  border-color: #c0fa7266;
+  box-shadow: 0 8px 24px #80ca1212;
+}
+.my-qr-page #list .actions .refresh-pass:hover {
+  background: #b3ee53;
+}
+.my-qr-page #list .actions .remove-pass {
+  background: #10171b;
+}
+.my-qr-page #list .pending-message {
+  background: #10171b;
+  border: 1px solid #ffffff12;
+}
+.my-qr-page #list .pending-icon {
+  background: #a3e6350a;
+  border: 1px solid #a3e63524;
+  color: #b2eb65;
+}
+.my-qr-page #install-pwa-button {
+  background: #10171b;
+}
+.my-qr-page h1 {
+  font-size: 40px;
+}
+.my-qr-page h1 + p {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid #a3e63525;
+  border-radius: 999px;
+  background: #a3e6350a;
+  margin-top: 12px;
+  font-size: 10px;
 }
 .my-qr-page #list .card.loading {
   opacity: 1;
