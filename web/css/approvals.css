@@ -1,4 +1,84 @@
 /* Approvals header: title + pill, actions, and four KPI cards with progress bars. */
+.ap-filterbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 20px;
+  background: #1a2227;
+  border: 1px solid #ffffff12;
+  border-radius: 12px;
+}
+.ap-search {
+  flex: 1;
+  min-width: 180px;
+  position: relative;
+}
+.ap-search svg {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  width: 16px;
+  height: 16px;
+  color: #8fa1ac;
+  pointer-events: none;
+}
+.admin-home .ap-search input {
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 12px 10px 36px;
+  font-size: 12px;
+  border-radius: 8px;
+}
+.ap-filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ap-filter-tabs button {
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid #ffffff12;
+  border-radius: 8px;
+  background: #11181d;
+  color: #a8bac5;
+  font: 500 11px/18px "Plus Jakarta Sans",sans-serif;
+  cursor: pointer;
+}
+.ap-filter-tabs button:hover {
+  color: #e9eef0;
+  border-color: #a3e63540;
+}
+.ap-filter-tabs button[aria-pressed="true"] {
+  background: #a3e63510;
+  border-color: #a3e63535;
+  color: #b2eb65;
+}
+.ap-no-matches {
+  padding: 24px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+}
+.ap-no-matches[hidden],
+.approvals-view tr[hidden] {
+  display: none;
+}
+@media (max-width:1100px) {
+  .ap-filterbar {
+    flex-wrap: wrap;
+  }
+  .ap-search {
+    flex-basis: 100%;
+  }
+}
+@media (max-width:600px) {
+  .ap-filter-tabs {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    width: 100%;
+  }
+}
 .approvals-view .ap-head {
   display: flex;
   justify-content: space-between;
