@@ -284,6 +284,14 @@ body.my-qr-page {
 }
 .pass-status.status-pending {
   color: #e7c57a;
+  background: #e7c57a10;
+  border: 1px solid #e7c57a35;
+}
+.pass-status {
+  padding: 4px 10px;
+  border: 1px solid #ffffff20;
+  border-radius: 6px;
+  background: #ffffff05;
 }
 .pass-status.status-approved {
   color: #b8ed65;

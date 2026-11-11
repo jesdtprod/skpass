@@ -71,7 +71,7 @@ function card(rec, view, note) {
         "span",
         { class: `pass-status status-${view.expired ? "expired" : s}` },
         view.expired ? "Expired" : ({
-          pending: "Pending approval",
+          pending: "Pending Approval",
           approved: "Approved",
           rejected: "Not approved",
           blocked: "Blocked",
