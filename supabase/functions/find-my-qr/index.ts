@@ -59,7 +59,7 @@ export async function handler(req: Request): Promise<Response> {
   if (plateCheck === "limited") return json(429, { error: "rate_limited" }, origin);
 
   const { data: v } = await db.from("vehicles").select(
-    "id, status, category, plate, owner_name, token, valid_from, valid_to, reject_reason, claim_hash, idempotency_key",
+    "id, status, category, plate, owner_name, token, valid_from, valid_to, reject_reason, claim_hash, idempotency_key, vehicle_type, color, office, position, agency, host_name, purpose, created_at",
   ).eq("plate_norm", plate).eq("phone_norm", phone).eq("status", "approved")
     .is("deleted_at", null).maybeSingle();
 
