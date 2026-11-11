@@ -114,3 +114,104 @@ export function gateBars(rows) {
   });
   return svg;
 }
+
+/**
+ * 24 stacked bars for today, one per hour. buckets: [{ in, out }] x 24.
+ * `nowHour` (optional) marks the current hour; `peak` (optional) highlights the busiest hour.
+ */
+export function hourChart(buckets, { nowHour = null, peak = null } = {}) {
+  const W = 560, H = 200, padL = 28, padB = 26, padT = 10, padR = 6;
+  const svg = svgEl("svg", {
+    viewBox: `0 0 ${W} ${H}`,
+    role: "img",
+    "aria-label": "Movements by hour today",
+    class: "chart",
+  });
+  const max = Math.max(1, ...buckets.map((b) => b.in + b.out));
+  const top = Math.max(4, Math.ceil(max / 4) * 4);
+  const plotH = H - padT - padB;
+  const slot = (W - padL - padR) / 24;
+  const bw = slot * 0.66;
+
+  for (let i = 0; i <= 4; i++) {
+    const v = Math.round((top / 4) * i);
+    const y = padT + plotH - (v / top) * plotH;
+    svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: y, y2: y, stroke: "#ffffff10" }));
+    svg.append(
+      svgEl("text", {
+        x: padL - 6,
+        y: y + 4,
+        "text-anchor": "end",
+        "font-size": 10,
+        fill: "#7f93a0",
+      }, v),
+    );
+  }
+  buckets.forEach((b, h) => {
+    const x = padL + slot * h + (slot - bw) / 2;
+    const hIn = (b.in / top) * plotH;
+    const hOut = (b.out / top) * plotH;
+    const g = svgEl("g");
+    g.append(svgEl("title", {}, `${String(h).padStart(2, "0")}:00 — ${b.in} in, ${b.out} out`));
+    if (nowHour === h) {
+      g.append(
+        svgEl("rect", {
+          x: x - 2,
+          y: padT,
+          width: bw + 4,
+          height: plotH,
+          fill: "#ffffff08",
+          rx: 3,
+        }),
+      );
+    }
+    g.append(
+      svgEl("rect", {
+        x,
+        y: padT + plotH - hIn,
+        width: bw,
+        height: hIn,
+        fill: COLORS.in,
+        rx: 1.5,
+        opacity: peak && peak.hour !== h ? 0.78 : 1,
+      }),
+    );
+    g.append(
+      svgEl("rect", {
+        x,
+        y: padT + plotH - hIn - hOut,
+        width: bw,
+        height: hOut,
+        fill: COLORS.out,
+        rx: 1.5,
+        opacity: peak && peak.hour !== h ? 0.78 : 1,
+      }),
+    );
+    svg.append(g);
+    if (h % 3 === 0) {
+      svg.append(
+        svgEl("text", {
+          x: x + bw / 2,
+          y: H - padB + 15,
+          "text-anchor": "middle",
+          "font-size": 10,
+          fill: "#7f93a0",
+        }, String(h).padStart(2, "0")),
+      );
+    }
+  });
+  if (peak) {
+    const x = padL + slot * peak.hour + slot / 2;
+    svg.append(
+      svgEl("text", {
+        x: Math.min(W - 40, Math.max(padL + 30, x)),
+        y: padT + 2,
+        "text-anchor": "middle",
+        "font-size": 10,
+        "font-weight": 600,
+        fill: "#a3e635",
+      }, `peak ${peak.count}`),
+    );
+  }
+  return svg;
+}

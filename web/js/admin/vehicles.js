@@ -237,4 +237,9 @@ export async function render(root, ctx) {
     reset();
   });
   await load();
+  // Deep link from the dashboard's "Add a pass" action: #/vehicles?add=1
+  if (location.hash.includes("?add=1")) {
+    history.replaceState(null, "", "#/vehicles");
+    addPass(ctx, load);
+  }
 }

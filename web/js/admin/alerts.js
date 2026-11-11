@@ -85,6 +85,8 @@ export function start(ctx) {
     })
     .subscribe((status) => {
       state.live = status === "SUBSCRIBED" ? "live" : status === "CLOSED" ? "closed" : "problem";
+      ctx.live = state.live;
+      dispatchEvent(new CustomEvent("skpass:live", { detail: state.live }));
       paint();
     });
   addEventListener("pagehide", () => ctx.sb.removeChannel(channel));
