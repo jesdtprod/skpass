@@ -10,7 +10,7 @@ class SKPassNavigation extends HTMLElement {
       find: "M17 17l4 4M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0",
       qr: "M3 3h6v6H3Zm12 0h6v6h-6ZM3 15h6v6H3Zm12 0h3v3h3v3h-6Z",
     };
-    const items = [["", "Home", "home"]];
+    const items = [["", "Home", "home"], ["my-qr", "My QR", "qr"]];
     const css = document.createElement("link");
     css.rel = "stylesheet";
     css.href = new URL("css/page-navigation.css", base).href;
