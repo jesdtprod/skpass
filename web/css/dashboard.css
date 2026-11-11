@@ -1644,20 +1644,48 @@
 }
 @media (max-width: 480px) {
   .dashboard-view .catlist {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .dashboard-view .catlist li {
-    grid-template-columns: 10px minmax(0, 1fr) auto auto;
-    padding: 9px 12px;
+    grid-template-columns: 7px minmax(0, 1fr) auto;
+    padding: 10px 8px;
+    gap: 8px 4px;
   }
   .dashboard-view .catlist .cat-label {
-    grid-column: auto;
+    grid-column: 2 / -1;
+    font-size: 10px;
   }
   .dashboard-view .catlist .n {
-    grid-column: auto;
-    font-size: 18px;
+    grid-column: 1 / 3;
+    font-size: 22px;
     line-height: 24px;
   }
+}
+.dashboard-view .cat-detail,
+.dashboard-view .cat-context {
+  grid-column: 1 / -1;
+  font: 500 10px/15px "Plus Jakarta Sans", sans-serif;
+  color: #8fa6b4;
+}
+.dashboard-view .cat-detail {
+  margin-top: -6px;
+}
+.dashboard-view .cat-context {
+  font-size: 9px;
+  color: #708a99;
+}
+.dashboard-view .cat-progress {
+  grid-column: 1 / -1;
+  height: 4px;
+  border-radius: 99px;
+  background: #ffffff09;
+  overflow: hidden;
+}
+.dashboard-view .cat-progress > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--category-color);
 }
 
 /* Let the activity plot fill its row alongside Today by gate without scaling text. */
