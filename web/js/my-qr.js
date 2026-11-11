@@ -178,7 +178,7 @@ function card(rec, view, note) {
             "span",
             {
               class:
-                "block text-2xl sm:text-3xl font-extrabold tracking-tight text-white font-mono leading-none",
+                "block text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white font-mono leading-none break-all",
             },
             displayPlate,
           ),
@@ -589,7 +589,7 @@ function card(rec, view, note) {
     "article",
     {
       class:
-        "bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden transition-all",
+        "bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden transition-all",
       "data-purpose": "vehicle-gate-pass-card",
       "data-id": rec.vehicle_id,
     },
