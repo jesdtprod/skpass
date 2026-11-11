@@ -256,12 +256,16 @@ body.register-page {
   padding: 6px;
   max-height: 280px;
   overflow-y: auto;
+  scrollbar-width: none;
   overscroll-behavior: contain;
   background: #192126;
   border: 1px solid #3b484f;
   border-radius: 12px;
   box-shadow: 0 16px 40px #0006;
   animation: dropdown-enter .16s ease-out;
+}
+.register-page .dropdown-options::-webkit-scrollbar {
+  display: none;
 }
 .register-page .dropdown-options[hidden] {
   display: none;
@@ -270,8 +274,7 @@ body.register-page {
   padding: 10px 32px 10px 12px;
   min-height: 42px;
   border-radius: 7px;
-  font-size: 14px;
-  line-height: 22px;
+  font: 400 14px/22px "Plus Jakarta Sans", sans-serif;
   color: #d4dfe5;
   cursor: pointer;
   position: relative;
@@ -300,6 +303,9 @@ body.register-page {
   }
 }
 @media (max-width: 639px) {
+  .register-page .dropdown-options [role="option"] {
+    font-size: 16px;
+  }
   .register-page .dropdown-trigger {
     font-size: 16px;
   }
