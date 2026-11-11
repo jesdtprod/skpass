@@ -10,8 +10,8 @@ const svgEl = (tag, attrs = {}, text) => {
 export const COLORS = { in: "#a3e635", out: "#748995" };
 
 /** Stacked daily bars. rows: [{ day:'2026-11-11', in:3, out:2 }] */
-export function dailyChart(rows) {
-  const W = 560, H = 160, padL = 34, padB = 30, padT = 12, padR = 8;
+export function dailyChart(rows, { width = 560, height = 160 } = {}) {
+  const W = width, H = height, padL = 34, padB = 30, padT = 12, padR = 8;
   const svg = svgEl("svg", {
     viewBox: `0 0 ${W} ${H}`,
     role: "img",

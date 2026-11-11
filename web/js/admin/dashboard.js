@@ -395,6 +395,7 @@ export async function render(root, ctx) {
 
   // ---- data + body
   let busy = false;
+  let chartObserver;
   async function load() {
     if (busy) return;
     busy = true;
@@ -402,7 +403,18 @@ export async function render(root, ctx) {
     try {
       const d = await fetchAll(ctx.sb, state.days);
       state.updated = new Date();
+      chartObserver?.disconnect();
       body.replaceChildren(...paint(d, ctx, state.days));
+      const chartSlot = body.querySelector(".daily-chart-slot");
+      if (chartSlot) {
+        chartObserver = new ResizeObserver(() => {
+          const { width, height } = chartSlot.getBoundingClientRect();
+          if (width > 0 && height > 0) {
+            chartSlot.replaceChildren(dailyChart(d.stats.data.daily, { width, height }));
+          }
+        });
+        chartObserver.observe(chartSlot);
+      }
     } catch (e) {
       body.replaceChildren(
         h("div", { class: "alert error" }, `Could not load the dashboard. ${errMsg(e)}`),
@@ -433,6 +445,7 @@ export async function render(root, ctx) {
   await load();
 
   return () => {
+    chartObserver?.disconnect();
     clearInterval(clock);
     clearInterval(auto);
     removeEventListener("skpass:live", onLive);
@@ -571,7 +584,7 @@ function paint(d, ctx, days) {
   // ---- activity chart
   const tot = dailyTotals(daily);
   const activityPanel = panel(
-    "span-8",
+    "span-8 activity-panel",
     `Activity, last ${days} days`,
     null,
     "#/logs",
@@ -616,7 +629,7 @@ function paint(d, ctx, days) {
         )
         : null,
     ),
-    tot.total ? dailyChart(daily) : emptyChart(
+    tot.total ? h("div", { class: "daily-chart-slot" }, dailyChart(daily)) : emptyChart(
       "No activity in this period",
       "Entries and exits will appear here after a gate scan.",
     ),
