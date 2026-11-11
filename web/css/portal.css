@@ -308,6 +308,13 @@ body.portal-page {
   grid-column: auto;
   min-width: 0;
 }
+.portal-page main {
+  padding-bottom: 16px;
+}
+.portal-page [data-purpose="gate-status-dashboard"] {
+  padding-top: 8px;
+  padding-bottom: 16px;
+}
 
 /* The mesh follows the pointer; content remains on a stationary layer. */
 .portal-pattern {
