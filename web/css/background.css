@@ -3,6 +3,21 @@ body:is(.portal-page, .pass-page, .tech-grid-bg, .registration-login, .admin-hom
   background: radial-gradient(ellipse at 48% 12%, #a3e63512, transparent 48%), #10141a !important;
   background-attachment: fixed !important;
 }
+/* The homepage's original ambient spot, shared independently of page layout. */
+body:is(.portal-page, .pass-page, .tech-grid-bg, .registration-login, .admin-home)::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 350px;
+  background: #91df161a;
+  filter: blur(130px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
 .portal-pattern {
   position: fixed;
   inset: 0;
