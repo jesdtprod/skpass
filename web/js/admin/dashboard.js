@@ -103,7 +103,6 @@ function stat(href, n, label, cls = "", sub = null, total = 0, basis = "register
         svgIcon("M7 17 17 7M7 7h10v10"),
       ),
     ),
-    sub ? h("div", { class: "metric-sub" }, sub) : null,
   );
 }
 
