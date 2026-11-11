@@ -238,7 +238,9 @@ export function hourChart(buckets, { nowHour = null, peak = null } = {}) {
     const hIn = (b.in / top) * plotH;
     const hOut = (b.out / top) * plotH;
     const g = svgEl("g");
-    g.append(svgEl("title", {}, `${String(h).padStart(2, "0")}:00 — ${b.in} in, ${b.out} out`));
+    g.append(
+      svgEl("title", {}, `${h % 12 || 12}:00 ${h < 12 ? "AM" : "PM"} — ${b.in} in, ${b.out} out`),
+    );
     if (nowHour === h) {
       g.append(
         svgEl("rect", {
@@ -284,40 +286,9 @@ export function hourChart(buckets, { nowHour = null, peak = null } = {}) {
           "font-family": "'Plus Jakarta Sans', sans-serif",
           "font-weight": "500",
           fill: "#7f93a0",
-        }, String(h).padStart(2, "0")),
+        }, `${h % 12 || 12} ${h < 12 ? "AM" : "PM"}`),
       );
     }
   });
-  if (peak) {
-    const count = String(peak.count);
-    const width = Math.max(24, count.length * 6.5 + 14);
-    const x = Math.min(
-      W - padR - width / 2,
-      Math.max(padL + width / 2, padL + slot * peak.hour + slot / 2),
-    );
-    const y = Math.max(3, padT + plotH - peak.count / top * plotH - 23);
-    const badge = svgEl("g", { class: "chart-count", "aria-label": `${count} movements` });
-    badge.append(
-      svgEl("rect", {
-        x: x - width / 2,
-        y,
-        width,
-        height: 18,
-        rx: 6,
-        fill: "#202d21",
-        stroke: "#a3e63540",
-      }),
-      svgEl("text", {
-        x,
-        y: y + 12,
-        "text-anchor": "middle",
-        "font-size": 10,
-        "font-family": "'JetBrains Mono', monospace",
-        "font-weight": 600,
-        fill: "#a3e635",
-      }, count),
-    );
-    svg.append(badge);
-  }
   return svg;
 }

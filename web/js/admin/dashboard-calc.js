@@ -96,7 +96,7 @@ export function peakHour(buckets) {
       best = i;
     }
   });
-  const hh = (h) => `${String(h).padStart(2, "0")}:00`;
+  const hh = (h) => `${h % 12 || 12}:00 ${h < 12 ? "AM" : "PM"}`;
   return best < 0 ? null : { hour: best, count: n, label: `${hh(best)}–${hh((best + 1) % 24)}` };
 }
 

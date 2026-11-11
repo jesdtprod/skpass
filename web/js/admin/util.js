@@ -23,6 +23,7 @@ export function fmtTime(iso, tz) {
       timeZone: tz,
       dateStyle: "medium",
       timeStyle: "short",
+      hour12: true,
     });
   } catch {
     return String(iso);

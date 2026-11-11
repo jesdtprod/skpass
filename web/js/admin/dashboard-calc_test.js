@@ -102,9 +102,9 @@ Deno.test("peakHour", () => {
   assertEquals(peakHour(b), null);
   b[8] = { in: 3, out: 2 };
   b[17] = { in: 1, out: 1 };
-  assertEquals(peakHour(b), { hour: 8, count: 5, label: "08:00–09:00" });
+  assertEquals(peakHour(b), { hour: 8, count: 5, label: "8:00 AM–9:00 AM" });
   b[23] = { in: 9, out: 0 };
-  assertEquals(peakHour(b).label, "23:00–00:00"); // wraps past midnight
+  assertEquals(peakHour(b).label, "11:00 PM–12:00 AM"); // wraps past midnight
 });
 
 Deno.test("denialLabel covers known codes and falls back safely", () => {

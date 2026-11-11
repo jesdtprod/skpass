@@ -452,7 +452,7 @@ async function refreshBar(override = {}) {
 }
 
 const fmtTime = (iso) =>
-  new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
 
 async function refreshHistory() {
   const h = (await queue.history()).slice(0, 15);

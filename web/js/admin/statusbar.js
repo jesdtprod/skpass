@@ -9,7 +9,7 @@ const formatter = new Intl.DateTimeFormat("en-CA", {
   hour: "2-digit",
   minute: "2-digit",
   second: "2-digit",
-  hourCycle: "h23",
+  hour12: true,
 });
 function updateNetwork() {
   network.textContent = navigator.onLine ? "Network: online" : "Network: offline";

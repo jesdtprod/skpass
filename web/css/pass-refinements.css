@@ -305,11 +305,24 @@ body.pass-page {
   margin-top: 10px;
 }
 @media (max-width: 620px) {
+  .pass-action-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .pass-action-row > button {
+    width: 100%;
+    font-size: 12px;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
   .pass-identity-layout.with-qr {
     grid-template-columns: minmax(0,1fr);
   }
-  .pass-holder-panel {
+  .pass-identity-layout.with-qr > .pass-qr-section {
     grid-row: 1;
+  }
+  .pass-identity-layout.with-qr > .pass-holder-panel {
+    grid-row: 2;
   }
   .pass-page .pass-identity-layout .qr-paper {
     max-width: 240px;

@@ -677,7 +677,7 @@ function paint(d, ctx, days) {
   const peak = peakHour(buckets);
   const hourPanel = panel(
     "span-7",
-    "Today by hour",
+    `Today by hour (${buckets.reduce((total, b) => total + b.in + b.out, 0)})`,
     peak ? `Peak ${peak.label} · ${peak.count} movements` : "No movements yet today",
     null,
     null,
