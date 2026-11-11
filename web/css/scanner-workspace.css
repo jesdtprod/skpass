@@ -695,3 +695,150 @@ body.site-theme.scan-page {
     text-align: left;
   }
 }
+
+/* Smooth assigned-gate listbox; native select remains the source of truth. */
+.scan-page .gate-trigger {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-height: 50px;
+  padding: 7px 36px 7px 40px;
+  border: 1px solid #36424a;
+  border-radius: 11px;
+  background: #11181d;
+  color: #e9eef0;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .18s, background .18s;
+}
+.scan-page .gate-trigger:hover {
+  border-color: #71838e;
+  background: #151e24;
+}
+.scan-page .gate-trigger:focus-visible,
+.scan-page .gate-trigger[aria-expanded="true"] {
+  outline: none;
+  border-color: #a3e635;
+  box-shadow: none;
+}
+.scan-page .gate-trigger:disabled {
+  cursor: not-allowed;
+  opacity: .6;
+}
+.gate-trigger-name {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 12px/18px "Plus Jakarta Sans", sans-serif;
+}
+.gate-trigger-detail {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 500 10px/14px "Plus Jakarta Sans", sans-serif;
+  color: #8199a7;
+}
+.gate-trigger > svg {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+  transition: transform .18s;
+  color: #8fa6b4;
+}
+.gate-trigger[aria-expanded="true"] > svg {
+  transform: translateY(-50%) rotate(180deg);
+  color: #a3e635;
+}
+.gate-menu {
+  position: fixed;
+  z-index: 90;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding: 5px;
+  border: 1px solid #3c4952;
+  border-radius: 12px;
+  background: #1a2227;
+  box-shadow: 0 16px 42px #0007;
+  animation: gate-menu-in .14s ease-out;
+}
+.gate-menu::-webkit-scrollbar {
+  display: none;
+}
+.gate-menu-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  min-height: 44px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #c5d5de;
+  cursor: pointer;
+  transition: background .12s;
+}
+.gate-menu-option > span {
+  min-width: 0;
+}
+.gate-menu-option strong {
+  display: block;
+  font: 600 12px/18px "Plus Jakarta Sans", sans-serif;
+  overflow-wrap: anywhere;
+}
+.gate-menu-option small {
+  display: block;
+  margin-top: 2px;
+  color: #8199a7;
+  font: 500 10px/15px "Plus Jakarta Sans", sans-serif;
+  overflow-wrap: anywhere;
+}
+.gate-menu-option > svg {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  color: #a3e635;
+  visibility: hidden;
+}
+.gate-menu-option.is-active {
+  background: #ffffff06;
+}
+.gate-menu-option[aria-selected="true"] {
+  color: #b2eb65;
+  background: #a3e63509;
+  border-color: #a3e63520;
+}
+.gate-menu-option[aria-selected="true"] > svg {
+  visibility: visible;
+}
+@keyframes gate-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gate-menu {
+    animation: none;
+  }
+  .gate-trigger,
+  .gate-trigger > svg,
+  .gate-menu-option {
+    transition: none;
+  }
+}

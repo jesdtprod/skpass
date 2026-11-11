@@ -1,4 +1,5 @@
 import { requireStaff, sb, signOut } from "./auth.js";
+import { enhanceGateSelect } from "./gate-dropdown.js";
 import {
   createQueue,
   isNearExpiry,
@@ -98,7 +99,10 @@ async function loadGates() {
       : null;
     const extra = [g.location, lane].filter(Boolean).join(" \u00b7 ");
     const label = extra ? `${g.name} (${extra})` : g.name;
-    gateSel.append(new Option(label, g.id));
+    const option = new Option(label, g.id);
+    option.dataset.name = g.name;
+    option.dataset.detail = extra;
+    gateSel.append(option);
   }
   let saved = "";
   try {
@@ -133,6 +137,7 @@ gateSel.addEventListener("change", () => {
   }
 });
 await loadGates();
+enhanceGateSelect(gateSel);
 
 // ------------------------------------------------------------------ feedback
 function play(pattern) {
