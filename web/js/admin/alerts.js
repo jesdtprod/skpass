@@ -129,6 +129,7 @@ export function start(ctx) {
       type: "button",
       "aria-label": "Alerts and notifications",
       "aria-expanded": "false",
+      "aria-haspopup": "dialog",
     },
     els.dot = h("span", { class: "al-dot", hidden: true }),
   );
@@ -368,7 +369,16 @@ export function start(ctx) {
     bell.title = state.unread ? "New registration awaiting review" : "Notifications and settings";
   }
 
-  async function syncPush(_quiet = false) {
+  async function syncPush() {
+    try {
+      await syncPushState();
+    } catch {
+      els.pushStatus.textContent =
+        "Could not check device notifications. Reopen this panel to try again.";
+    }
+  }
+
+  async function syncPushState() {
     const s = pushSupport();
     if (!s.supported) {
       els.pushStatus.textContent = REASON_TEXT[s.reason] ?? "Not supported here.";
@@ -424,6 +434,8 @@ export function start(ctx) {
             "error",
           );}
       }
+    } catch {
+      toast("Could not update device notifications. Please try again.", "error");
     } finally {
       pushBtn.disabled = false;
       syncPush(true);
@@ -436,6 +448,8 @@ export function start(ctx) {
     let r;
     try {
       r = await tokenThen((t) => sendAdminTest(t));
+    } catch {
+      r = { ok: false };
     } finally {
       testPush.disabled = false;
     }
