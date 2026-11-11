@@ -1,0 +1,83 @@
+.qr-modal-open {
+  overflow: hidden;
+}
+dialog.qr-modal {
+  padding: 0;
+  margin: auto;
+  width: min(560px,calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 40px);
+  border: 1px solid #ffffff20;
+  border-radius: 20px;
+  background: #10171b;
+  color: #e9eef0;
+  box-shadow: 0 32px 100px #0009;
+}
+.qr-modal::backdrop {
+  background: #05090dc9;
+  backdrop-filter: blur(6px);
+}
+.qr-modal-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid #ffffff12;
+}
+.qr-modal-heading h2 {
+  margin: 0;
+  font: 600 20px/28px "Space Grotesk",sans-serif;
+}
+.qr-modal-heading button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ffffff14;
+  border-radius: 10px;
+  background: #202a30;
+  color: #bdcdd7;
+  font-size: 24px;
+  cursor: pointer;
+}
+.qr-modal-heading button:hover {
+  color: #e9eef0;
+  border-color: #a3e63560;
+}
+.qr-modal-heading button:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 3px;
+}
+.qr-modal-body iframe {
+  display: block;
+  width: 100%;
+  height: min(740px,calc(100dvh - 110px));
+  border: 0;
+  background: #10171b;
+}
+.qr-embedded > skpass-header,
+.qr-embedded > skpass-footer,
+.qr-embedded > .portal-pattern {
+  display: none !important;
+}
+body.qr-embedded {
+  min-height: 0;
+  background: #10171b;
+}
+.qr-embedded main {
+  padding: 16px !important;
+}
+.qr-embedded main > div {
+  max-width: 100%;
+}
+@media (max-width:480px) {
+  dialog.qr-modal {
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+    border-radius: 16px;
+  }
+  .qr-modal-body iframe {
+    height: calc(100dvh - 88px);
+  }
+}
