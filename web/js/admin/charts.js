@@ -7,7 +7,7 @@ const svgEl = (tag, attrs = {}, text) => {
   return e;
 };
 
-export const COLORS = { in: "#10b981", out: "#334155" };
+export const COLORS = { in: "#a3e635", out: "#748995" };
 
 /** Stacked daily bars. rows: [{ day:'2026-11-11', in:3, out:2 }] */
 export function dailyChart(rows) {
@@ -27,7 +27,7 @@ export function dailyChart(rows) {
   for (let i = 0; i <= 4; i++) {
     const v = Math.round((niceMax / 4) * i);
     const y = padT + plotH - (v / niceMax) * plotH;
-    svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: y, y2: y, stroke: "#1e293b" }));
+    svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: y, y2: y, stroke: "#ffffff0d" }));
     svg.append(
       svgEl("text", {
         x: padL - 6,
