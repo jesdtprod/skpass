@@ -1,10 +1,10 @@
 /* Shared homepage mesh and ambient lime glow across portal and admin views. */
-body:is(.portal-page, .pass-page, .tech-grid-bg, .registration-login, .admin-home) {
+body:is(.portal-page, .pass-page, .tech-grid-bg, .registration-login) {
   background: radial-gradient(ellipse at 48% 12%, #a3e63512, transparent 48%), #10141a !important;
   background-attachment: fixed !important;
 }
 /* The homepage's original ambient spot, shared independently of page layout. */
-body:is(.portal-page, .pass-page, .tech-grid-bg, .registration-login, .admin-home)::before {
+body:is(.portal-page, .pass-page, .tech-grid-bg, .registration-login)::before {
   content: "";
   position: fixed;
   top: 0;
@@ -30,4 +30,7 @@ body:is(.portal-page, .pass-page, .tech-grid-bg, .registration-login, .admin-hom
 }
 .admin-home #content {
   background: transparent;
+}
+body.admin-home {
+  background: #10141a !important;
 }

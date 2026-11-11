@@ -321,7 +321,7 @@ export async function render(root, ctx) {
       h(
         "div",
         {},
-        h("h1", {}, "Dashboard"),
+        h("div", { class: "dash-title" }, h("h1", {}, "Dashboard"), liveEl),
         h(
           "p",
           { class: "dash-sub" },
@@ -331,8 +331,9 @@ export async function render(root, ctx) {
       h(
         "div",
         { class: "dash-controls" },
-        h("div", { class: "dash-row" }, liveEl, updatedEl, refreshBtn),
+        updatedEl,
         seg,
+        refreshBtn,
       ),
     ),
   );

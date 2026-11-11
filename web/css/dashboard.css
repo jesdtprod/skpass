@@ -1061,3 +1061,61 @@
     gap: 12px;
   }
 }
+
+/* The overview header follows the Approvals title, badge and action row. */
+.dashboard-view .dash-top {
+  align-items: center;
+  gap: 16px;
+}
+.dashboard-view .dash-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.dashboard-view .dash-title h1 {
+  margin: 0;
+}
+.dashboard-view .dash-sub {
+  margin-top: 6px;
+  max-width: 560px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #8fa1ac;
+}
+.dashboard-view .dash-controls {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.dashboard-view .dash-btn {
+  min-height: 44px;
+  padding: 8px 16px;
+  font-weight: 700;
+}
+.dashboard-view .live-pill {
+  padding: 4px 10px;
+  gap: 7px;
+  font: 700 11px/1 "JetBrains Mono", monospace;
+}
+.dashboard-view .live-pill i {
+  width: 6px;
+  height: 6px;
+}
+.dashboard-view .seg {
+  min-height: 44px;
+  align-items: stretch;
+  border-radius: 10px;
+}
+.dashboard-view .seg button {
+  border-radius: 7px;
+}
+@media (max-width: 720px) {
+  .dashboard-view .dash-controls {
+    width: 100%;
+  }
+  .dashboard-view .dash-updated {
+    flex-basis: 100%;
+  }
+}
