@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SKPass</title>
+    <meta name="description" content="Vehicle registration and QR gate pass" />
+    <meta name="theme-color" content="#2d9a0f" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="css/base.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="brand">
+        <img src="icons/logo.png" alt="SKPass logo" />
+        <h1>SKPass</h1>
+        <p>Vehicle Gate Pass</p>
+      </header>
+
+      <nav class="menu">
+        <a class="btn" href="register/">Register a vehicle</a>
+        <a class="btn secondary" href="my-qr/">My QR</a>
+        <a class="btn ghost" href="find/">Find my QR</a>
+        <a class="btn ghost" href="login/">Staff login</a>
+        <button class="btn ghost" data-install hidden>Add to Home Screen</button>
+      </nav>
+
+      <footer>Provincial Government</footer>
+    </main>
+    <script type="module" src="js/pwa.js"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "tasks": {
+    "fmt": "deno fmt",
+    "lint": "deno lint",
+    "test": "deno test --allow-env --allow-net --allow-read",
+    "check": "deno fmt --check && deno lint && deno test --allow-env --allow-net --allow-read --permit-no-files",
+    "serve": "deno run --allow-net --allow-read jsr:@std/http/file-server web --port 8137"
+  },
+  "fmt": {
+    "include": ["web/", "supabase/functions/", "docs/"],
+    "exclude": ["web/icons/"],
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "singleQuote": false
+  },
+  "lint": {
+    "include": ["web/", "supabase/functions/"],
+    "rules": { "tags": ["recommended"] }
+  },
+  "exclude": ["supabase/.temp/", "node_modules/"]
+}
