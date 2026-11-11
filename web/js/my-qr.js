@@ -659,11 +659,28 @@ async function refresh(id) {
   const rec = recs.find((r) => r.vehicle_id === id);
   if (!rec) return;
   const old = list?.querySelector(`[data-id="${id}"]`);
-  if (old) old.classList.add("opacity-60", "pointer-events-none");
-  const { view, note } = await viewFor(rec);
-  const fresh = card(rec, view, note);
-  if (old) old.replaceWith(fresh);
-  else list?.append(fresh);
+  if (old?.getAttribute("aria-busy") === "true") return;
+  old?.setAttribute("aria-busy", "true");
+  try {
+    const { view, note } = await viewFor(rec);
+    const fresh = card(rec, view, note);
+    if (old?.isConnected) old.replaceWith(fresh);
+    else if (!list?.querySelector(`[data-id="${id}"]`)) list?.append(fresh);
+  } catch {
+    // Keep the saved pass and its QR readable if the status service is unavailable.
+    if (old?.isConnected && !old.querySelector(".refresh-status-note")) {
+      old.append(
+        h(
+          "p",
+          { class: "refresh-status-note text-xs text-slate-400 mt-3", role: "status" },
+          "Could not update the status. Your saved pass is still displayed.",
+        ),
+      );
+    }
+  } finally {
+    old?.removeAttribute("aria-busy");
+    old?.classList.remove("opacity-60", "pointer-events-none");
+  }
 }
 
 async function render() {
