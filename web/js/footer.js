@@ -6,7 +6,7 @@ class SKPassFooter extends HTMLElement {
     const root = this.attachShadow({ mode: "open" });
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = new URL("../css/footer.css?v=modal-1", import.meta.url).href;
+    stylesheet.href = new URL("../css/footer.css?v=alignment-2", import.meta.url).href;
     root.append(stylesheet);
     const logo = new URL("../icons/logo.png", import.meta.url).href;
     const template = document.createElement("template");
@@ -16,12 +16,14 @@ class SKPassFooter extends HTMLElement {
       <img class="footer-logo" src="${logo}" width="40" height="40" alt="SKPass" />
       <span><strong>SKPass System</strong><small>Official Portal of the Provincial Government</small></span>
     </div>
+    <div class="footer-links">
     <nav aria-label="Footer">
       <a href="#privacy" class="policy-link" data-policy="privacy">Privacy Policy</a><span class="divider" aria-hidden="true">|</span><a href="#terms" class="policy-link" data-policy="terms">Terms of Clearance</a><span class="divider" aria-hidden="true">|</span><a href="#accessibility" class="policy-link" data-policy="accessibility">Accessibility</a><span class="divider" aria-hidden="true">|</span><a href="#gate-protocols" class="policy-link" data-policy="protocols">Gate Protocols</a>
       <span class="status" role="status"><i aria-hidden="true"></i><span class="status-text"></span></span>
     </nav>
+    <p class="legal">All rights reserved. Unauthorized access is punishable by law.</p>
+    </div>
   </div>
-  <p class="legal">All rights reserved. Unauthorized access is punishable by law.</p>
 </footer>
 <dialog class="policy-modal" id="policy-modal" aria-labelledby="policy-dialog-title">
   <div class="modal-card">
