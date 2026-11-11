@@ -1,6 +1,6 @@
 :host {
   display: block;
-  margin-top: 8px;
+  margin-top: 0;
 }
 * {
   box-sizing: border-box;
@@ -17,7 +17,7 @@ a {
   justify-content: center;
   gap: 8px;
   min-height: 40px;
-  padding: 10px 14px;
+  padding: 4px 14px;
   border: 0;
   border-radius: 6px;
   background: transparent;
