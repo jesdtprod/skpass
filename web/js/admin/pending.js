@@ -94,7 +94,58 @@ export async function render(root, ctx) {
     kpis,
   );
   const box = h("div");
+  const search = h("input", {
+    type: "search",
+    placeholder: "Search by plate number, owner name, phone...",
+    "aria-label": "Search approvals",
+  });
+  let category = "all";
+  const tabs = h("div", { class: "ap-filter-tabs", "aria-label": "Registration categories" });
+  for (
+    const [value, label] of [["all", "All Categories"], ["employee", "Employees"], [
+      "official",
+      "VIP / Officials",
+    ], ["visitor", "Visitors & Contractors"]]
+  ) {
+    const tab = h(
+      "button",
+      { type: "button", "aria-pressed": value === "all" ? "true" : "false" },
+      label,
+    );
+    tab.addEventListener("click", () => {
+      category = value;
+      for (const button of tabs.children) {
+        button.setAttribute("aria-pressed", String(button === tab));
+      }
+      applyFilters();
+    });
+    tabs.append(tab);
+  }
+  const searchWrap = h(
+    "div",
+    { class: "ap-search" },
+    svgIcon("M21 21l-5-5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0"),
+    search,
+  );
+  root.append(h("div", { class: "ap-filterbar" }, searchWrap, tabs));
+  const noMatches = h(
+    "p",
+    { class: "ap-no-matches", role: "status", hidden: true },
+    "No registrations match your filters.",
+  );
   root.append(box);
+  root.append(noMatches);
+  function applyFilters() {
+    const term = search.value.trim().toLocaleLowerCase();
+    let matches = 0;
+    for (const row of box.querySelectorAll("tbody tr")) {
+      row.hidden = !(category === "all" || row.dataset.category === category) ||
+        !row.dataset.search.includes(term);
+      if (!row.hidden) matches++;
+    }
+    noMatches.hidden = matches > 0 || !queue.length;
+  }
+  search.addEventListener("input", applyFilters);
   let queue = [];
 
   async function paintKpis(pendingCount) {
@@ -178,7 +229,10 @@ export async function render(root, ctx) {
     for (const v of data) {
       tbody.append(h(
         "tr",
-        {},
+        {
+          "data-category": v.category,
+          "data-search": `${v.plate} ${v.owner_name} ${v.phone}`.toLocaleLowerCase(),
+        },
         h("td", {}, h("strong", {}, v.plate)),
         h("td", {}, v.owner_name, h("div", { class: "muted small" }, v.phone)),
         h("td", { class: "cat" }, v.category),
@@ -237,6 +291,7 @@ export async function render(root, ctx) {
         ),
       ),
     );
+    applyFilters();
   }
   refreshBtn.addEventListener("click", async () => {
     refreshBtn.setAttribute("aria-busy", "true");

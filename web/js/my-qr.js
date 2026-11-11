@@ -685,7 +685,7 @@ async function viewFor(rec) {
 const lastStatusCheck = new Map();
 async function refresh(id, force = false) {
   const now = Date.now();
-  if (now - (lastStatusCheck.get(id) ?? 0) < (force ? 5000 : 30000)) return;
+  if (now - (lastStatusCheck.get(id) ?? 0) < (force ? 5000 : 25000)) return;
   const recs = await listVehicles();
   const rec = recs.find((r) => r.vehicle_id === id);
   if (!rec) return;

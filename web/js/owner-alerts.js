@@ -84,7 +84,11 @@ export function announceDecision({ vehicle_id, status, plate }) {
     anchor?.parentElement?.insertBefore(banner, anchor);
     banner.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
   }
-  playAlert(status === "approved" ? "approved" : "rejected");
+  const kind = status === "approved" ? "approved" : "rejected";
+  playAlert(kind).then((ms) => {
+    // Browsers block sound until the page has been touched once: offer a one-tap replay.
+    if (ms === -1) offerSound(kind, title);
+  });
   if (document.hidden) {
     showLocalNotification({
       title,
@@ -93,6 +97,25 @@ export function announceDecision({ vehicle_id, status, plate }) {
       url: `my-qr/?v=${encodeURIComponent(vehicle_id)}`,
     });
   }
+}
+
+/** Shown only when the browser blocked the alert sound. One tap unlocks audio and plays it. */
+function offerSound(kind, title) {
+  document.getElementById("sound-offer")?.remove();
+  const btn = el(
+    "button",
+    {
+      id: "sound-offer",
+      type: "button",
+      class: "oa-sound-offer",
+      onclick: async () => {
+        btn.remove();
+        await playAlert(kind, { force: true });
+      },
+    },
+    `🔔 ${title} Tap to play the sound`,
+  );
+  document.body.append(btn);
 }
 
 // ------------------------------------------------------------ the opt-in card
