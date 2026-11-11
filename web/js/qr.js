@@ -70,18 +70,12 @@ export function downloadQr(token, plate) {
       const logoSize = Math.round(qrSize * 0.18);
       const x = Math.round((qrSize - logoSize) / 2);
       const y = Math.round((qrSize - logoSize) / 2);
-      const pad = Math.round(logoSize * 0.12);
-      const r = Math.round(logoSize * 0.25);
-
-      // Clean white backing keeps the center logo separate from data modules.
+      const pad = Math.max(1, Math.round(logoSize * 0.025));
+      // A narrow circular quiet backing around the original full-color logo.
       g.fillStyle = "#ffffff";
-      if (typeof g.roundRect === "function") {
-        g.beginPath();
-        g.roundRect(x - pad, y - pad, logoSize + pad * 2, logoSize + pad * 2, [r + 2]);
-        g.fill();
-      } else {
-        g.fillRect(x - pad, y - pad, logoSize + pad * 2, logoSize + pad * 2);
-      }
+      g.beginPath();
+      g.arc(qrSize / 2, qrSize / 2, logoSize / 2 + pad, 0, Math.PI * 2);
+      g.fill();
 
       // Draw the official logo
       g.drawImage(img, x, y, logoSize, logoSize);
