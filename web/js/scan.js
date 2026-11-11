@@ -232,7 +232,7 @@ function stopCamera() {
   $("stop").hidden = true;
   torchBtn.hidden = true;
   torchOn = false;
-  torchBtn.textContent = "Torch: off";
+  torchBtn.textContent = "Torch: Off";
   updateStart();
 }
 
@@ -248,7 +248,7 @@ torchBtn.addEventListener("click", async () => {
   torchOn = !torchOn;
   try {
     await track.applyConstraints({ advanced: [{ torch: torchOn }] });
-    torchBtn.textContent = torchOn ? "Torch: on" : "Torch: off";
+    torchBtn.textContent = torchOn ? "Torch: On" : "Torch: Off";
   } catch {
     torchOn = false;
   }
