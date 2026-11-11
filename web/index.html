@@ -2,6 +2,13 @@
 <html class="dark" lang="en">
   <head>
     <meta charset="utf-8" />
+    <script>
+    // Auth emails (password reset) may land here via the project's Site URL. Hand them to the
+    // reset page, keeping the hash (it holds the one-time token, or the error such as otp_expired).
+    if (/[#&](type=recovery|error_code=)/.test(location.hash)) {
+      location.replace("reset/" + location.hash);
+    }
+    </script>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>SKPass - Vehicle Gate Pass | Provincial Government</title>
     <meta name="description"

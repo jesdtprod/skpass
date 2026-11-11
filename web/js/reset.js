@@ -22,6 +22,9 @@ export function passwordProblem(p, confirm) {
   return null;
 }
 
+// Remember whether the Auth server sent us an error (e.g. otp_expired) before supabase-js clears it.
+const linkError = new URLSearchParams(location.hash.slice(1)).get("error_code");
+
 // supabase-js has parsed #access_token=... by the time getSession resolves.
 const { data: { session } } = await sb.auth.getSession();
 // Never leave the one-time token sitting in the address bar / history.
@@ -29,6 +32,10 @@ if (location.hash) history.replaceState(null, "", location.pathname + location.s
 
 if (!session) {
   form.hidden = true;
+  if (linkError === "otp_expired") {
+    $("invalid-msg").textContent =
+      "This link has expired or was already used. Each reset link works only once, so please request a new one.";
+  }
   $("invalid").hidden = false;
 } else {
   form.hidden = false;

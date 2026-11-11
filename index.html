@@ -2,13 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script>
+      // Auth emails (password reset) may land here via the project's Site URL. Hand them to the
+      // reset page, keeping the hash (it holds the one-time token, or the error such as otp_expired).
+      if (/[#&](type=recovery|error_code=)/.test(location.hash)) {
+        location.replace("web/reset/" + location.hash);
+      }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SKPass</title>
-    <meta http-equiv="refresh" content="0; url=web/" />
+    <noscript><meta http-equiv="refresh" content="0; url=web/" /></noscript>
     <link rel="icon" type="image/png" href="web/icons/favicon-32.png" />
     <script>
       // Keep any query string / hash (e.g. ?plate=ABC or #/dashboard) when forwarding to the app.
-      location.replace("web/" + location.search + location.hash);
+      if (!/[#&](type=recovery|error_code=)/.test(location.hash)) {
+        location.replace("web/" + location.search + location.hash);
+      }
     </script>
   </head>
   <body>
