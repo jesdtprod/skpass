@@ -462,7 +462,15 @@ async function refreshHistory() {
     li.dataset.result = e.result;
     li.textContent = `${fmtTime(e.scanned_at)} · ${e.plate ?? "unknown QR"}${
       e.gate ? ` · ${e.gate}` : ""
-    } · ${e.result === "ok" ? `${e.direction ?? ""} recorded` : (e.message ?? e.result)}`;
+    } · ${
+      e.result === "ok"
+        ? (e.direction === "IN"
+          ? "Entry Recorded"
+          : e.direction === "OUT"
+          ? "Exit Recorded"
+          : "Recorded")
+        : (e.message ?? e.result)
+    }`;
     list.append(li);
   }
 }
