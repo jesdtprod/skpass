@@ -36,7 +36,7 @@
 .register-page #reg-form #phone.has-leading-icon {
   padding-left: 14px !important;
 }
-#login-form :is(input[type="email"],input[type="password"]) {
+#login-form :is(input[type="email"],input[type="password"],input[data-pw-toggle]) {
   width: 100%;
   min-height: 48px;
   border: 1px solid var(--line);

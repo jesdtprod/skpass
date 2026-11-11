@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
     <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
     <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/password-toggle.css" />
     <style>
     body {
       background: #090d14;
@@ -58,7 +59,8 @@
       color: #cbd5e1;
       margin-bottom: 6px;
     }
-    input[type="password"] {
+    input[type="password"],
+    input[data-pw-toggle] {
       width: 100%;
       padding: 12px;
       font-size: 1rem;
@@ -146,5 +148,6 @@
     </main>
     <script src="../js/vendor/supabase.js"></script>
     <script type="module" src="../js/reset.js"></script>
+    <script type="module" src="../js/password-toggle.js"></script>
   </body>
 </html>

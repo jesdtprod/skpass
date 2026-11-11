@@ -15,7 +15,7 @@ body .field :is(input:not([type="radio"]):not([type="checkbox"]):not([type="file
 .register-page :is(.dropdown-trigger, .calendar-trigger),
 .portal-page input#plate-quick-search,
 .portal-page #verify-plate-btn,
-#login-form :is(input[type="email"],input[type="password"]) {
+#login-form :is(input[type="email"],input[type="password"],input[data-pw-toggle]) {
   border-radius: var(--radius-control);
 }
 .register-page #reg-form .relative:has(> #phone) {
