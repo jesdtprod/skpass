@@ -5,3 +5,6 @@ supabase/.temp/
 supabase/.branches/
 node_modules/
 .DS_Store
+
+# local-only seeds (real emails)
+*.local.sql
