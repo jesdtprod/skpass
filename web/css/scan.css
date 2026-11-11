@@ -251,3 +251,5 @@ body:not(.scanning) .reticle {
 .synchist li[data-result="warning"] {
   color: #ffd58a;
 }
+
+.viewport:focus { outline: none; }

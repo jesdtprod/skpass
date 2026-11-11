@@ -237,6 +237,8 @@ function stopCamera() {
 }
 
 $("stop").addEventListener("click", () => {
+  // Ignore a tap that lands right after a result screen closes (a finger still on its way down).
+  if (Date.now() - lastDismissAt < 800) return;
   wantCamera = false;
   stopCamera();
   wakeLock?.release?.().catch(() => {});
@@ -621,13 +623,24 @@ function maybeShowReport() {
   });
 }
 
+let lastDismissAt = 0;
 function dismiss() {
   clearTimeout(overlayTimer);
   overlay.hidden = true;
   resultVersion++;
   busy = false;
   maybeShowReport();
-  if (overlay.hidden) (started ? $("stop") : startBtn).focus({ preventScroll: true });
+  lastDismissAt = Date.now();
+  if (overlay.hidden) {
+    // While scanning, never park focus on "Stop Camera": a stray Enter/Space (or a scanner
+    // wedge) would switch the camera off. Drop focus on the camera view instead, which does
+    // nothing when activated.
+    if (started) {
+      const view = $("video").closest(".viewport") ?? $("video");
+      view.tabIndex = -1;
+      view.focus({ preventScroll: true });
+    } else startBtn.focus({ preventScroll: true });
+  }
 }
 overlay.addEventListener("click", (event) => {
   if (event.target === overlay || event.target.closest("#ov-continue")) dismiss();
