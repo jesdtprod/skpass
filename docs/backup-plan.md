@@ -6,14 +6,14 @@
 
 ## 1. What must be protected
 
-| Data                                                           | Where                                     | Sensitivity                   |
-| -------------------------------------------------------------- | ----------------------------------------- | ----------------------------- |
-| Vehicles, owners, phone numbers, plates                        | Postgres `public.vehicles`                | **Personal data**             |
-| Movements (`gate_logs`), audit trail, settings, staff profiles | Postgres `public`                         | Personal / security           |
-| Staff logins (emails, password hashes)                         | Postgres `auth` schema (Supabase Auth)    | **Secret**                    |
-| Vehicle photos                                                 | Storage bucket `vehicle-photos` (private) | **Personal data**             |
-| Edge Function code, migrations, web app                        | This Git repository                       | Public                        |
-| Secrets (`CLAIM_PEPPER`, Turnstile secret)                     | Supabase secrets                          | **Secret, not in any backup** |
+| Data                                                            | Where                                     | Sensitivity                   |
+| --------------------------------------------------------------- | ----------------------------------------- | ----------------------------- |
+| Vehicles, owners, phone numbers, plates                         | Postgres `public.vehicles`                | **Personal data**             |
+| Movements (`gate_logs`), audit trail, settings, staff profiles  | Postgres `public`                         | Personal / security           |
+| Staff logins (emails, password hashes)                          | Postgres `auth` schema (Supabase Auth)    | **Secret**                    |
+| Vehicle photos                                                  | Storage bucket `vehicle-photos` (private) | **Personal data**             |
+| Edge Function code, migrations, web app                         | This Git repository                       | Public                        |
+| Secrets (`CLAIM_PEPPER`, Turnstile secret, `VAPID_PRIVATE_KEY`) | Supabase secrets                          | **Secret, not in any backup** |
 
 The code and schema are fully reproducible from Git. The **data** and the **secrets** are not, so
 they are what the backups are for.
@@ -76,9 +76,12 @@ hashes, and this repository is public.
 4. Load the data: `psql "<new connection string>" -f data-auth.sql` then `-f data-public.sql`. Load
    `auth` first so staff profiles have their users.
 5. Re-upload `photos/` to the `vehicle-photos` bucket.
-6. Set the secrets: `CLAIM_PEPPER` (the **original** value), `TURNSTILE_SECRET_KEY`.
+6. Set the secrets: `CLAIM_PEPPER` (the **original** value), `TURNSTILE_SECRET_KEY`, and the VAPID
+   keys (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`). If the VAPID private key is
+   lost, generate a new pair (and update `web/js/config.js`): everyone then turns notifications on
+   again.
 7. Redeploy the Edge Functions: `register-vehicle`, `my-status`, `find-my-qr`, `create-staff`,
-   `report-error`.
+   `report-error`, `push-subscribe`, `notify-owner`.
 8. Update `web/js/config.js` with the new project URL and publishable key, commit, deploy.
 9. In Supabase → Authentication → URL Configuration, set the Site URL and redirect URLs.
 10. Smoke test (section 7).

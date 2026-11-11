@@ -36,6 +36,43 @@ For the people running the system day to day. Backups and disaster recovery are 
   the same person signs in again. **Scans are tied to the guard who made them.**
 - If a phone is lost, its unsent scans are lost with it.
 
+## Notifications and alert sounds
+
+**Admins** (Admin dashboard → the 🔔 bell, bottom-left):
+
+- While the dashboard is **open**, a new registration appears **within seconds**: a toast, the
+  badge, the list refreshes, and a **loud alert that plays 3 times**. It works in a background tab
+  too.
+- **Turn on notifications** on a device to also be told when the dashboard is **closed** (a system
+  notification that stays until you act on it, with a 3-buzz vibration on Android). Use **Send a
+  test notification** to check a device. Each admin can register up to 10 devices.
+- The first time, tap anywhere on the page once so the browser allows sound.
+
+**Vehicle owners** (My QR page): while a registration is pending, the page offers **Notify me when
+it's decided**. When an administrator approves or rejects it, the owner's device is notified (even
+if the page is closed), and an open page shows a green/red banner with a different 3× sound for
+approved and rejected. Owners need no account: a device is tied to the vehicle with its claim
+secret. One phone can follow several vehicles.
+
+**Limits you should know about**
+
+- **Sound is only custom while a SKPass page is open.** When it is closed, the phone/computer plays
+  its **own** notification sound at its own volume. Web pages cannot choose, loop or boost that
+  sound. Nothing can be louder than the device volume.
+- **iPhone/iPad:** notifications only work after the person adds SKPass to the Home Screen (Share →
+  Add to Home Screen) and opens it from there (iOS 16.4 or later).
+- Browsers delete push permission if the user clears site data; the person must turn it on again.
+- The owner is notified when an **admin approves/rejects in the dashboard**. A change made directly
+  in the database does not notify anyone.
+- A push is encrypted end to end, but passes through Google/Apple/Mozilla's push services. It
+  contains only the plate and the decision.
+- Notifications are not a delivery guarantee: a phone that is off or offline gets them (or not,
+  depending on the push service's time limit of 24 h) later. My QR always shows the true status.
+
+**Keys.** `VAPID_PRIVATE_KEY` (and `VAPID_PUBLIC_KEY`, `VAPID_SUBJECT`) are Supabase secrets; the
+public key is also in `web/js/config.js`. If the private key is ever replaced, every device must
+turn notifications on again (old subscriptions are bound to the old key).
+
 ## Things to watch
 
 - **System health → App errors.** A burst of errors usually means a bad deploy or a phone/browser

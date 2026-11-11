@@ -6,6 +6,7 @@ import { announceDecision, mountNotifyCard, refreshNotifyCard } from "./owner-al
 const list = document.getElementById("list");
 const empty = document.getElementById("empty");
 const welcome = document.getElementById("welcome");
+const skeleton = document.getElementById("skeleton-loader");
 const params = new URLSearchParams(location.search);
 const focusId = params.get("v");
 if (params.get("new") === "1" && welcome) welcome.hidden = false;
@@ -639,6 +640,7 @@ async function refresh(id) {
 
 async function render() {
   const recs = await listVehicles();
+  if (skeleton) skeleton.hidden = true;
   if (!list || !empty) return;
   list.replaceChildren();
   empty.hidden = recs.length > 0;
