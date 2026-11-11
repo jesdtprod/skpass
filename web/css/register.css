@@ -4,6 +4,110 @@ body.register-page {
   background-attachment: fixed;
   font-family: "Plus Jakarta Sans", sans-serif;
 }
+.register-page .custom-dropdown > .absolute {
+  display: none;
+}
+.register-page .dropdown-trigger {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 44px 12px 14px;
+  background: #10171b;
+  border: 1px solid #37434b;
+  border-radius: 10px;
+  color: #e9eef0;
+  text-align: left;
+  font: 400 14px/22px "Plus Jakarta Sans", sans-serif;
+  cursor: pointer;
+  position: relative;
+  transition: border-color .18s, background .18s;
+}
+.register-page .dropdown-trigger::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  width: 8px;
+  height: 8px;
+  border-right: 1.8px solid #99aeb8;
+  border-bottom: 1.8px solid #99aeb8;
+  transform: rotate(45deg);
+  transition: transform .18s;
+}
+.register-page .dropdown-trigger[aria-expanded="true"] {
+  border-color: #a3e635;
+}
+.register-page .dropdown-trigger[aria-expanded="true"]::after {
+  transform: translateY(4px) rotate(225deg);
+}
+.register-page .dropdown-trigger:hover {
+  background: #151e23;
+  border-color: #6c818c;
+}
+.register-page .dropdown-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  padding: 6px;
+  max-height: 280px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #192126;
+  border: 1px solid #3b484f;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px #0006;
+  animation: dropdown-enter .16s ease-out;
+}
+.register-page .dropdown-options[hidden] {
+  display: none;
+}
+.register-page .dropdown-options [role="option"] {
+  padding: 10px 32px 10px 12px;
+  min-height: 42px;
+  border-radius: 7px;
+  font-size: 14px;
+  line-height: 22px;
+  color: #d4dfe5;
+  cursor: pointer;
+  position: relative;
+}
+.register-page .dropdown-options [role="option"]:hover,
+.register-page .dropdown-options .active {
+  background: #ffffff09;
+}
+.register-page .dropdown-options [aria-selected="true"] {
+  background: #a3e63512;
+  color: #b8ed65;
+}
+.register-page .dropdown-options [aria-selected="true"]::after {
+  content: "\2713";
+  position: absolute;
+  right: 12px;
+}
+@keyframes dropdown-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 639px) {
+  .register-page .dropdown-trigger {
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .register-page .dropdown-options {
+    animation: none;
+  }
+  .register-page .dropdown-trigger::after {
+    transition: none;
+  }
+}
 .register-page main,
 .register-page footer {
   position: relative;
@@ -62,6 +166,142 @@ body.register-page {
 }
 .register-page svg {
   flex-shrink: 0;
+}
+.register-page #reg-form {
+  --field-height: 48px;
+}
+.register-page #reg-form .field {
+  min-width: 0;
+}
+.register-page #reg-form :is(input:not([type="radio"]):not([type="file"]),select,textarea) {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--field-height);
+  padding: 12px 14px;
+  border-width: 1px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: normal;
+  transition: border-color .15s;
+}
+.register-page #reg-form input::placeholder {
+  color: #82939e;
+  opacity: 1;
+}
+.register-page #reg-form label:not(.role-btn) {
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: .025em;
+}
+.register-page #reg-form .field > label {
+  margin-bottom: 8px;
+}
+.register-page #reg-form .field > .flex:first-child {
+  margin-bottom: 8px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.register-page #reg-form .field > .relative > .absolute {
+  color: #99aeb8;
+}
+.register-page #reg-form .field > .relative > .absolute svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.register-page #reg-form #owner_name {
+  padding-right: 44px;
+}
+.register-page #reg-form #plate {
+  padding-right: 112px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.register-page #reg-form #color {
+  padding-right: 80px;
+}
+.register-page #reg-form select {
+  appearance: none;
+  background-image: none;
+  padding-right: 44px;
+  cursor: pointer;
+  color-scheme: dark;
+}
+.register-page #reg-form select option {
+  background: #10171b;
+  color: #e9eef0;
+}
+.register-page #reg-form input[type="date"] {
+  color-scheme: dark;
+}
+.register-page #reg-form .relative:has(> #phone) {
+  border: 1px solid #37434b;
+  border-radius: 10px;
+  background: #10171b;
+  overflow: hidden;
+}
+.register-page #reg-form .relative:has(> #phone):focus-within {
+  border-color: #a3e635;
+}
+.register-page #reg-form .relative:has(> #phone) > span {
+  padding-inline: 14px;
+  border: 0;
+  border-right: 1px solid #37434b;
+  border-radius: 0;
+  background: #ffffff03;
+  font: 500 13px "Plus Jakarta Sans", sans-serif;
+}
+.register-page #reg-form #phone {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.register-page #reg-form > .border-t {
+  padding-top: 20px;
+}
+.register-page #reg-form .role-btn {
+  min-height: 44px;
+  gap: 8px;
+  font-size: 14px;
+}
+.register-page #reg-form .role-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.register-page #reg-form .role-btn.tab-active svg {
+  color: inherit;
+}
+.register-page #reg-form .field:has(input[type="file"]) > .relative {
+  padding: 24px 16px;
+}
+.register-page #reg-form .field:has(input[type="file"]) > .relative:focus-within {
+  border-color: #a3e635;
+}
+.register-page #file-chosen-text {
+  overflow-wrap: anywhere;
+}
+.register-page #submit {
+  min-height: 48px;
+  font: 700 15px "Plus Jakarta Sans", sans-serif;
+}
+@media (max-width: 639px) {
+  .register-page #reg-form :is(input:not([type="radio"]):not([type="file"]),select,textarea) {
+    font-size: 16px;
+  }
+  .register-page #reg-form .role-btn {
+    font-size: 12px;
+    gap: 6px;
+  }
+  .register-page #reg-form #plate {
+    padding-right: 14px;
+  }
+  .register-page #reg-form .relative:has(> #plate) > .absolute {
+    display: none;
+  }
 }
 @media (max-width: 639px) {
   .register-page header .leading-tight > div:last-child {

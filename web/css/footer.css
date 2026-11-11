@@ -1,0 +1,104 @@
+/* Isolated by the footer's shadow root, identical on every page. */
+:host {
+  display: block;
+  width: 100%;
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
+}
+* {
+  box-sizing: border-box;
+}
+footer {
+  padding: 28px 24px;
+  border-top: 1px solid #ffffff12;
+  background: #0b1013;
+  color: #9ba9b1;
+  font: 400 12px/1.8 "Plus Jakarta Sans", sans-serif;
+  text-align: left;
+}
+.inner {
+  max-width: 1280px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px 40px;
+}
+.identity {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+}
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 24px;
+  height: 24px;
+  background: #141c25;
+  border: 1px solid #ffffff12;
+  border-radius: 6px;
+  color: #a3e635;
+}
+.name {
+  font-weight: 500;
+}
+strong {
+  color: #cbd5e1;
+  font-weight: 700;
+}
+.rights {
+  display: block;
+  margin-top: 4px;
+}
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+a {
+  color: #aab7bf;
+  text-decoration: none;
+  white-space: nowrap;
+}
+a:hover {
+  color: #a3e635;
+}
+a:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+.separator {
+  color: #53616a;
+}
+@media (max-width: 1023px) {
+  .inner {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .identity {
+    text-align: center;
+  }
+  nav {
+    justify-content: center;
+  }
+}
+@media (max-width: 480px) {
+  footer {
+    padding: 24px 16px;
+  }
+  .identity {
+    align-items: flex-start;
+  }
+  .badge {
+    margin-top: 2px;
+  }
+  nav {
+    column-gap: 10px;
+  }
+}

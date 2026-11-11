@@ -239,71 +239,8 @@
   <body
     class="text-slate-100 flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-black">
     <!-- BEGIN: MainHeader -->
-    <header
-      class="w-full border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md sticky top-0 z-30">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <!-- Brand & Department Details -->
-        <div class="flex items-center gap-3">
-          <a class="flex items-center gap-3 group" href="../">
-            <div
-              class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-700 via-emerald-500 to-teal-400 p-[1px] shadow-lg shadow-emerald-950/50"
-            >
-              <div
-                class="w-full h-full bg-[#0a101d] rounded-[11px] flex items-center justify-center">
-                <svg
-                  class="w-5 h-5 text-emerald-400"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewbox="0 0 24 24"
-                >
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                  <path d="m9 12 2 2 4-4"></path>
-                </svg>
-              </div>
-            </div>
-            <div class="leading-tight">
-              <div class="flex items-center gap-1.5">
-                <span class="text-xs uppercase tracking-wider font-semibold text-slate-300">
-                  Provincial Government
-                </span>
-              </div>
-              <div
-                class="text-[11px] text-slate-400 font-mono">Digital Access &amp; Security Division</div>
-            </div>
-          </a>
-        </div>
-
-        <!-- Live Terminal Status Badges -->
-        <div class="flex items-center gap-3">
-          <div
-            class="hidden sm:flex items-center gap-2 bg-slate-900/90 border border-slate-800 text-xs px-3 py-1.5 rounded-full font-mono text-slate-300"
-          >
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Gate Scanner Ready</span>
-            <span class="text-slate-600">|</span>
-            <span class="text-emerald-400">0.4s Latency</span>
-          </div>
-          <a
-            id="support-link"
-            class="text-xs font-medium text-slate-300 hover:text-white bg-slate-900/90 border border-slate-800 hover:border-slate-700 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
-            href="#support"
-          >
-            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
-              <path
-                d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 4.243a9 9 0 01-2.829-2.829m0 0L3 21m2.829-5.636a5 5 0 01-2.829-2.829"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-              ></path>
-            </svg>
-            Support Desk
-          </a>
-        </div>
-      </div>
-    </header>
+    <skpass-header></skpass-header>
+    <script type="module" src="../js/header.js"></script>
     <!-- END: MainHeader -->
 
     <!-- BEGIN: MainContent -->
@@ -536,43 +473,8 @@
     <!-- END: MainContent -->
 
     <!-- BEGIN: MainFooter -->
-    <footer class="w-full border-t border-slate-800/80 bg-slate-950/70 py-4 mt-auto">
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-slate-500"
-      >
-        <!-- Security & Provincial Notice -->
-        <div class="flex items-center gap-2 text-center md:text-left">
-          <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-          <span>
-            SKPass System — Official Portal of the
-            <strong class="text-slate-300 font-semibold">Provincial Government</strong>. Unauthorized access is punishable by law.
-          </span>
-        </div>
-
-        <!-- Legal & Protocol Links -->
-        <div class="flex flex-wrap items-center justify-center gap-4 text-slate-400">
-          <a
-            class="hover:text-emerald-400 transition-colors"
-            href="#privacy"
-            onclick="alert('Privacy Policy: All vehicle registration data is secured in compliance with the Data Privacy Act.'); return false;"
-          >Privacy Policy</a>
-          <span>•</span>
-          <a
-            class="hover:text-emerald-400 transition-colors"
-            href="#terms"
-            onclick="alert('Terms of Clearance: All gate passes are non-transferable and subject to security marshal inspection upon perimeter entry.'); return false;"
-          >Terms of Clearance</a>
-          <span>•</span>
-          <a
-            class="hover:text-emerald-400 transition-colors"
-            href="#gate-protocols"
-            onclick="alert('Gate Protocols: Vehicles must slow down to 10 km/h at checkpoint scanners. Display your digital QR pass or physical placard to the guard camera.'); return false;"
-          >Gate Protocols</a>
-          <span>•</span>
-          <span class="font-mono text-slate-600">SEC-GATE v4.2.1</span>
-        </div>
-      </div>
-    </footer>
+    <skpass-footer></skpass-footer>
+    <script type="module" src="../js/footer.js"></script>
     <!-- END: MainFooter -->
 
     <!-- QR Code Generator & Core Scripts -->

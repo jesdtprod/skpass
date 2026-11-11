@@ -6,7 +6,10 @@ import { shrinkImage } from "./image.js";
 const form = document.getElementById("reg-form");
 const submitBtn = document.getElementById("submit");
 const alertBox = document.getElementById("alert");
-const today = new Date().toISOString().slice(0, 10);
+const now = new Date();
+const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${
+  String(now.getDate()).padStart(2, "0")
+}`;
 
 // ---- category switch: show only the fields that apply
 function showCategory(cat) {

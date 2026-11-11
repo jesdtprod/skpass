@@ -1,0 +1,182 @@
+.input-with-icon {
+  position: relative;
+}
+.input-leading-icon {
+  position: absolute;
+  left: 14px;
+  top: 24px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: #99aeb8;
+  pointer-events: none;
+}
+.input-leading-icon svg {
+  width: 18px;
+  height: 18px;
+}
+.input-with-icon .has-leading-icon {
+  padding-left: 44px !important;
+}
+.register-page #reg-form .relative:has(> #phone) > span:not(.input-leading-icon) {
+  padding-left: 42px;
+}
+.register-page #reg-form .relative:has(> #phone) > .input-leading-icon {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  width: 18px;
+  height: 18px;
+  color: #99aeb8;
+}
+.register-page #reg-form #phone.has-leading-icon {
+  padding-left: 14px !important;
+}
+#login-form :is(input[type="email"],input[type="password"]) {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font: 400 16px "Plus Jakarta Sans", sans-serif;
+}
+#login-form .input-leading-icon {
+  color: #667078;
+}
+.calendar-control {
+  position: relative;
+}
+.calendar-trigger {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid #37434b;
+  border-radius: 10px;
+  background: #10171b;
+  color: #e9eef0;
+  text-align: left;
+  font: 400 14px/22px "Plus Jakarta Sans", sans-serif;
+  cursor: pointer;
+  transition: border-color .18s;
+}
+.calendar-trigger:hover {
+  border-color: #6c818c;
+}
+.calendar-trigger[aria-expanded="true"] {
+  border-color: #a3e635;
+}
+.calendar-trigger:disabled {
+  opacity: .5;
+  cursor: default;
+}
+.calendar-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 40;
+  width: 288px;
+  max-width: calc(100vw - 64px);
+  padding: 12px;
+  border: 1px solid #3b484f;
+  border-radius: 14px;
+  background: #192126;
+  color: #d4dfe5;
+  box-shadow: 0 16px 40px #0006;
+  font: 400 13px/1.5 "Plus Jakarta Sans", sans-serif;
+  animation: calendar-enter .16s ease-out;
+}
+.calendar-panel[hidden],
+.calendar-control input[hidden] {
+  display: none !important;
+}
+.calendar-heading {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.calendar-heading strong {
+  flex: 1;
+  padding-left: 4px;
+  font-weight: 600;
+}
+.calendar-panel button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 8px;
+  font: inherit;
+}
+.calendar-heading button {
+  width: 36px;
+  height: 36px;
+  font-size: 24px;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0,1fr));
+  gap: 2px;
+}
+.calendar-grid > span {
+  text-align: center;
+  color: #99aeb8;
+  font-size: 11px;
+  line-height: 28px;
+}
+.calendar-grid button {
+  min-height: 36px;
+  padding: 0;
+}
+.calendar-panel button:hover:not(:disabled) {
+  background: #ffffff10;
+}
+.calendar-panel button[aria-current="date"] {
+  box-shadow: inset 0 0 0 1px #a3e63570;
+}
+.calendar-panel button.selected {
+  background: #a3e635;
+  color: #19280e;
+  font-weight: 700;
+}
+.calendar-panel button.selected:hover {
+  background: #b3ee53;
+}
+.calendar-panel button:disabled {
+  opacity: .3;
+  cursor: default;
+}
+.calendar-panel button:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 0;
+}
+@keyframes calendar-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (min-width: 768px) {
+  .field:has(#valid_to) .calendar-panel {
+    left: auto;
+    right: 0;
+  }
+}
+@media (max-width: 639px) {
+  .calendar-trigger {
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .calendar-panel {
+    animation: none;
+  }
+}

@@ -516,3 +516,13 @@ table.data tr.click:hover td {
 .btn.ghost:hover {
   background: #f1f4f0;
 }
+
+/* Shared chrome spans the admin workspace; keep navigation and content together. */
+body.admin {
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+body.admin > skpass-header,
+body.admin > skpass-footer {
+  flex: 0 0 100%;
+}

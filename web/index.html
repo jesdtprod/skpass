@@ -121,63 +121,8 @@
     ></div>
 
     <!-- BEGIN: SiteNavigation -->
-    <header
-      class="relative z-10 w-full border-b border-surface-border/60 bg-surface-base/80 backdrop-blur-md px-6 py-4"
-    >
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <!-- Left: Official Authority Identity -->
-        <div class="flex items-center gap-3">
-          <a href="./" aria-label="SKPass home" class="shrink-0">
-            <img src="icons/logo.png?v=original-1" width="40" height="40" alt="SKPass"
-              class="w-10 h-10 object-contain" />
-          </a>
-          <div class="leading-tight">
-            <span class="text-xs tracking-wider uppercase font-semibold text-slate-400 block">
-              Provincial Government
-            </span>
-            <span
-              class="text-xs text-slate-500 font-medium">Digital Access &amp; Security Division</span>
-          </div>
-        </div>
-
-        <!-- Right: Real-time Gate Indicator & Help Link -->
-        <div class="flex items-center gap-4 sm:gap-6">
-          <!-- Live System Status -->
-          <div
-            class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-medium"
-          >
-            <span class="w-2 h-2 rounded-full bg-lime-500 status-pulse"></span>
-            <span class="text-slate-300">All Gates Active</span>
-            <span class="text-slate-600">|</span>
-            <span class="text-brand-400 font-mono">0.4s Scan Avg</span>
-          </div>
-
-          <!-- Official Support Link -->
-          <a
-            id="support-link"
-            class="text-xs text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"
-            href="#support"
-          >
-            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 14v-3a9 9 0 0 1 18 0v3" />
-              <rect x="3" y="11" width="4" height="7" rx="2" />
-              <rect x="17" y="11" width="4" height="7" rx="2" />
-              <path d="M21 16v2a4 4 0 0 1-4 4h-3" />
-              <path d="M11 22h3" />
-            </svg>
-            Support Desk
-          </a>
-
-          <!-- Staff Access Direct Link -->
-          <a
-            class="text-xs font-semibold px-3 py-1.5 rounded-md text-slate-300 hover:text-white hover:bg-slate-800/80 border border-slate-700/60 transition"
-            href="login/"
-          >
-            Official Staff Portal →
-          </a>
-        </div>
-      </div>
-    </header>
+    <skpass-header></skpass-header>
+    <script type="module" src="js/header.js"></script>
     <!-- END: SiteNavigation -->
 
     <!-- BEGIN: MainContent -->
@@ -505,44 +450,8 @@
     <!-- END: InformationDrawer / Gates Grid -->
 
     <!-- BEGIN: MainFooter -->
-    <footer
-      class="site-footer relative z-10 w-full border-t border-surface-border/70 bg-surface-base/90 backdrop-blur-md py-6 px-6 text-slate-500 text-xs"
-    >
-      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <!-- Authority & Copyright Notice -->
-        <div class="flex items-center gap-3 text-center md:text-left">
-          <div
-            class="w-6 h-6 rounded-md bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400"
-          >
-            <svg class="w-3.5 h-3.5 text-brand-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"></path>
-            </svg>
-          </div>
-          <div>
-            <span class="text-slate-400 font-medium">SKPass System</span> &mdash; Official Portal of the
-            <strong class="text-slate-300">Provincial Government</strong>.
-            <span class="block md:inline text-slate-600">
-              All rights reserved. Unauthorized access is punishable by law.
-            </span>
-          </div>
-        </div>
-
-        <!-- Footer Policy Links -->
-        <div class="flex items-center gap-4 text-slate-400 flex-wrap justify-center">
-          <a class="hover:text-brand-400 transition-colors" href="#privacy"
-            onclick="alert('Privacy Policy: All vehicle registration data is secured in compliance with the Data Privacy Act.'); return false;">Privacy Policy</a>
-          <span aria-hidden="true">&bull;</span>
-          <a class="hover:text-brand-400 transition-colors" href="#terms"
-            onclick="alert('Terms of Clearance: All gate passes are non-transferable and subject to security marshal inspection upon perimeter entry.'); return false;">Terms of Clearance</a>
-          <span aria-hidden="true">&bull;</span>
-          <a class="hover:text-brand-400 transition-colors" href="#accessibility"
-            onclick="alert('Accessibility: High-contrast responsive design optimized for standard screen readers and high-throughput checkpoint terminals.'); return false;">Accessibility</a>
-          <span aria-hidden="true">&bull;</span>
-          <a class="hover:text-brand-400 transition-colors" href="#gate-protocols"
-            onclick="alert('Gate Protocols: Vehicles must slow down to 10 km/h at checkpoint scanners. Display your digital QR pass or physical placard to the guard camera.'); return false;">Gate Protocols</a>
-        </div>
-      </div>
-    </footer>
+    <skpass-footer></skpass-footer>
+    <script type="module" src="js/footer.js"></script>
     <!-- END: MainFooter -->
 
     <!-- PWA Service Worker Registration -->
@@ -572,14 +481,6 @@
       } else {
         searchInput?.focus();
       }
-    });
-
-    // Support Desk modal / notification
-    document.getElementById("support-link")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      alert(
-        "Provincial Security Operations Center\n\nGate Marshal Support Hotline: (02) 8920-0000 loc. 4421\nEmail: security-clearance@skpass.gov\nHours: 24/7 Gate Patrol Dispatch",
-      );
     });
     </script>
   </body>

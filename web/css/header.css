@@ -1,0 +1,140 @@
+:host {
+  display: block;
+  width: 100%;
+  position: relative;
+  z-index: 30;
+  flex-shrink: 0;
+}
+* {
+  box-sizing: border-box;
+}
+header {
+  background: #0b1013;
+  border-bottom: 1px solid #ffffff12;
+  padding: 16px 24px;
+  font: 500 12px/1.5 "Plus Jakarta Sans", sans-serif;
+  color: #94a3b8;
+}
+.inner {
+  max-width: 1280px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.brand img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.brand strong {
+  display: block;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: .025em;
+  font-weight: 600;
+}
+.brand small {
+  display: block;
+  line-height: 1.25;
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 0;
+}
+nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  border: 1px solid #1e293b;
+  background: #0f172a;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: #cbd5e1;
+}
+.status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #91df16;
+}
+.status b {
+  color: #a3e635;
+  font: 600 12px "JetBrains Mono", monospace;
+}
+.divider {
+  color: #475569;
+}
+.support {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.support svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.staff {
+  padding: 6px 12px;
+  border: 1px solid #33415599;
+  border-radius: 6px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #cbd5e1;
+}
+a:hover {
+  color: #e9eef0;
+}
+a:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+@media (max-width: 900px) {
+  .status {
+    display: none;
+  }
+}
+@media (max-width: 639px) {
+  header {
+    padding: 12px 16px;
+  }
+  .inner {
+    gap: 12px;
+  }
+  .support {
+    display: none;
+  }
+  .brand {
+    gap: 8px;
+  }
+  .brand strong {
+    font-size: 10px;
+  }
+  .brand small {
+    font-size: 10px;
+  }
+  .staff {
+    padding: 8px;
+    font-size: 10px;
+  }
+}
