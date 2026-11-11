@@ -309,6 +309,7 @@ body.portal-page {
   min-width: 0;
 }
 .portal-page main {
+  padding-top: 24px;
   padding-bottom: 16px;
 }
 .portal-page [data-purpose="gate-status-dashboard"] {
