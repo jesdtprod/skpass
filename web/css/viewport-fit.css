@@ -19,8 +19,8 @@
     margin-bottom: 0;
   }
   .portal-page .portal-logo {
-    width: 150px;
-    height: 150px;
+    width: 172px;
+    height: 172px;
     margin-bottom: 0;
   }
   .portal-page [data-purpose="action-portal-container"] > div > div:last-child {
@@ -50,7 +50,7 @@
   body > main > div > .text-center {
     margin-bottom: 0;
   }
-  body > main > div > .text-center > div:first-child,
+  body:not(.portal-page) > main > div > .text-center > div:first-child,
   .my-qr-brand-frame {
     width: 56px;
     height: 56px;
@@ -87,11 +87,11 @@
     padding-block: 10px !important;
   }
   .portal-page .portal-logo {
-    width: 128px;
-    height: 128px;
+    width: 148px;
+    height: 148px;
   }
   .portal-page [data-purpose="portal-branding"] {
-    gap: 12px;
+    gap: 6px;
   }
   .portal-page [data-purpose="primary-action-buttons"] > a {
     min-height: 58px;
