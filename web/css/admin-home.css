@@ -85,13 +85,15 @@ body.admin-home {
   box-shadow: none;
 }
 .admin-home .sidebar-identity {
-  padding: 24px 20px 20px;
+  height: 73px;
+  padding: 16px 20px;
+  box-sizing: border-box;
   border-color: #ffffff0c;
   gap: 12px;
 }
 .admin-home .sidebar-identity img {
   width: 40px;
-  height: 44px;
+  height: 40px;
   border-radius: 0;
   object-fit: contain;
 }
