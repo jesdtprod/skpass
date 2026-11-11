@@ -433,3 +433,6 @@ verify_jwt = false
 
 [functions.find-my-qr]
 verify_jwt = false
+
+[functions.create-staff]
+verify_jwt = false

@@ -5,8 +5,8 @@ export const sb = globalThis.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_K
   auth: { persistSession: true, autoRefreshToken: true, storageKey: "skpass.auth" },
 });
 
-// Where each role lands after login. (Admin dashboard arrives in phase E6.)
-export const HOME = { guard: "../scan/", admin: "../scan/" };
+// Where each role lands after login.
+export const HOME = { guard: "../scan/", admin: "../admin/" };
 
 export async function myProfile(userId) {
   const { data } = await sb.from("profiles").select("id, full_name, role, active")
@@ -19,9 +19,14 @@ export async function requireStaff(roles = ["guard", "admin"]) {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return goLogin();
   const profile = await myProfile(session.user.id);
-  if (!profile || !profile.active || !roles.includes(profile.role)) {
+  if (!profile || !profile.active || !HOME[profile.role]) {
     await sb.auth.signOut();
     return goLogin("noaccess");
+  }
+  if (!roles.includes(profile.role)) {
+    // Valid staff member on the wrong page (e.g. a guard opening /admin/): send them home.
+    location.replace(HOME[profile.role]);
+    return new Promise(() => {});
   }
   return { user: session.user, profile };
 }

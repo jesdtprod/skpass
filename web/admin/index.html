@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin · SKPass</title>
+    <meta name="theme-color" content="#2b2f33" />
+    <meta name="robots" content="noindex" />
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="icon" href="../icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/admin.css" />
+  </head>
+  <body class="admin">
+    <aside class="side" aria-label="Main">
+      <div class="side-brand">
+        <img src="../icons/logo.png" alt="SKPass" />
+        <div><strong>SKPass</strong><span>Admin</span></div>
+      </div>
+      <nav id="nav"></nav>
+      <div class="side-foot">
+        <span id="who" class="who"></span>
+        <a class="foot-link" href="../scan/">Open scanner</a>
+        <button id="signout" class="foot-link" type="button">Sign out</button>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <button id="menu" class="menu-btn" type="button" aria-label="Menu">☰</button>
+        <img src="../icons/logo.png" alt="" />
+        <strong>SKPass Admin</strong>
+      </header>
+      <main id="content" class="content" tabindex="-1"></main>
+    </div>
+
+    <div id="toasts" class="toasts" aria-live="polite"></div>
+
+    <script src="../js/vendor/supabase.js"></script>
+    <script src="../js/vendor/qrcode.js"></script>
+    <script type="module" src="../js/admin/app.js"></script>
+    <script type="module" src="../js/pwa.js"></script>
+  </body>
+</html>
