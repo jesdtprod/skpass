@@ -252,4 +252,6 @@ body:not(.scanning) .reticle {
   color: #ffd58a;
 }
 
-.viewport:focus { outline: none; }
+.viewport:focus {
+  outline: none;
+}
