@@ -1,0 +1,62 @@
+body.pass-page {
+  background: radial-gradient(ellipse at 15% 25%,#a3e63512,transparent 45%),radial-gradient(ellipse
+    at 90% 80%,#a3e63510,transparent 40%),#10141a;
+  background-attachment: fixed;
+}
+.pass-page main {
+  position: relative;
+  z-index: 1;
+}
+.pass-card-header {
+  align-items: center;
+}
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid #a3e63525;
+  border-radius: 8px;
+  background: #a3e6350a;
+}
+.category-chip span {
+  font: 500 10px/18px "JetBrains Mono",monospace;
+  letter-spacing: .06em;
+  color: #c4dfad;
+}
+.pass-page .qr-paper {
+  max-width: 280px;
+  padding: 0;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px #0003;
+  overflow: hidden;
+}
+.pass-page .qr-paper canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+.pass-page .qr-logo-backing {
+  width: 18%;
+  aspect-ratio: 1;
+  padding: 3px;
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  border-radius: 10px;
+}
+.pass-page .qr-logo-backing img {
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  filter: none;
+}
+@media (max-width: 480px) {
+  .pass-page .qr-paper {
+    max-width: 256px;
+  }
+  .category-chip {
+    padding: 4px 8px;
+  }
+}

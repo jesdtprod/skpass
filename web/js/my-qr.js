@@ -157,7 +157,7 @@ function card(rec, view, note) {
   kids.push(
     h(
       "div",
-      { class: "flex items-start justify-between mb-4" },
+      { class: "pass-card-header flex items-center justify-between gap-3 mb-4" },
       h(
         "div",
         { class: "flex items-center space-x-3.5" },
@@ -190,7 +190,7 @@ function card(rec, view, note) {
       h(
         "div",
         {
-          class: "px-3 py-1 bg-surface-750/90 border border-slate-700/80 rounded-lg flex-shrink-0",
+          class: "category-chip flex-shrink-0",
         },
         h(
           "span",
@@ -467,21 +467,26 @@ function card(rec, view, note) {
           "div",
           {
             class:
-              "relative bg-white p-3.5 rounded-2xl shadow-xl flex items-center justify-center max-w-[220px] w-full aspect-square",
+              "qr-paper relative bg-white rounded-2xl flex items-center justify-center w-full aspect-square",
           },
           canvas,
           h(
             "div",
             {
-              class: "absolute inset-0 flex items-center justify-center pointer-events-none",
+              class:
+                "absolute inset-0 flex items-center justify-center pointer-events-none select-none",
             },
             h(
               "div",
               {
-                class:
-                  "w-8 h-8 rounded-lg bg-surface-900 border-2 border-white flex items-center justify-center shadow-md",
+                class: "qr-logo-backing bg-white flex items-center justify-center relative",
               },
-              h("div", { class: "w-3 h-3 rounded-full bg-brand-500" }),
+              h("img", {
+                src: new URL("../icons/logo.png", import.meta.url).href,
+                alt: "SKPass Security Seal",
+                class: "w-full h-full object-contain filter drop-shadow-sm select-none",
+                draggable: "false",
+              }),
             ),
           ),
         ),
