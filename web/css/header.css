@@ -1,3 +1,5 @@
+@import url("./radii.css");
+
 :host {
   display: block;
   width: 100%;
@@ -96,7 +98,7 @@ nav {
 .staff {
   padding: 6px 12px;
   border: 1px solid #33415599;
-  border-radius: 6px;
+  border-radius: var(--radius-compact);
   font-weight: 600;
   white-space: nowrap;
   color: #cbd5e1;

@@ -1,3 +1,5 @@
+@import url("./radii.css");
+
 /* Isolated by the footer's shadow root, identical on every page. */
 :host {
   display: block;
@@ -39,7 +41,7 @@ footer {
   height: 24px;
   background: #141c25;
   border: 1px solid #ffffff12;
-  border-radius: 6px;
+  border-radius: var(--radius-compact);
   color: #a3e635;
 }
 .name {

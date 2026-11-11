@@ -1,0 +1,61 @@
+@import url("./radii.css");
+
+/* Keep circles, status pills, native checkboxes, and joined field edges intact. */
+body :is(.btn, button[type="submit"], .segmented span) {
+  border-radius: var(--radius-control);
+}
+body :is(.card, [data-purpose="registration-card"], #empty) {
+  border-radius: var(--radius-card);
+}
+body :is(.alert, .badge) {
+  border-radius: var(--radius-small);
+}
+body .field :is(input:not([type="radio"]):not([type="checkbox"]):not([type="file"]):not([type="hidden"]), select, textarea),
+.register-page #reg-form :is(input:not([type="radio"]):not([type="file"]), select, textarea),
+.register-page :is(.dropdown-trigger, .calendar-trigger),
+.portal-page input#plate-quick-search,
+.portal-page #verify-plate-btn,
+#login-form :is(input[type="email"],input[type="password"]) {
+  border-radius: var(--radius-control);
+}
+.register-page #reg-form .relative:has(> #phone) {
+  border-radius: var(--radius-control);
+}
+.register-page #reg-form #phone {
+  border-radius: 0;
+}
+.register-page #reg-form .relative:has(> #phone) > span {
+  border-radius: 0;
+}
+.register-page #reg-form .role-btn {
+  border-radius: var(--radius-control);
+}
+.register-page #reg-form [data-purpose="user-role-selection"] > .grid,
+.register-page .dropdown-options,
+.register-page .calendar-panel {
+  border-radius: var(--radius-group);
+}
+.register-page .dropdown-options [role="option"],
+.register-page .calendar-panel button {
+  border-radius: var(--radius-small);
+}
+.register-page #reg-form .field:has(#photo) > .relative,
+.register-page #submit,
+.register-page .upload-preview,
+.my-qr-page :is(.btn, [data-purpose="register-vehicle-button"], #install-pwa-button),
+.portal-page #install-pwa-button {
+  border-radius: var(--radius-control);
+}
+.portal-page [data-purpose="primary-action-buttons"] > a {
+  border-radius: var(--radius-group);
+}
+.portal-page [data-purpose="primary-action-buttons"] > a > div:first-child > div:first-child {
+  border-radius: var(--radius-control);
+}
+.portal-page [data-purpose="action-portal-container"] > div > div:last-child {
+  border-radius: var(--radius-card);
+}
+.register-page .form-section-heading > span,
+.my-qr-page .badge {
+  border-radius: var(--radius-compact);
+}

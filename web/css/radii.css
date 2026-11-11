@@ -1,0 +1,9 @@
+/* Shared proportions: compact details, standard controls, groups, and cards. */
+:root,
+:host {
+  --radius-compact: 6px;
+  --radius-small: 8px;
+  --radius-control: 12px;
+  --radius-group: 16px;
+  --radius-card: 20px;
+}
