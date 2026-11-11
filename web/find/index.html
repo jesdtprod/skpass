@@ -1,57 +1,337 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html class="dark" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Find My QR · SKPass</title>
-    <meta name="theme-color" content="#2d9a0f" />
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <title>SKPass - Find my QR | Vehicle Gate Pass</title>
+    <meta
+      name="description"
+      content="Retrieve your approved provincial vehicle gate QR pass using your registered plate number and mobile phone."
+    />
+    <meta name="theme-color" content="#070b11" />
+
+    <!-- PWA & Favicons -->
     <link rel="manifest" href="../manifest.webmanifest" />
-    <link rel="icon" type="image/png" href="../icons/favicon-32.png?v=fullcolor-2" sizes="32x32" />
-    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png?v=fullcolor-2" />
-    <link rel="stylesheet" href="../css/base.css" />
-    <link rel="stylesheet" href="../css/control-shapes.css" />
-    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="icon" href="../icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16.png" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN with Forms & Container Queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              400: "#4ade80",
+              500: "#22c55e",
+              600: "#16a34a",
+              accent: "#84cc16",
+              bright: "#a3e635",
+            },
+            surface: {
+              900: "#070b11",
+              850: "#0d131f",
+              800: "#111827",
+              750: "#151e2e",
+              700: "#1c2638",
+            },
+          },
+          fontFamily: {
+            sans: [
+              "Inter",
+              "system-ui",
+              "-apple-system",
+              "Segoe UI",
+              "Roboto",
+              "sans-serif",
+            ],
+            mono: [
+              '"JetBrains Mono"',
+              "ui-monospace",
+              "SFMono-Regular",
+              "Menlo",
+              "Monaco",
+              "Consolas",
+              "monospace",
+            ],
+          },
+        },
+      },
+    };
+    </script>
+
+    <!-- Styling: Background Grid & Custom Accents -->
+    <style data-purpose="background-pattern">
+    .tech-grid-bg {
+      background-color: #070b11;
+      background-image:
+        radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+        radial-gradient(rgba(34, 197, 94, 0.12) 1px, transparent 1px);
+      background-size: 100% 100%, 28px 28px;
+    }
+    .subtle-border {
+      border-color: rgba(255, 255, 255, 0.07);
+    }
+    .alert {
+      padding: 0.875rem 1rem;
+      border-radius: 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    .alert.error {
+      background: rgba(127, 29, 29, 0.35);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fecaca;
+    }
+    .alert.warn {
+      background: rgba(120, 53, 15, 0.35);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fde68a;
+    }
+    .alert.info {
+      background: rgba(6, 78, 59, 0.35);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #bbf7d0;
+    }
+    .captcha-frame {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+      min-height: 65px;
+    }
+    </style>
     <link rel="stylesheet" href="../css/portal.css" />
-    <link rel="stylesheet" href="../css/form-controls.css" />
-    <link rel="stylesheet" href="../css/find.css" />
+    <style>
+    body.tech-grid-bg {
+      background: radial-gradient(ellipse at 15% 25%, #a3e63512, transparent 45%),
+        radial-gradient(ellipse at 90% 80%, #a3e63510, transparent 40%), #10141a;
+      background-attachment: fixed;
+    }
+    </style>
   </head>
-  <body class="site-theme utility-page find-page">
+  <body
+    class="tech-grid-bg min-h-screen text-slate-200 antialiased flex flex-col justify-between selection:bg-brand-500 selection:text-black"
+  >
     <canvas class="portal-pattern" aria-hidden="true"></canvas>
     <script type="module" src="../js/background.js?v=convex-2"></script>
+    <!-- BEGIN: MainHeader -->
     <skpass-header></skpass-header>
     <script type="module" src="../js/header.js"></script>
-    <main class="container">
-      <header class="brand compact">
-        <a href="../"><img src="../icons/logo.png" alt="SKPass" /></a>
-        <h1>Find My QR</h1>
-        <p>Lost your QR? Enter the plate number and mobile number you registered with.</p>
-      </header>
+    <!-- END: MainHeader -->
 
-      <div id="alert" class="alert error" role="alert" hidden></div>
-
-      <form id="find-form" class="card" novalidate>
-        <div class="field">
-          <label for="plate">Plate number</label>
-          <input id="plate" name="plate" type="text" autocapitalize="characters" maxlength="15"
-            placeholder="e.g. ABC 1234"
-            required />
+    <!-- BEGIN: MainContentContainer -->
+    <main class="relative z-10 flex-grow flex items-center justify-center px-3 sm:px-4 py-6 sm:py-12">
+      <div class="w-full max-w-[480px] flex flex-col gap-4">
+        <!-- Brand Header Section -->
+        <div class="text-center mb-2">
+          <div
+            class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 rounded-2xl bg-surface-850 border border-slate-700/80 p-2.5 flex items-center justify-center shadow-xl relative"
+          >
+            <div
+              class="absolute inset-0 bg-brand-500/10 rounded-2xl blur-lg pointer-events-none"
+            ></div>
+            <img
+              src="../icons/logo.png"
+              alt="SKPass Logo"
+              class="w-full h-full object-contain relative select-none"
+            />
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            Find my QR
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">
+            Retrieve your approved digital gate pass using your registered plate number and mobile phone.
+          </p>
         </div>
-        <div class="field">
-          <label for="phone">Mobile number</label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="20"
-            placeholder="e.g. 0912 345 6789" required />
-        </div>
-        <div id="captcha" class="captcha"></div>
-        <button id="submit" class="btn" type="submit">Find My QR</button>
-      </form>
 
-      <p
-        class="find-links center"><a href="../my-qr/">Back to My QR</a> · <a href="../register/">Register a vehicle</a></p>
+        <!-- Alert Notification Box -->
+        <div id="alert" class="alert error" role="alert" hidden></div>
+
+        <!-- Find Form Card -->
+        <form
+          id="find-form"
+          class="bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden space-y-4"
+          novalidate
+        >
+          <!-- Decorative Ambient Top Border Glow -->
+          <div
+            class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-500 to-transparent opacity-80 pointer-events-none"
+          ></div>
+
+          <!-- Field 1: Plate Number -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label
+                for="plate"
+                class="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono"
+              >
+                Plate Number <span class="text-brand-500">*</span>
+              </label>
+              <span
+                class="text-[10px] text-slate-500 font-mono uppercase">Standard or Conduction</span>
+            </div>
+            <div class="relative flex items-center">
+              <div
+                class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                  viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M8 17a2 2 0 100-4 2 2 0 000 4zm8 0a2 2 0 100-4 2 2 0 000 4z"
+                  ></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 11l1.5-4.5A2 2 0 016.4 5h11.2a2 2 0 011.9 1.5L21 11v6a1 1 0 01-1 1h-1a1 1 0 01-1-1v-1H6v1a1 1 0 01-1 1H4a1 1 0 01-1-1v-6z"
+                  ></path>
+                </svg>
+              </div>
+              <input
+                id="plate"
+                name="plate"
+                type="text"
+                autocapitalize="characters"
+                maxlength="15"
+                placeholder="e.g. ABC 1234"
+                required
+                class="w-full bg-surface-900 border border-slate-700/80 rounded-xl pl-10 pr-24 py-3 text-base sm:text-sm font-mono font-bold tracking-wider text-lime-300 placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all uppercase"
+              />
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                <span
+                  class="px-1.5 py-0.5 text-[9px] font-bold uppercase rounded bg-surface-750 text-slate-400 border border-slate-700"
+                >
+                  PH
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Field 2: Mobile Phone -->
+          <div>
+            <label
+              for="phone"
+              class="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono mb-1.5"
+            >
+              Registered Mobile <span class="text-brand-500">*</span>
+            </label>
+            <div class="relative flex">
+              <span
+                class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-700/80 bg-surface-750 text-slate-300 text-xs font-mono font-semibold"
+              >
+                +63
+              </span>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                autocomplete="tel"
+                maxlength="20"
+                placeholder="912 345 6789"
+                required
+                class="w-full bg-surface-900 border border-slate-700/80 rounded-r-xl px-4 py-3 text-base sm:text-sm font-mono text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all"
+              />
+            </div>
+          </div>
+
+          <!-- Turnstile Captcha Mount -->
+          <div id="captcha" class="captcha-frame"></div>
+
+          <!-- Submit Button -->
+          <button
+            id="submit"
+            type="submit"
+            class="w-full py-3.5 px-4 bg-brand-bright hover:bg-brand-400 active:bg-brand-500 text-slate-950 font-bold text-sm tracking-wide rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-400"
+          >
+            <svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" stroke-width="2.2"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <span>Find my QR</span>
+          </button>
+        </form>
+
+        <!-- Shimmer Skeleton Loading Preview Card (Visible while querying) -->
+        <div
+          id="search-skeleton"
+          class="bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden animate-pulse space-y-4"
+          hidden
+          aria-live="polite"
+        >
+          <!-- Shimmer line -->
+          <div
+            class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-500/40 to-transparent"
+          ></div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-surface-750/90 flex-shrink-0"></div>
+              <div class="space-y-1.5">
+                <div class="h-6 w-28 bg-surface-750/90 rounded-md"></div>
+                <div class="h-3 w-16 bg-surface-750/50 rounded"></div>
+              </div>
+            </div>
+            <div class="h-6 w-24 bg-surface-750/80 rounded-full"></div>
+          </div>
+
+          <div class="space-y-1.5">
+            <div class="h-3 w-24 bg-surface-750/50 rounded"></div>
+            <div class="h-5 w-40 bg-surface-750/90 rounded-lg"></div>
+          </div>
+
+          <div
+            class="h-36 w-full bg-surface-900/90 border border-slate-800 rounded-2xl flex items-center justify-center">
+            <div class="w-20 h-20 bg-surface-750/70 rounded-xl"></div>
+          </div>
+
+          <div class="h-10 w-full bg-brand-500/20 rounded-xl"></div>
+        </div>
+
+        <!-- Secondary Bottom Navigation -->
+        <div class="mt-2 text-center">
+          <nav class="inline-flex items-center gap-2 text-xs font-medium text-slate-400">
+            <a
+              class="hover:text-brand-400 transition-colors underline-offset-4 hover:underline"
+              href="../my-qr/"
+            >
+              Back to My QR
+            </a>
+            <span class="text-slate-600">&bull;</span>
+            <a
+              class="hover:text-brand-400 transition-colors underline-offset-4 hover:underline"
+              href="../register/"
+            >
+              Register a vehicle
+            </a>
+          </nav>
+        </div>
+      </div>
     </main>
-    <script type="module" src="../js/find.js"></script>
-    <script type="module" src="../js/pwa.js"></script>
+    <!-- END: MainContentContainer -->
+
+    <!-- BEGIN: MainFooter -->
     <skpass-footer></skpass-footer>
     <script type="module" src="../js/footer.js"></script>
-    <script type="module" src="../js/form-controls.js"></script>
+    <!-- END: MainFooter -->
+
+    <script type="module" src="../js/find.js"></script>
+    <script type="module" src="../js/pwa.js"></script>
   </body>
 </html>
