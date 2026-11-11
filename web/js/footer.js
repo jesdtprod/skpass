@@ -11,7 +11,9 @@ class SKPassFooter extends HTMLElement {
     template.innerHTML = `<footer>
   <div class="inner">
     <div class="identity">
-      <span class="badge" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></span>
+      <img class="footer-logo" src="${
+      new URL("../icons/logo.png", import.meta.url).href
+    }" width="32" height="32" alt="SKPass" />
       <div><span class="name">SKPass System</span> &mdash; Official Portal of the <strong>Provincial Government</strong>.
         <span class="rights">All rights reserved. Unauthorized access is punishable by law.</span>
       </div>
