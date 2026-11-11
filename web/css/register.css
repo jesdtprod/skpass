@@ -4,6 +4,21 @@ body.register-page {
   background-attachment: fixed;
   font-family: "Plus Jakarta Sans", sans-serif;
 }
+.register-page .upload-preview {
+  display: block;
+  width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #10171b;
+  margin-bottom: 12px;
+}
+.register-page .upload-preview[hidden] {
+  display: none;
+}
+.register-page .field:has(.upload-preview:not([hidden])) .w-10 {
+  display: none;
+}
 /* Registration page composition. Shared controls keep their existing behavior. */
 .registration-main {
   padding: 32px 32px 64px;

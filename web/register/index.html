@@ -698,13 +698,40 @@
       const photoInput = document.getElementById("photo");
       const fileText = document.getElementById("file-chosen-text");
       if (photoInput && fileText) {
-        photoInput.addEventListener("change", (e) => {
-          if (e.target.files && e.target.files[0]) {
-            fileText.textContent = `Attached: ${e.target.files[0].name} (${
-              (e.target.files[0].size / 1024).toFixed(1)
-            } KB)`;
+        const preview = document.createElement("img");
+        preview.className = "upload-preview";
+        preview.alt = "Selected vehicle photo";
+        preview.hidden = true;
+        const content = fileText.parentElement;
+        content.prepend(preview);
+        const hint = fileText.textContent;
+        let previewUrl;
+        function updatePreview() {
+          if (previewUrl) URL.revokeObjectURL(previewUrl);
+          previewUrl = undefined;
+          preview.hidden = true;
+          preview.removeAttribute("src");
+          const file = photoInput.files?.[0];
+          if (file) {
+            fileText.textContent = `Attached: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
             fileText.classList.add("text-brand-400", "font-medium");
+            if (["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+              previewUrl = URL.createObjectURL(file);
+              preview.src = previewUrl;
+              preview.hidden = false;
+            }
+          } else {
+            fileText.textContent = hint;
+            fileText.classList.remove("text-brand-400", "font-medium");
           }
+        }
+        preview.addEventListener("error", () => {
+          preview.hidden = true;
+        });
+        photoInput.addEventListener("change", updatePreview);
+        photoInput.form.addEventListener("reset", () => setTimeout(updatePreview));
+        window.addEventListener("pagehide", () => {
+          if (previewUrl) URL.revokeObjectURL(previewUrl);
         });
       }
     });
