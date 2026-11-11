@@ -422,3 +422,132 @@
     min-height: 44px;
   }
 }
+
+/* close button: icon, centred, readable on the dark panel */
+.al-panel .al-close {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #ffffff1f;
+  border-radius: 9px;
+  background: #ffffff0a;
+  color: #cfd9df;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.al-panel .al-close svg {
+  width: 16px;
+  height: 16px;
+}
+.al-panel .al-close:hover {
+  background: #fb71851a;
+  border-color: #fb718566;
+  color: #fda4af;
+}
+.al-panel .al-close:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 2px;
+}
+
+/* unread count on the bell */
+.al-header .al-dot,
+.al-dot {
+  display: grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  width: auto;
+  padding: 0 4px;
+  top: 2px;
+  right: 2px;
+  border-radius: 999px;
+  background: #a3e635;
+  color: #0b1013;
+  font: 800 10px/1 "Plus Jakarta Sans", system-ui, sans-serif;
+  box-shadow: 0 0 0 2px #10141a;
+}
+.al-dot[hidden] {
+  display: none;
+}
+
+/* read / unread */
+.al-feed-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+.al-feed-head .al-section-label {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.al-count {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #a3e6351f;
+  color: #b2eb65;
+  font-size: 10px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.al-markall {
+  border: 1px solid #a3e63550;
+  background: #a3e6350f;
+  color: #b2eb65;
+  border-radius: 8px;
+  padding: 4px 9px;
+  font: 700 11px/1.2 "Plus Jakarta Sans", system-ui, sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.al-markall:hover:not(:disabled) {
+  background: #a3e6351f;
+}
+.al-markall:disabled {
+  opacity: .4;
+  cursor: default;
+}
+.al-item {
+  position: relative;
+}
+.al-item.unread {
+  background: #a3e6350d;
+  border-color: #a3e63538;
+  box-shadow: inset 3px 0 0 #a3e635;
+}
+.al-item.unread strong {
+  color: #fff;
+  font-weight: 700;
+}
+.al-item.unread .al-item-dot {
+  background: #a3e635;
+  box-shadow: 0 0 0 3px #a3e63522;
+}
+.al-item.read {
+  opacity: .72;
+}
+.al-item.read strong {
+  font-weight: 500;
+  color: #b9c8d1;
+}
+.al-item.read .al-item-dot {
+  background: transparent;
+  border: 1.5px solid #5c717d;
+}
+.al-new-tag {
+  margin-left: auto;
+  align-self: flex-start;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #a3e635;
+  color: #0b1013;
+  font: 800 9px/1.5 "Plus Jakarta Sans", system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}

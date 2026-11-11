@@ -20,7 +20,36 @@ const POLL_MS = 30_000;
 
 export function start(ctx) {
   const seen = new Map(); // key -> time, so Realtime + push for the same event sound once
-  const state = { live: "connecting", unread: false };
+  const state = { live: "connecting", unread: 0 };
+  // Which notifications this admin has read. Kept per browser and per account.
+  const READ_KEY = `skpass.notif.read.${ctx.profile?.id ?? "me"}`;
+  const readSet = () => {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(READ_KEY) ?? "[]"));
+    } catch {
+      return new Set();
+    }
+  };
+  function markRead(keys) {
+    const set = readSet();
+    for (const k of keys) set.add(k);
+    try {
+      localStorage.setItem(READ_KEY, JSON.stringify([...set].slice(-300)));
+    } catch { /* storage unavailable */ }
+  }
+  let pendingKeys = []; // keys of everything currently waiting, newest first
+  async function refreshUnread() {
+    try {
+      const { data, error } = await ctx.sb.from("vehicles").select("id")
+        .is("deleted_at", null).eq("status", "pending")
+        .order("created_at", { ascending: false }).limit(50);
+      if (error) return;
+      pendingKeys = (data ?? []).map((r) => `reg:${r.id}`);
+      const read = readSet();
+      state.unread = pendingKeys.filter((k) => !read.has(k)).length;
+      paint();
+    } catch { /* keep the previous count */ }
+  }
   let lastTestSound = -Infinity;
   async function playTestSound() {
     const now = performance.now();
@@ -52,8 +81,7 @@ export function start(ctx) {
     const what = plate ? `${plate}${category ? ` (${category})` : ""}` : "A vehicle";
     const t = toast(`New registration: ${what} is waiting for approval`, "ok");
     t?.addEventListener?.("click", () => (location.hash = "#/pending"));
-    state.unread = true;
-    paint();
+    await refreshUnread();
     if (!panel.hidden) loadNotifications();
     playAlert("new_registration");
     if (document.hidden) {
@@ -83,6 +111,7 @@ export function start(ctx) {
       } else {
         // someone else approved/rejected/edited: keep numbers and lists current, quietly
         ctx.refreshBadge?.();
+        refreshUnread();
         if (!panel.hidden) loadNotifications();
         refreshIfIdle();
       }
@@ -223,15 +252,31 @@ export function start(ctx) {
     panel.hidden = true;
     bell.setAttribute("aria-expanded", "false");
   }
+  const closeIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  for (
+    const [key, value] of Object.entries({
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2.2",
+      "stroke-linecap": "round",
+      "aria-hidden": "true",
+    })
+  ) closeIcon.setAttribute(key, value);
+  const closePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  closePath.setAttribute("d", "M6 6l12 12M18 6L6 18");
+  closeIcon.append(closePath);
   const close = h("button", {
     class: "al-close",
     type: "button",
+    title: "Close",
     "aria-label": "Close notifications",
-    onclick: () => {
+    onclick: (e) => {
+      e.stopPropagation();
       closePanel();
       bell.focus();
     },
-  }, "×");
+  }, closeIcon);
   const panel = h(
     "div",
     {
@@ -259,44 +304,77 @@ export function start(ctx) {
   );
   bell.setAttribute("aria-controls", "admin-notifications");
   let feedRequest = 0;
+  const KINDS = { employee: "Employee", official: "Official", visitor: "Visitor" };
   async function loadNotifications() {
     const request = ++feedRequest;
-    feed.replaceChildren(h("p", { class: "al-empty" }, "Loading registrations…"));
+    if (!feed.children.length) {
+      feed.replaceChildren(h("p", { class: "al-empty" }, "Loading registrations…"));
+    }
     try {
       const { data, error } = await ctx.sb.from("vehicles").select("id,plate,category,created_at")
         .is("deleted_at", null).eq("status", "pending").order("created_at", { ascending: false })
-        .limit(5);
+        .limit(10);
       if (request !== feedRequest) return;
       if (error) throw error;
       const rows = data ?? [];
+      const read = readSet();
+      const unread = rows.filter((r) => !read.has(`reg:${r.id}`)).length;
+      const markAll = h("button", {
+        class: "al-markall",
+        type: "button",
+        disabled: pendingKeys.every((k) => read.has(k)) && unread === 0,
+        onclick: () => {
+          markRead([...pendingKeys, ...rows.map((r) => `reg:${r.id}`)]);
+          state.unread = 0;
+          paint();
+          loadNotifications();
+        },
+      }, "Mark all as read");
       feed.replaceChildren(
-        h("p", { class: "al-section-label" }, "Awaiting your review"),
-        ...rows.map((row) =>
+        h(
+          "div",
+          { class: "al-feed-head" },
           h(
+            "p",
+            { class: "al-section-label" },
+            "Awaiting your review",
+            unread ? h("span", { class: "al-count" }, `${unread} new`) : null,
+          ),
+          markAll,
+        ),
+        ...rows.map((row) => {
+          const key = `reg:${row.id}`;
+          const isNew = !read.has(key);
+          return h(
             "a",
-            { class: "al-item", href: "#/pending", onclick: closePanel },
+            {
+              class: `al-item ${isNew ? "unread" : "read"}`,
+              href: "#/pending",
+              "aria-label": `${isNew ? "Unread: " : ""}${
+                row.plate || "Vehicle"
+              } registration pending`,
+              onclick: () => {
+                markRead([key]); // opens the Approvals page, where it can be reviewed
+                state.unread = Math.max(0, state.unread - (isNew ? 1 : 0));
+                paint();
+                closePanel();
+              },
+            },
             h("span", { class: "al-item-dot", "aria-hidden": "true" }),
             h(
               "span",
               {},
               h("strong", {}, `${row.plate || "Vehicle"} · Registration pending`),
-              h(
-                "span",
-                {},
-                `${
-                  ({ employee: "Employee", official: "Official", visitor: "Visitor" })[
-                    row.category
-                  ] ?? "Vehicle"
-                } pass awaiting approval.`,
-              ),
+              h("span", {}, `${KINDS[row.category] ?? "Vehicle"} pass awaiting approval.`),
               h(
                 "time",
                 { datetime: row.created_at },
                 fmtTime(row.created_at, ctx.tz ?? "Asia/Manila"),
               ),
             ),
-          )
-        ),
+            isNew ? h("span", { class: "al-new-tag" }, "New") : null,
+          );
+        }),
         rows.length
           ? h(
             "a",
@@ -333,8 +411,6 @@ export function start(ctx) {
     panel.hidden = !panel.hidden;
     bell.setAttribute("aria-expanded", String(!panel.hidden));
     if (!panel.hidden) {
-      state.unread = false;
-      paint();
       loadNotifications();
       syncPush();
       inboxTab.focus();
@@ -365,8 +441,15 @@ export function start(ctx) {
       ? "Connecting to live updates…"
       : "Reconnecting · checking every 30 seconds";
     els.live.dataset.state = state.live;
-    els.dot.hidden = !state.unread;
-    bell.title = state.unread ? "New registration awaiting review" : "Notifications and settings";
+    els.dot.hidden = state.unread === 0;
+    els.dot.textContent = state.unread > 9 ? "9+" : String(state.unread || "");
+    bell.title = state.unread
+      ? `${state.unread} unread notification${state.unread === 1 ? "" : "s"}`
+      : "Notifications and settings";
+    bell.setAttribute(
+      "aria-label",
+      state.unread ? `Notifications, ${state.unread} unread` : "Alerts and notifications",
+    );
   }
 
   async function syncPush() {
@@ -465,6 +548,8 @@ export function start(ctx) {
   });
 
   paint();
+  refreshUnread();
+  setInterval(() => !document.hidden && refreshUnread(), 60_000);
   syncPush(true);
   return { announceNew, state };
 }

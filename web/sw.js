@@ -1,6 +1,6 @@
 // Service worker: caches the static app shell only.
 // Supabase / Turnstile (cross-origin) requests are never cached.
-const CACHE = "skpass-shell-v20";
+const CACHE = "skpass-shell-v21";
 const SHELL = [
   "./",
   "./index.html",
