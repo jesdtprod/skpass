@@ -204,7 +204,7 @@ export function gateBars(rows) {
  * `nowHour` (optional) marks the current hour; `peak` (optional) highlights the busiest hour.
  */
 export function hourChart(buckets, { nowHour = null, peak = null } = {}) {
-  const W = 560, H = 150, padL = 28, padB = 26, padT = 10, padR = 6;
+  const W = 560, H = 150, padL = 28, padB = 26, padT = 26, padR = 6;
   const svg = svgEl("svg", {
     viewBox: `0 0 ${W} ${H}`,
     role: "img",
@@ -289,18 +289,35 @@ export function hourChart(buckets, { nowHour = null, peak = null } = {}) {
     }
   });
   if (peak) {
-    const x = padL + slot * peak.hour + slot / 2;
-    svg.append(
+    const count = String(peak.count);
+    const width = Math.max(24, count.length * 6.5 + 14);
+    const x = Math.min(
+      W - padR - width / 2,
+      Math.max(padL + width / 2, padL + slot * peak.hour + slot / 2),
+    );
+    const y = Math.max(3, padT + plotH - peak.count / top * plotH - 23);
+    const badge = svgEl("g", { class: "chart-count", "aria-label": `${count} movements` });
+    badge.append(
+      svgEl("rect", {
+        x: x - width / 2,
+        y,
+        width,
+        height: 18,
+        rx: 6,
+        fill: "#202d21",
+        stroke: "#a3e63540",
+      }),
       svgEl("text", {
-        x: Math.min(W - 40, Math.max(padL + 30, x)),
-        y: padT + 2,
+        x,
+        y: y + 12,
         "text-anchor": "middle",
         "font-size": 10,
-        "font-family": "'Plus Jakarta Sans', sans-serif",
+        "font-family": "'JetBrains Mono', monospace",
         "font-weight": 600,
         fill: "#a3e635",
-      }, `peak ${peak.count}`),
+      }, count),
     );
+    svg.append(badge);
   }
   return svg;
 }
