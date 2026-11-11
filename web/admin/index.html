@@ -193,6 +193,16 @@
     </div>
 
     <!-- BEGIN: BottomTelemetryBar -->
+    <div class="admin-statusbar" aria-label="System status">
+      <div class="statusbar-left">
+        <span><i id="statusbar-network-dot" aria-hidden="true"></i><span id="statusbar-network">Network: checking</span></span>
+        <span class="statusbar-secondary">Database: not checked</span>
+        <span class="statusbar-secondary">RFID barrier: not monitored</span>
+        <span id="statusbar-connection"></span>
+      </div>
+      <div class="statusbar-right"><time id="statusbar-clock"></time></div>
+    </div>
+    <script type="module" src="../js/admin/statusbar.js"></script>
     <!-- END: BottomTelemetryBar -->
 
     <!-- Global Toast Container -->
