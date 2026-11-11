@@ -107,7 +107,9 @@
 .gate-control > svg {
   position: absolute;
   left: 13px;
-  top: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
   width: 17px;
   height: 17px;
   color: #8fa6b4;
