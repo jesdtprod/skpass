@@ -3,6 +3,29 @@ body.pass-page {
     at 90% 80%,#a3e63510,transparent 40%),#10141a;
   background-attachment: fixed;
 }
+.pass-page [data-purpose="vehicle-gate-pass-card"] {
+  background: #1a2025;
+  border-color: #ffffff16;
+  box-shadow: 0 16px 64px #0002;
+}
+.pass-page [data-purpose="vehicle-gate-pass-card"] > .absolute {
+  display: none;
+}
+.pass-page .pass-qr-section,
+.pass-page .pass-reference > div {
+  background: #11181d;
+  border-color: #36424a;
+}
+.pass-page [data-purpose="vehicle-gate-pass-card"] button {
+  background-color: #11181d;
+  border-color: #36424a;
+  color: #c4d2da;
+}
+.pass-page [data-purpose="vehicle-gate-pass-card"] button.bg-brand-bright {
+  background-color: #a3e635;
+  border-color: #c0fa7266;
+  color: #19280e;
+}
 .pass-page main > div {
   max-width: 700px;
 }
