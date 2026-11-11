@@ -1,5 +1,5 @@
 import { myStatus } from "./api.js";
-import { downloadPassJpg, drawQr } from "./qr.js";
+import { downloadPassPng, drawQr } from "./qr.js";
 import { listVehicles, removeVehicle, updateVehicle } from "./store.js";
 import { announceDecision, mountNotifyCard, refreshNotifyCard } from "./owner-alerts.js";
 
@@ -541,7 +541,7 @@ function card(rec, view, note) {
             button.disabled = true;
             button.setAttribute("aria-busy", "true");
             try {
-              await downloadPassJpg({
+              await downloadPassPng({
                 token: view.token,
                 plate: displayPlate,
                 category: displayCategory,
@@ -564,7 +564,7 @@ function card(rec, view, note) {
           },
         },
         svgIcon("download", "w-4 h-4 text-slate-950"),
-        "Download pass (JPG)",
+        "Download pass (PNG)",
       ),
     );
   }

@@ -99,7 +99,7 @@ export function downloadQr(token, plate) {
   }
 }
 
-// ------------------------------------------------------------------ pass image (JPG)
+// ------------------------------------------------------------------ pass image (PNG)
 const MONO = '"JetBrains Mono", ui-monospace, Consolas, monospace';
 const SANS = '"Plus Jakarta Sans", system-ui, "Segoe UI", sans-serif';
 
@@ -147,9 +147,7 @@ export async function drawPassImage(pass) {
   c.height = totalHeight * S;
   const g = c.getContext("2d");
   g.scale(S, S);
-  // JPEG is opaque; the page-colored corners frame the rounded pass.
-  g.fillStyle = "#10141a";
-  g.fillRect(0, 0, W, totalHeight);
+  // Leave the canvas transparent outside the rounded pass frame.
   g.save();
   g.beginPath();
   g.roundRect(0.5, 0.5, W - 1, totalHeight - 1, 22);
@@ -301,14 +299,14 @@ export async function drawPassImage(pass) {
   return c;
 }
 
-/** Downloads the pass picture as a JPG (white-free dark card, 2x resolution). */
-export async function downloadPassJpg(pass) {
+/** Downloads the rounded pass as a PNG with transparent corners, at 2x resolution. */
+export async function downloadPassPng(pass) {
   const canvas = await drawPassImage(pass);
-  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
   if (!blob) throw new Error("The browser could not create the pass image.");
   const safe = String(pass.plate).replace(/[^A-Za-z0-9-]+/g, "") || "pass";
   const a = document.createElement("a");
-  Object.assign(a, { href: URL.createObjectURL(blob), download: `skpass-${safe}.jpg` });
+  Object.assign(a, { href: URL.createObjectURL(blob), download: `skpass-${safe}.png` });
   document.body.append(a);
   a.click();
   a.remove();
