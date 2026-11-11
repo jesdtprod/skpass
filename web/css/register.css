@@ -4,6 +4,210 @@ body.register-page {
   background-attachment: fixed;
   font-family: "Plus Jakarta Sans", sans-serif;
 }
+/* Registration page composition. Shared controls keep their existing behavior. */
+.registration-main {
+  padding: 32px 32px 64px;
+}
+.registration-shell {
+  width: 100%;
+  max-width: 1120px;
+  margin-inline: auto;
+}
+.registration-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+.registration-breadcrumb > div {
+  font: 500 10px "JetBrains Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.registration-layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0,1fr);
+  gap: 64px;
+  align-items: start;
+}
+.registration-aside {
+  position: sticky;
+  top: 32px;
+  padding-top: 24px;
+}
+.register-page .registration-aside .registration-logo {
+  width: 112px;
+  height: 112px;
+  margin: 0 0 28px;
+}
+.registration-title {
+  color: #f4f7f8;
+  font-size: 42px;
+  line-height: 1.12;
+  letter-spacing: -.045em;
+  margin: 0 0 16px;
+}
+.registration-description {
+  color: #a0afb8;
+  font-size: 14px;
+  line-height: 1.8;
+  max-width: 300px;
+}
+.registration-aside > div:last-child {
+  text-align: left;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #ffffff12;
+}
+.registration-aside a {
+  font-size: 12px;
+  line-height: 1.8;
+}
+.register-page .registration-layout [data-purpose="registration-card"] {
+  overflow: visible;
+  background: #1a2025;
+  border-radius: 20px;
+  box-shadow: 0 16px 64px #0002;
+}
+.register-page .registration-layout [data-purpose="registration-card"] > .p-6 {
+  padding: 32px;
+}
+.register-page #reg-form > * + * {
+  margin-top: 24px;
+}
+.register-page #reg-form [data-purpose="user-role-selection"] {
+  margin-bottom: 28px;
+}
+.register-page #reg-form [data-purpose="user-role-selection"] > label {
+  font-size: 11px;
+  color: #a0afb8;
+  margin-bottom: 12px;
+}
+.register-page #reg-form .role-btn {
+  border-radius: 8px;
+  min-height: 44px;
+  font-weight: 600;
+}
+.register-page #reg-form .personal-fields {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 20px 16px;
+}
+.personal-fields > [data-cat],
+.personal-fields > h2 {
+  grid-column: 1 / -1;
+}
+.register-page #reg-form .personal-fields > * {
+  margin: 0;
+}
+.register-page #reg-form .personal-fields [data-cat] > .grid {
+  gap: 20px 16px;
+}
+.register-page #reg-form .form-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 600 16px/24px "Space Grotesk",sans-serif;
+  color: #e4ebef;
+  letter-spacing: -.015em;
+}
+.form-section-heading > span {
+  font: 500 10px "JetBrains Mono",monospace;
+  color: #a3e635;
+  background: #a3e6350b;
+  border: 1px solid #a3e63525;
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+.register-page #reg-form .vehicle-heading {
+  padding-top: 24px;
+  border-top: 1px solid #ffffff12;
+  margin-top: 28px;
+}
+.register-page #reg-form label:not(.role-btn) {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  color: #b9c6ce;
+}
+.register-page #reg-form input:not([type="radio"]):not([type="file"]),
+.register-page #reg-form select {
+  background-color: #11181d;
+  border-color: #36424a;
+}
+.register-page #reg-form .plate-note {
+  display: none;
+}
+.register-page #reg-form .field:has(#photo) > .relative {
+  border-width: 1px;
+  background: #ffffff02;
+  padding: 20px 16px;
+}
+.register-page #reg-form .field:has(#photo) .w-10 {
+  border-radius: 10px;
+  background: #a3e6350a;
+  color: #a3e635;
+}
+.register-page #reg-form #submit {
+  border-radius: 10px;
+}
+@media (max-width: 1023px) {
+  .registration-layout {
+    grid-template-columns: 240px minmax(0,1fr);
+    gap: 32px;
+  }
+  .registration-title {
+    font-size: 36px;
+  }
+  .register-page #reg-form .personal-fields {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 767px) {
+  .registration-main {
+    padding: 24px 16px 40px;
+  }
+  .registration-breadcrumb {
+    margin-bottom: 24px;
+  }
+  .registration-breadcrumb > div {
+    display: none;
+  }
+  .registration-layout {
+    grid-template-columns: minmax(0,1fr);
+    gap: 24px;
+    max-width: 600px;
+    margin-inline: auto;
+  }
+  .registration-aside {
+    position: static;
+    padding: 0;
+  }
+  .register-page .registration-aside .registration-logo {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 16px;
+  }
+  .registration-title {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+  .registration-description {
+    max-width: 460px;
+    font-size: 13px;
+  }
+  .registration-aside > div:last-child {
+    margin-top: 16px;
+    padding-top: 0;
+    border: 0;
+  }
+  .register-page .registration-layout [data-purpose="registration-card"] > .p-6 {
+    padding: 24px 20px;
+  }
+}
 .register-page .custom-dropdown > .absolute {
   display: none;
 }
@@ -318,5 +522,75 @@ body.register-page {
   .register-page .role-btn {
     padding-inline: 8px;
     font-size: 12px;
+  }
+}
+
+/* Single centered registration column at every viewport size. */
+.register-page #reg-form {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+.register-page #reg-form .role-btn,
+.register-page #reg-form .form-section-heading {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+}
+.register-page #reg-form label:not(.role-btn),
+.register-page #reg-form [data-purpose="user-role-selection"] > label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.register-page #reg-form label .lowercase {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+.register-page #reg-form :is(input, select, .dropdown-trigger, .calendar-trigger),
+.register-page #reg-form .dropdown-options {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+.register-page #reg-form #plate {
+  font-family: "JetBrains Mono", monospace;
+  font-weight: 500;
+  letter-spacing: .025em;
+}
+.registration-shell {
+  max-width: 720px;
+}
+.registration-layout {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  max-width: none;
+}
+.registration-aside {
+  position: static;
+  padding-top: 0;
+  text-align: center;
+}
+.register-page .registration-aside .registration-logo {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 20px;
+}
+.registration-description {
+  max-width: 440px;
+  margin-inline: auto;
+}
+.registration-title {
+  font-size: 36px;
+}
+.registration-aside > div:last-child {
+  text-align: center;
+  margin-top: 16px;
+  padding-top: 0;
+  border: 0;
+}
+@media (max-width: 767px) {
+  .registration-title {
+    font-size: 32px;
+  }
+  .register-page .registration-aside .registration-logo {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 16px;
   }
 }
