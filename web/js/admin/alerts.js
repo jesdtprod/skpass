@@ -13,6 +13,7 @@ import {
   sendAdminTest,
   showLocalNotification,
 } from "../notify.js";
+import { notifFeedSkeleton } from "./skeleton.js";
 import { fmtTime, h, toast } from "./util.js";
 
 const DEDUPE_MS = 60_000;
@@ -313,7 +314,7 @@ export function start(ctx) {
   async function loadNotifications() {
     const request = ++feedRequest;
     if (!feed.children.length) {
-      feed.replaceChildren(h("p", { class: "al-empty" }, "Loading registrations…"));
+      feed.replaceChildren(...notifFeedSkeleton(3));
     }
     try {
       const { data, error } = await ctx.sb.from("vehicles").select("id,plate,category,created_at")

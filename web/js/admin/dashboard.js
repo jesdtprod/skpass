@@ -1,4 +1,5 @@
 import { dailyChart, gateBars, hourChart } from "./charts.js";
+import { dashboardPanelsSkeleton, statsGridSkeleton } from "./skeleton.js";
 import {
   dailyTotals,
   fmtDuration,
@@ -279,12 +280,7 @@ const emptyChart = (title, detail) =>
 const catTag = (c) => h("span", { class: `tag cat-${c}` }, c);
 
 function skeleton() {
-  return [
-    h("div", { class: "skeleton", style: "height:46px" }),
-    h("div", { class: "skeleton", style: "height:76px" }),
-    h("div", { class: "skeleton", style: "height:150px" }),
-    h("div", { class: "skeleton", style: "height:320px" }),
-  ];
+  return [statsGridSkeleton(6), dashboardPanelsSkeleton()];
 }
 
 // ------------------------------------------------------------------ render

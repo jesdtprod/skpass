@@ -1,6 +1,7 @@
 import { approvalMetrics, localParts } from "./dashboard-calc.js";
 import { confirmBox } from "./dialog.js";
 import { notifyDecision } from "./notify-owner.js";
+import { kpiStripSkeleton, tableSkeleton } from "./skeleton.js";
 import { fmtTime, h, toast } from "./util.js";
 import { approveVehicle, openVehicle, rejectVehicle } from "./vehicle-detail.js";
 
@@ -100,7 +101,7 @@ export async function render(root, ctx) {
     svgIcon(ICON_CHECK),
     "Approve All",
   );
-  const kpis = h("div", { class: "ap-kpis" });
+  const kpis = h("div", { class: "ap-kpis" }, ...kpiStripSkeleton(4).children);
   root.append(
     h(
       "header",
@@ -119,7 +120,15 @@ export async function render(root, ctx) {
     ),
     kpis,
   );
-  const box = h("div");
+  const box = h(
+    "div",
+    {},
+    tableSkeleton({
+      cols: ["90px", "130px", "75px", "70px", "120px", "100px"],
+      rows: 5,
+      actions: 3,
+    }),
+  );
   const search = h("input", {
     type: "search",
     placeholder: "Search by plate number, owner name, phone...",

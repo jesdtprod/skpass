@@ -95,7 +95,11 @@ export async function render(root, ctx) {
       "Visitor",
     ]].map(([v, l]) => h("option", { value: v }, l)),
   );
-  const list = h("div");
+  const list = h(
+    "div",
+    {},
+    tableSkeleton({ cols: ["90px", "150px", "80px", "85px", "130px", "110px"], rows: 6 }),
+  );
 
   root.append(
     h("h1", {}, "Vehicles"),

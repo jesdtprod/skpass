@@ -1,4 +1,5 @@
 import { requireStaff, sb, signOut } from "../auth.js";
+import { renderRouteSkeleton } from "./skeleton.js";
 import { $, errMsg, h } from "./util.js";
 
 const { profile } = await requireStaff(["admin"]);
@@ -145,7 +146,7 @@ async function route() {
   cleanup?.();
   cleanup = null;
   const root = $("#content");
-  root.replaceChildren(h("p", { class: "muted" }, "Loading…"));
+  root.replaceChildren(renderRouteSkeleton(r.id));
   try {
     const mod = await r.load();
     const view = h("section", { class: "view" });

@@ -637,3 +637,194 @@ body.admin-home {
     bottom: 44px;
   }
 }
+
+/* ==========================================================================
+   Admin Shimmer Skeleton Loading System
+   ========================================================================== */
+.admin-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  pointer-events: none;
+  user-select: none;
+  animation: sk-fade-in 0.2s ease-out;
+}
+
+@keyframes sk-fade-in {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Header Skeleton */
+.admin-skeleton-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+.admin-skeleton-head-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.admin-skeleton-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* KPI Cards Grid (Approvals 4-columns) */
+.admin-skeleton-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 4px;
+}
+@media (max-width: 1024px) {
+  .admin-skeleton-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .admin-skeleton-kpis {
+    grid-template-columns: 1fr;
+  }
+}
+.admin-skeleton-kpi-card {
+  padding: 16px 20px;
+  background: linear-gradient(145deg, #20272b, #171d21);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.admin-skeleton-kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Dashboard 6 Stats Grid */
+.admin-skeleton-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 4px;
+}
+@media (max-width: 1024px) {
+  .admin-skeleton-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .admin-skeleton-stats {
+    grid-template-columns: 1fr;
+  }
+}
+.admin-skeleton-stat-card {
+  padding: 20px;
+  background: #1a2227;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.admin-skeleton-stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Dashboard Panels Split Grid (Activity chart + Today by gate) */
+.admin-skeleton-panels {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 1024px) {
+  .admin-skeleton-panels {
+    grid-template-columns: 1fr;
+  }
+}
+.admin-skeleton-panel {
+  padding: 24px;
+  background: #1a2227;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.admin-skeleton-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Toolbar Shimmer */
+.admin-skeleton-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+/* Table Skeleton */
+.admin-skeleton-tablewrap {
+  background: linear-gradient(145deg, #20272b, #171d21);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.admin-skeleton-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin-skeleton-table th {
+  padding: 14px 16px;
+  background: #151d22;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  text-align: left;
+}
+.admin-skeleton-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+.admin-skeleton-table tr:last-child td {
+  border-bottom: none;
+}
+.admin-skeleton-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-skeleton-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: rgba(0, 0, 0, 0.15);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Notification Feed Shimmer */
+.admin-skeleton-notif-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
