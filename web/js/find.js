@@ -9,8 +9,14 @@ const captcha = mountCaptcha("#captcha");
 
 const initialPlate = new URLSearchParams(location.search).get("plate");
 if (initialPlate && form?.plate) {
-  form.plate.value = initialPlate;
+  form.plate.value = initialPlate.toUpperCase();
 }
+
+form.plate.addEventListener("input", () => {
+  const start = form.plate.selectionStart, end = form.plate.selectionEnd;
+  form.plate.value = form.plate.value.toUpperCase();
+  form.plate.setSelectionRange(start, end);
+});
 
 function show(msg, kind = "error") {
   alertBox.textContent = msg;

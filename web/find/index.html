@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Find my QR · SKPass</title>
+    <title>Find My QR · SKPass</title>
     <meta name="theme-color" content="#2d9a0f" />
     <link rel="manifest" href="../manifest.webmanifest" />
     <link rel="icon" type="image/png" href="../icons/favicon-32.png?v=fullcolor-2" sizes="32x32" />
@@ -11,14 +11,19 @@
     <link rel="stylesheet" href="../css/base.css" />
     <link rel="stylesheet" href="../css/control-shapes.css" />
     <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/portal.css" />
+    <link rel="stylesheet" href="../css/form-controls.css" />
+    <link rel="stylesheet" href="../css/find.css" />
   </head>
-  <body class="site-theme utility-page">
+  <body class="site-theme utility-page find-page">
+    <canvas class="portal-pattern" aria-hidden="true"></canvas>
+    <script type="module" src="../js/background.js?v=convex-2"></script>
     <skpass-header></skpass-header>
     <script type="module" src="../js/header.js"></script>
     <main class="container">
       <header class="brand compact">
         <a href="../"><img src="../icons/logo.png" alt="SKPass" /></a>
-        <h1>Find my QR</h1>
+        <h1>Find My QR</h1>
         <p>Lost your QR? Enter the plate number and mobile number you registered with.</p>
       </header>
 
@@ -28,6 +33,7 @@
         <div class="field">
           <label for="plate">Plate number</label>
           <input id="plate" name="plate" type="text" autocapitalize="characters" maxlength="15"
+            placeholder="e.g. ABC 1234"
             required />
         </div>
         <div class="field">
@@ -36,15 +42,16 @@
             placeholder="e.g. 0912 345 6789" required />
         </div>
         <div id="captcha" class="captcha"></div>
-        <button id="submit" class="btn" type="submit">Find my QR</button>
+        <button id="submit" class="btn" type="submit">Find My QR</button>
       </form>
 
       <p
-        class="center"><a href="../my-qr/">Back to My QR</a> · <a href="../register/">Register a vehicle</a></p>
+        class="find-links center"><a href="../my-qr/">Back to My QR</a> · <a href="../register/">Register a vehicle</a></p>
     </main>
     <script type="module" src="../js/find.js"></script>
     <script type="module" src="../js/pwa.js"></script>
     <skpass-footer></skpass-footer>
     <script type="module" src="../js/footer.js"></script>
+    <script type="module" src="../js/form-controls.js"></script>
   </body>
 </html>
