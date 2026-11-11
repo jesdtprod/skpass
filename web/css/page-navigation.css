@@ -1,0 +1,57 @@
+:host {
+  display: block;
+  margin-top: 8px;
+}
+* {
+  box-sizing: border-box;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 10px 14px;
+  border: 1px solid #ffffff12;
+  border-radius: 12px;
+  background: #11181d;
+  color: #b5c6d0;
+  font: 500 12px/18px "Plus Jakarta Sans",sans-serif;
+  text-decoration: none;
+  transition: background .18s,border-color .18s,color .18s;
+}
+svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: #a3e635;
+}
+a:hover {
+  background: #202a30;
+  border-color: #a3e63540;
+  color: #e9eef0;
+}
+a:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 3px;
+}
+@media (max-width:480px) {
+  nav {
+    gap: 8px;
+  }
+  a {
+    font-size: 11px;
+    padding-inline: 10px;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  a {
+    transition: none;
+  }
+}
