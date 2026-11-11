@@ -62,22 +62,15 @@ body.portal-page {
   max-width: 410px;
 }
 .portal-page [data-purpose="portal-branding"] > div:last-child {
-  gap: 0;
-  border-top: 1px solid #ffffff12;
-  padding-top: 24px;
+  gap: 8px;
+  border: 0;
+  padding-top: 0;
 }
 .portal-page [data-purpose="portal-branding"] > div:last-child > div {
-  background: transparent;
-  border: 0;
-  border-right: 1px solid #ffffff12;
-  border-radius: 0;
-  padding: 0 12px;
-}
-.portal-page [data-purpose="portal-branding"] > div:last-child > div:first-child {
-  padding-left: 0;
-}
-.portal-page [data-purpose="portal-branding"] > div:last-child > div:last-child {
-  border-right: 0;
+  background: #11181d99;
+  border: 1px solid #ffffff0c;
+  border-radius: 12px;
+  padding: 10px 8px;
 }
 .portal-page [data-purpose="action-portal-container"] > div > div:first-child {
   display: none;
