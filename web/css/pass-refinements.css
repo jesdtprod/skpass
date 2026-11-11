@@ -101,10 +101,29 @@ body.pass-page {
   display: grid;
   grid-template-columns: 220px minmax(0,1fr);
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
 }
 .pass-holder-panel {
   min-width: 0;
+}
+@media (min-width: 621px) {
+  .with-qr .pass-holder-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .with-qr .pass-holder-panel .pass-card-header {
+    margin-bottom: 0;
+    padding-bottom: 12px;
+  }
+  .with-qr .pass-holder-row,
+  .with-qr .pass-vehicle-fields {
+    margin-bottom: 0;
+  }
+  .pass-page .with-qr .pass-qr-section {
+    justify-content: space-between;
+  }
 }
 .pass-vehicle-fields {
   display: grid;
