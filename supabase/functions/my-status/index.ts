@@ -40,7 +40,7 @@ export async function handler(req: Request): Promise<Response> {
   }
 
   const { data: v } = await db.from("vehicles").select(
-    "status, category, plate, owner_name, token, valid_from, valid_to, reject_reason, claim_hash",
+    "status, category, plate, owner_name, token, valid_from, valid_to, reject_reason, claim_hash, vehicle_type, color, office, position, agency, host_name, purpose, created_at",
   ).eq("id", vehicleId).is("deleted_at", null).maybeSingle();
 
   // Always hash, so "unknown vehicle" and "wrong secret" take the same time and look identical.

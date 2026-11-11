@@ -81,6 +81,43 @@ function card(rec, view, note) {
     ),
   ];
   if (view.owner_name) kids.push(h("p", { class: "muted" }, view.owner_name));
+  const typeNames = {
+    car: "Car",
+    suv: "SUV / Crossover",
+    van: "Van / MPV",
+    truck: "Pickup / Truck",
+    motorcycle: "Motorcycle",
+    tricycle: "Tricycle",
+    other: "Other",
+  };
+  function displayDate(value) {
+    if (!value) return null;
+    const date = new Date(value.length === 10 ? `${value}T12:00:00` : value);
+    return Number.isNaN(date.getTime())
+      ? null
+      : date.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
+  }
+  const details = [
+    ["Vehicle type", typeNames[view.vehicle_type] ?? view.vehicle_type],
+    ["Color", view.color],
+    ["Office / Department", view.office],
+    ["Position / Title", view.position],
+    ["Agency / Office", view.agency],
+    ["Visiting", view.host_name],
+    ["Purpose of visit", view.purpose],
+    ["Registered", displayDate(view.created_at)],
+    ["Valid from", displayDate(view.valid_from)],
+    ["Valid until", displayDate(view.valid_to)],
+  ].filter(([, value]) => value);
+  if (details.length) {
+    kids.push(
+      h(
+        "dl",
+        { class: "pass-details" },
+        details.map(([label, value]) => h("div", {}, h("dt", {}, label), h("dd", {}, value))),
+      ),
+    );
+  }
   if (note) kids.push(h("p", { class: "alert warn" }, note));
 
   if (s === "pending") {

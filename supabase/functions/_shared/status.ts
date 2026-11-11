@@ -5,6 +5,15 @@ export interface VehicleRow {
   category: string;
   plate: string;
   owner_name: string;
+  vehicle_type?: string | null;
+  color?: string | null;
+  office?: string | null;
+  position?: string | null;
+  agency?: string | null;
+  host_name?: string | null;
+  purpose?: string | null;
+  created_at?: string | null;
+
   token: string | null;
   valid_from: string | null;
   valid_to: string | null;
@@ -16,6 +25,15 @@ export interface OwnerStatus {
   category: string;
   plate: string;
   owner_name: string;
+  vehicle_type?: string | null;
+  color?: string | null;
+  office?: string | null;
+  position?: string | null;
+  agency?: string | null;
+  host_name?: string | null;
+  purpose?: string | null;
+  created_at?: string | null;
+
   valid_from: string | null;
   valid_to: string | null;
   reject_reason?: string;
@@ -33,6 +51,14 @@ export function ownerStatus(v: VehicleRow, today: string): OwnerStatus {
     owner_name: v.owner_name,
     valid_from: v.valid_from,
     valid_to: v.valid_to,
+    vehicle_type: v.vehicle_type,
+    color: v.color,
+    office: v.office,
+    position: v.position,
+    agency: v.agency,
+    host_name: v.host_name,
+    purpose: v.purpose,
+    created_at: v.created_at,
   };
   if (v.status === "rejected" && v.reject_reason) out.reject_reason = v.reject_reason;
   if (v.status === "approved" && v.token) {

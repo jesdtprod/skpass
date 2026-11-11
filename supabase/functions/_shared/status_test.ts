@@ -13,6 +13,24 @@ const base: VehicleRow = {
 };
 const TODAY = "2026-11-11";
 
+Deno.test("owner receives vehicle and registration details while pending without a token", () => {
+  const details = {
+    vehicle_type: "suv",
+    color: "Silver",
+    office: "Treasury",
+    position: null,
+    agency: null,
+    host_name: null,
+    purpose: null,
+    created_at: "2026-11-11T02:00:00Z",
+  };
+  const result = ownerStatus({ ...base, ...details, status: "pending" }, TODAY);
+  for (const [key, value] of Object.entries(details)) {
+    assertEquals(result[key as keyof typeof result], value);
+  }
+  assert(!("token" in result));
+});
+
 Deno.test("approved vehicle exposes its token", () => {
   assertEquals(ownerStatus(base, TODAY).token, "tok123");
 });
