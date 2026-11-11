@@ -24,6 +24,9 @@ body.admin-home {
   font-family: "Plus Jakarta Sans",sans-serif;
   background: radial-gradient(ellipse at 20% 20%,#a3e6350a,transparent 50%),#10141a;
 }
+body.admin-home {
+  background: #10141a;
+}
 .admin-home > skpass-header,
 .admin-home > skpass-footer {
   margin-left: 256px;

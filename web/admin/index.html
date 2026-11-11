@@ -113,10 +113,8 @@
   </head>
   <body
     class="admin admin-home h-full flex flex-col font-sans overflow-x-hidden selection:bg-brand-500 selection:text-white">
-    <canvas class="portal-pattern" aria-hidden="true"></canvas>
-    <script type="module" src="../js/background.js?v=convex-2"></script>
     <!-- BEGIN: TopBar -->
-    <skpass-header></skpass-header>
+    <skpass-header admin></skpass-header>
     <script type="module" src="../js/header.js"></script>
     <div
       class="admin-mobile-toolbar"><button id="menu" type="button" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button><span>SKPass Admin</span><a href="../scan/">Open Scanner &rarr;</a></div>
@@ -197,8 +195,6 @@
     </div>
 
     <!-- BEGIN: BottomTelemetryBar -->
-    <skpass-footer></skpass-footer>
-    <script type="module" src="../js/footer.js"></script>
     <!-- END: BottomTelemetryBar -->
 
     <!-- Global Toast Container -->
