@@ -30,33 +30,33 @@ if (select) {
     list.append(item);
     return item;
   });
-  function render() {
+  const render = () => {
     button.textContent = select.selectedOptions[0]?.textContent || "";
     options.forEach((option, index) => {
       option.setAttribute("aria-selected", String(index === select.selectedIndex));
       option.classList.toggle("active", index === active);
     });
     button.setAttribute("aria-activedescendant", options[active].id);
-  }
-  function open() {
+  };
+  const open = () => {
     active = select.selectedIndex;
     list.hidden = false;
     button.setAttribute("aria-expanded", "true");
     render();
     options[active].scrollIntoView({ block: "nearest" });
-  }
-  function close() {
+  };
+  const close = () => {
     list.hidden = true;
     button.setAttribute("aria-expanded", "false");
     button.removeAttribute("aria-activedescendant");
-  }
-  function choose(index) {
+  };
+  const choose = (index) => {
     select.selectedIndex = active = index;
     select.dispatchEvent(new Event("change", { bubbles: true }));
     render();
     close();
     button.focus();
-  }
+  };
   button.addEventListener("click", () => list.hidden ? open() : close());
   let search = "", searchTimer;
   button.addEventListener("keydown", (event) => {
