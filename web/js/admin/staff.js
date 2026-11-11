@@ -1,5 +1,6 @@
 import { SUPABASE_URL } from "../config.js";
 import { ask, pickMany } from "./dialog.js";
+import { tableSkeleton } from "./skeleton.js";
 import { attempt, fmtTime, h } from "./util.js";
 
 const FN = `${SUPABASE_URL}/functions/v1/create-staff`;
@@ -45,7 +46,15 @@ const PASSWORD_FIELD = {
 };
 
 export async function render(root, ctx) {
-  const box = h("div");
+  const box = h(
+    "div",
+    {},
+    tableSkeleton({
+      cols: ["140px", "160px", "80px", "130px", "110px"],
+      rows: 5,
+      actions: 2,
+    }),
+  );
   root.append(
     h("h1", {}, "Staff"),
     h("p", { class: "sub" }, "Guards scan at the gates. Administrators manage everything."),

@@ -1,3 +1,4 @@
+import { tableSkeleton } from "./skeleton.js";
 import { addDays, downloadText, fmtTime, h, safeTerm, toast, toCsv, todayLocal } from "./util.js";
 
 const PAGE = 50;
@@ -28,7 +29,14 @@ export async function render(root, ctx) {
     result: h("select", {}, sel([["", "All results"], ["ok", "OK"], ["warning", "Warnings"]])),
     plate: h("input", { type: "search", placeholder: "Plate", "aria-label": "Plate" }),
   };
-  const box = h("div");
+  const box = h(
+    "div",
+    {},
+    tableSkeleton({
+      cols: ["110px", "90px", "60px", "65px", "85px", "75px", "130px", "110px"],
+      rows: 8,
+    }),
+  );
   const note = h("p", { class: "muted small" });
 
   const field = (label, input) => h("div", { class: "field" }, h("label", {}, label), input);

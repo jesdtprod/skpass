@@ -1,4 +1,5 @@
 import { ask, confirmBox } from "./dialog.js";
+import { bone } from "./skeleton.js";
 import { attempt, h } from "./util.js";
 
 const MODES = [
@@ -9,7 +10,13 @@ const MODES = [
 const MODE_TEXT = { both: "Entrance + exit", in: "Entrance only", out: "Exit only" };
 
 export async function render(root, ctx) {
-  const box = h("div");
+  const box = h(
+    "div",
+    { style: "display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px" },
+    bone("100%", "140px", 14),
+    bone("100%", "140px", 14),
+    bone("100%", "140px", 14),
+  );
   root.append(
     h("h1", {}, "Gates"),
     h(
