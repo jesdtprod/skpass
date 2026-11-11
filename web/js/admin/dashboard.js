@@ -13,8 +13,8 @@ const legend = () =>
   h(
     "div",
     { class: "legend" },
-    h("span", {}, h("i", { style: "background:#2d9a0f" }), "Entries (IN)"),
-    h("span", {}, h("i", { style: "background:#2b2f33" }), "Exits (OUT)"),
+    h("span", {}, h("i", { style: "background:#10b981" }), "Entries (IN)"),
+    h("span", {}, h("i", { style: "background:#334155" }), "Exits (OUT)"),
   );
 
 export async function render(root, ctx) {

@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>SKPass - My QR | Vehicle Gate Pass</title>
+    <title>SKPass - Vehicle Gate Pass | Provincial Government</title>
     <meta
       name="description"
       content="Access your approved provincial vehicle gate QR pass for automated checkpoint clearance."
     />
-    <meta name="theme-color" content="#10141a" />
+    <meta name="theme-color" content="#070b11" />
 
     <!-- PWA & Favicons -->
     <link rel="manifest" href="../manifest.webmanifest" />
@@ -17,16 +17,18 @@
     <link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16.png" />
     <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
 
-    <!-- Google Fonts -->
+    <!-- Google Fonts: Inter & JetBrains Mono -->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
 
-    <!-- Tailwind CSS v3 CDN -->
+    <!-- Tailwind CSS CDN with Forms & Container Queries -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Custom Tailwind Configuration -->
     <script>
     tailwind.config = {
       darkMode: "class",
@@ -34,22 +36,23 @@
         extend: {
           colors: {
             brand: {
-              50: "#f3ffe5",
-              100: "#e5ffc2",
-              400: "#a3e635",
-              500: "#91df16",
-              600: "#70ba0b",
-              700: "#438509",
+              400: "#4ade80",
+              500: "#22c55e",
+              600: "#16a34a",
+              accent: "#84cc16",
+              bright: "#a3e635",
             },
-            panel: {
-              card: "rgba(15, 23, 42, 0.75)",
-              border: "rgba(51, 65, 85, 0.45)",
-              glow: "rgba(145, 223, 22, 0.15)",
+            surface: {
+              900: "#070b11",
+              850: "#0d131f",
+              800: "#111827",
+              750: "#151e2e",
+              700: "#1c2638",
             },
           },
           fontFamily: {
             sans: [
-              "Plus Jakarta Sans",
+              "Inter",
               "system-ui",
               "-apple-system",
               "Segoe UI",
@@ -57,9 +60,12 @@
               "sans-serif",
             ],
             mono: [
-              "JetBrains Mono",
+              '"JetBrains Mono"',
               "ui-monospace",
               "SFMono-Regular",
+              "Menlo",
+              "Monaco",
+              "Consolas",
               "monospace",
             ],
           },
@@ -68,22 +74,27 @@
     };
     </script>
 
-    <!-- Custom Styling for Grid Background, Radar Rings and Card Rendering -->
-    <style data-purpose="background-mesh">
-    body {
-      background-color: #10141a;
+    <!-- Styling: Background Grid & Custom Accents -->
+    <style data-purpose="background-pattern">
+    .tech-grid-bg {
+      background-color: #070b11;
       background-image:
-        radial-gradient(circle at 50% 0%, rgba(145, 223, 22, 0.12) 0%, transparent 55%),
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 36px 36px, 36px 36px;
-      min-height: 100vh;
+        radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+        radial-gradient(rgba(34, 197, 94, 0.12) 1px, transparent 1px);
+      background-size: 100% 100%, 28px 28px;
     }
-
+    .subtle-border {
+      border-color: rgba(255, 255, 255, 0.07);
+    }
+    .neon-badge-glow {
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.25);
+    }
+    .qr-container-glow {
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), 0 0 25px rgba(16, 185, 129, 0.05);
+    }
     .scanner-radar-ring {
       animation: radar-pulse 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
     }
-
     @keyframes radar-pulse {
       0% {
         transform: scale(0.85);
@@ -98,228 +109,97 @@
         opacity: 0;
       }
     }
-
-    /* Dynamic Card Styling rendered by my-qr.js */
-    .card {
-      background-color: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(51, 65, 85, 0.7);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-      margin-bottom: 1.25rem;
-      transition: all 0.2s ease-in-out;
-    }
-    .card.loading {
-      opacity: 0.6;
-      pointer-events: none;
-    }
-    .card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
-    }
-    .plate {
-      font-family: "JetBrains Mono", ui-monospace, monospace;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #a3e635;
-      letter-spacing: 0.1em;
-      background: rgba(15, 23, 34, 0.7);
-      padding: 0.25rem 0.65rem;
-      border-radius: 0.5rem;
-      border: 1px solid rgba(145, 223, 22, 0.3);
-    }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.25rem 0.65rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .badge.cat {
-      background: rgba(145, 223, 22, 0.15);
-      color: #a3e635;
-      border: 1px solid rgba(145, 223, 22, 0.3);
-    }
-    .muted {
-      color: #94a3b8;
-      font-size: 0.875rem;
-      margin: 0.25rem 0;
-    }
-    .center {
-      text-align: center;
-    }
-    .alert {
-      padding: 0.75rem 1rem;
-      border-radius: 0.75rem;
-      font-size: 0.8125rem;
-      margin: 0.75rem 0;
-      font-weight: 500;
-    }
-    .alert.info {
-      background: rgba(6, 78, 59, 0.3);
-      border: 1px solid rgba(145, 223, 22, 0.35);
-      color: #a7f3d0;
-    }
-    .alert.warn {
-      background: rgba(120, 53, 15, 0.3);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      color: #fde68a;
-    }
-    .alert.error {
-      background: rgba(127, 29, 29, 0.3);
-      border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #fecaca;
-    }
-    .qr {
-      display: block;
-      margin: 1.25rem auto;
-      max-width: 240px;
-      width: 100%;
-      height: auto;
-      border-radius: 0.75rem;
-      background: #ffffff;
-      padding: 0.75rem;
-      box-shadow: 0 0 25px rgba(145, 223, 22, 0.25);
-    }
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 0.75rem 1.25rem;
-      border-radius: 0.75rem;
-      font-weight: 600;
-      font-size: 0.875rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: linear-gradient(to right, #70ba0b, #91df16, #14b8a6);
-      color: #ffffff;
-      border: none;
-      box-shadow: 0 10px 15px -3px rgba(6, 78, 59, 0.4);
-      margin-top: 0.75rem;
-      text-decoration: none;
-    }
-    .btn:hover {
-      background: linear-gradient(to right, #91df16, #a3e635, #2dd4bf);
-      transform: scale(1.01);
-    }
-    .btn.ghost {
-      background: rgba(30, 41, 59, 0.5);
-      color: #cbd5e1;
-      border: 1px solid rgba(51, 65, 85, 0.7);
-      box-shadow: none;
-    }
-    .btn.ghost:hover {
-      background: rgba(51, 65, 85, 0.7);
-      color: #ffffff;
-      border-color: rgba(100, 116, 139, 0.8);
-    }
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      margin-top: 1rem;
-      padding-top: 0.75rem;
-      border-top: 1px solid rgba(51, 65, 85, 0.4);
-    }
-    @media (max-width: 640px) {
-      .actions {
-        grid-template-columns: 1fr;
-      }
-    }
     </style>
-    <link rel="stylesheet" href="../css/portal.css" />
-    <link rel="stylesheet" href="../css/my-qr.css?v=status-3" />
-    <link rel="stylesheet" href="../css/control-shapes.css" />
   </head>
   <body
-    class="my-qr-page text-slate-100 flex flex-col justify-between antialiased selection:bg-lime-500 selection:text-black">
-    <canvas class="portal-pattern" aria-hidden="true"></canvas>
-    <script type="module" src="../js/background.js?v=convex-2"></script>
+    class="tech-grid-bg min-h-screen text-slate-200 antialiased flex flex-col justify-between selection:bg-brand-500 selection:text-black"
+  >
     <!-- BEGIN: MainHeader -->
     <skpass-header></skpass-header>
     <script type="module" src="../js/header.js"></script>
     <!-- END: MainHeader -->
 
-    <!-- BEGIN: MainContent -->
-    <main class="flex-grow flex items-center justify-center px-4 py-10 sm:py-16">
-      <div class="w-full max-w-lg">
-        <!-- Logo and Screen Title Heading -->
-        <div class="text-center mb-6">
-          <img class="my-qr-logo" src="../icons/logo.png" width="88" height="88"
-            alt="SKPass vehicle gate pass" />
-          <!-- Section Title -->
-          <h1
-            class="text-2xl sm:text-3xl font-bold tracking-tight text-white flex items-center justify-center gap-2">
-            <span>My QR</span>
-          </h1>
-          <p
-            class="text-xs uppercase tracking-widest text-lime-400/90 font-mono mt-1 font-semibold">
-            Vehicle Access Pass Gateway
-          </p>
-        </div>
-
+    <!-- BEGIN: MainContentContainer -->
+    <main class="flex-grow flex items-center justify-center px-4 py-8 sm:py-12">
+      <div class="w-full max-w-[480px] flex flex-col gap-4">
         <!-- Registration Success Notification Banner -->
         <div
           id="welcome"
-          class="mb-6 p-4 rounded-xl border border-lime-500/40 bg-lime-950/40 text-lime-200 text-xs font-medium"
+          class="p-4 rounded-2xl border border-emerald-500/40 bg-emerald-950/40 text-emerald-200 text-xs font-medium shadow-lg"
           role="alert"
           hidden
         >
-          <strong>Registration received.</strong> Keep this page: it is saved on this device and will show your QR once approved.
+          <div class="flex items-start gap-3">
+            <div
+              class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center flex-shrink-0 mt-0.5"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div>
+              <strong class="block text-white font-semibold mb-0.5">Registration Received</strong>
+              <span>Keep this page: it is saved on this device and will show your active QR pass once approved by gate security.</span>
+            </div>
+          </div>
         </div>
 
         <!-- Dynamic List of Saved Vehicles Rendered by my-qr.js -->
         <div id="list" class="space-y-4"></div>
 
-        <!-- Main Glassmorphic Empty Card Container -->
+        <!-- BEGIN: Empty State Card (Shown when zero vehicles saved) -->
         <div
           id="empty"
-          class="bg-slate-900/80 backdrop-blur-xl border border-slate-800/90 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-black/80 relative overflow-hidden"
+          class="bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden"
           hidden
         >
+          <!-- Decorative top glow line -->
+          <div
+            class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-500 to-transparent opacity-80 pointer-events-none"
+          ></div>
+
           <!-- Ambient corner highlight -->
           <div
-            class="absolute -top-16 -right-16 w-32 h-32 bg-lime-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            class="absolute -top-16 -right-16 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"
+          ></div>
 
           <!-- Wireframe Empty QR Illustration -->
           <div class="flex flex-col items-center justify-center py-2 mb-6 text-center">
             <div class="relative w-36 h-36 flex items-center justify-center">
               <!-- Radar Scan Animation Rings -->
               <div
-                class="absolute inset-0 rounded-2xl border border-lime-500/30 scanner-radar-ring pointer-events-none"></div>
+                class="absolute inset-0 rounded-2xl border border-emerald-500/30 scanner-radar-ring pointer-events-none"
+              ></div>
               <div
-                class="absolute inset-2 rounded-xl border border-dashed border-lime-500/20 pointer-events-none"></div>
+                class="absolute inset-2 rounded-xl border border-dashed border-emerald-500/20 pointer-events-none"
+              ></div>
 
               <!-- Stylized QR Placeholder Framework -->
               <div
-                class="w-28 h-28 rounded-xl bg-slate-950/70 border border-slate-800/80 p-3 grid grid-cols-3 gap-1.5 relative shadow-inner"
+                class="w-28 h-28 rounded-xl bg-surface-900 border border-slate-800 p-3 grid grid-cols-3 gap-1.5 relative shadow-inner"
               >
                 <!-- Corner QR Markers -->
                 <div
-                  class="border-2 border-slate-700 rounded p-0.5 flex items-center justify-center">
+                  class="border-2 border-slate-700 rounded p-0.5 flex items-center justify-center"
+                >
                   <div class="w-full h-full bg-slate-700/60 rounded-xs"></div>
                 </div>
                 <div class="border border-slate-800/60 flex items-center justify-center">
-                  <div class="w-1.5 h-1.5 bg-lime-500/40 rounded-full animate-ping"></div>
+                  <div class="w-1.5 h-1.5 bg-emerald-500/40 rounded-full animate-ping"></div>
                 </div>
                 <div
-                  class="border-2 border-slate-700 rounded p-0.5 flex items-center justify-center">
+                  class="border-2 border-slate-700 rounded p-0.5 flex items-center justify-center"
+                >
                   <div class="w-full h-full bg-slate-700/60 rounded-xs"></div>
                 </div>
                 <div class="border border-slate-800/60"></div>
 
                 <!-- Center Car / Pass Silhouette -->
                 <div
-                  class="bg-lime-950/60 border border-lime-500/40 rounded flex items-center justify-center">
-                  <svg class="w-4 h-4 text-lime-400" fill="currentColor" viewBox="0 0 24 24">
+                  class="bg-emerald-950/60 border border-emerald-500/40 rounded flex items-center justify-center"
+                >
+                  <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
                     <path
                       d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.85 7h10.29l1.04 3H5.81l1.04-3zM19 17H5v-4.66l.12-.34h13.77l.11.34V17z"
                     ></path>
@@ -327,7 +207,8 @@
                 </div>
                 <div class="border border-slate-800/60"></div>
                 <div
-                  class="border-2 border-slate-700 rounded p-0.5 flex items-center justify-center">
+                  class="border-2 border-slate-700 rounded p-0.5 flex items-center justify-center"
+                >
                   <div class="w-full h-full bg-slate-700/60 rounded-xs"></div>
                 </div>
                 <div class="border border-slate-800/60"></div>
@@ -338,10 +219,10 @@
             </div>
 
             <!-- Notice / Status -->
-            <p class="text-sm font-medium text-slate-300 mt-3" data-purpose="empty-notice">
+            <p class="text-sm font-semibold text-slate-200 mt-4" data-purpose="empty-notice">
               No vehicles saved on this device.
             </p>
-            <p class="text-xs text-slate-500 mt-1 max-w-xs">
+            <p class="text-xs text-slate-400 mt-1 max-w-xs leading-relaxed">
               Link an existing pass or enroll your vehicle credentials for automated gate clearance.
             </p>
           </div>
@@ -349,23 +230,26 @@
           <!-- Primary CTA: "Register a vehicle" -->
           <div class="space-y-4">
             <a
-              class="group relative w-full flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-lime-600 via-lime-500 to-lime-500 hover:from-lime-500 hover:to-lime-400 text-white font-semibold rounded-xl transition duration-200 shadow-lg shadow-lime-950/60 focus:outline-none focus:ring-2 focus:ring-lime-400/50"
+              class="group relative w-full flex items-center justify-between px-5 py-3.5 bg-brand-bright hover:bg-brand-400 text-slate-950 font-bold rounded-xl transition duration-200 shadow-lg shadow-emerald-950/40 focus:outline-none focus:ring-2 focus:ring-brand-400 cursor-pointer"
               data-purpose="register-vehicle-button"
               href="../register/"
             >
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
-                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor"
+                <div class="w-8 h-8 rounded-lg bg-slate-950/10 flex items-center justify-center">
+                  <svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
-                    <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width="2"></path>
+                    <path
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2.2"
+                    ></path>
                   </svg>
                 </div>
-                <!-- Text Label -->
-                <span class="text-base tracking-wide font-medium">Register a vehicle</span>
+                <span class="text-sm tracking-wide font-bold">Register a vehicle</span>
               </div>
               <div
-                class="flex items-center text-lime-100 group-hover:translate-x-0.5 transition-transform">
+                class="flex items-center text-slate-950 group-hover:translate-x-0.5 transition-transform">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"
                     stroke-width="2"></path>
@@ -378,7 +262,7 @@
               <span class="text-xs text-slate-400">
                 Already approved?
                 <a
-                  class="font-medium text-lime-400 hover:text-lime-300 underline underline-offset-4 decoration-lime-500/40 hover:decoration-lime-400 transition-colors ml-1"
+                  class="font-medium text-brand-400 hover:text-brand-bright underline underline-offset-4 decoration-brand-500/40 hover:decoration-brand-bright transition-colors ml-1"
                   href="../find/"
                 >
                   Find my QR
@@ -387,67 +271,79 @@
             </div>
           </div>
         </div>
+        <!-- END: Empty State Card -->
 
-        <!-- Action: "Add to Home Screen" Card -->
-        <div class="mt-4">
-          <button
-            class="w-full group flex items-center justify-between px-4 py-3 bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700/90 rounded-xl transition text-slate-300 hover:text-white cursor-pointer"
-            data-purpose="add-to-home-screen-button"
-            data-install
-            id="install-pwa-button"
-            type="button"
-            hidden
-          >
-            <div class="flex items-center gap-3">
-              <div
-                class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-lime-400 transition-colors"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                  ></path>
-                </svg>
-              </div>
-              <span class="text-sm font-medium">Add to Home Screen</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span
-                class="text-[11px] font-mono uppercase bg-slate-800 text-slate-400 px-2 py-0.5 rounded border border-slate-700/60">
-                PWA
-              </span>
-              <svg
-                class="w-4 h-4 text-slate-500 group-hover:text-slate-300 transition-colors"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width="2"></path>
+        <!-- BEGIN: PWAInstallBar -->
+        <aside
+          id="install-pwa-button"
+          data-install
+          hidden
+          class="w-full bg-surface-850/90 border border-slate-800 hover:border-slate-700 rounded-2xl px-4 py-3 flex items-center justify-between cursor-pointer transition-colors group"
+          data-purpose="pwa-install-banner"
+        >
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-8 h-8 rounded-lg bg-surface-750 border border-slate-700 flex items-center justify-center text-slate-300"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                viewBox="0 0 24 24">
+                <path
+                  d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
               </svg>
             </div>
-          </button>
-        </div>
+            <span
+              class="text-sm font-semibold text-slate-200 group-hover:text-white transition-colors">
+              Add to Home Screen
+            </span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span
+              class="text-[10px] font-bold px-2 py-0.5 rounded bg-surface-700 text-slate-400 border border-slate-600/60 uppercase tracking-wider"
+            >
+              PWA
+            </span>
+            <svg
+              class="w-4 h-4 text-slate-500 group-hover:text-slate-300 group-hover:translate-x-0.5 transition-all"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+        </aside>
+        <!-- END: PWAInstallBar -->
+
+        <!-- Additional Civic Pass Metadata / Security Notice -->
+        <p class="text-center text-[11px] text-slate-500">
+          NFC &amp; RFID Enabled Pass &bull; Valid at all provincial perimeter barriers
+        </p>
 
         <!-- Bottom Secondary Navigation -->
-        <div class="mt-6 text-center">
+        <div class="mt-2 text-center">
           <nav class="inline-flex items-center gap-2 text-xs font-medium text-slate-400">
-            <a class="hover:text-lime-400 transition-colors underline-offset-4 hover:underline"
-              href="../register/">
+            <a
+              class="hover:text-brand-400 transition-colors underline-offset-4 hover:underline"
+              href="../register/"
+            >
               Register another vehicle
             </a>
-            <span class="text-slate-600">·</span>
-            <a class="hover:text-lime-400 transition-colors underline-offset-4 hover:underline"
-              href="../find/">
+            <span class="text-slate-600">&bull;</span>
+            <a
+              class="hover:text-brand-400 transition-colors underline-offset-4 hover:underline"
+              href="../find/"
+            >
               Find my QR
             </a>
           </nav>
         </div>
       </div>
     </main>
-    <!-- END: MainContent -->
+    <!-- END: MainContentContainer -->
 
     <!-- BEGIN: MainFooter -->
     <skpass-footer></skpass-footer>
@@ -456,16 +352,7 @@
 
     <!-- QR Code Generator & Core Scripts -->
     <script src="../js/vendor/qrcode.js"></script>
-    <script type="module" src="../js/my-qr.js?v=status-3"></script>
+    <script type="module" src="../js/my-qr.js?v=card-2"></script>
     <script type="module" src="../js/pwa.js"></script>
-
-    <script data-purpose="interaction-handlers">
-    document.getElementById("support-link")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      alert(
-        "Provincial Security Operations Center\n\nGate Marshal Support Hotline: (02) 8920-0000 loc. 4421\nEmail: security-clearance@skpass.gov\nHours: 24/7 Gate Patrol Dispatch",
-      );
-    });
-    </script>
   </body>
 </html>

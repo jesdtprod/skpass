@@ -1,12 +1,21 @@
 import { requireStaff, sb, signOut } from "./auth.js";
 import {
+  createQueue,
+  isNearExpiry,
+  needsAttention,
+  openStore,
+  syncQueue,
+} from "./offline-queue.js";
+import {
   describeFailure,
   describeResult,
   isAuthError,
   isForbidden,
   isNetworkError,
   isToken,
+  queuedResult,
   SOUNDS,
+  syncBarState,
   VIBRATION,
 } from "./scan-ui.js";
 
@@ -36,24 +45,49 @@ const canvas = document.createElement("canvas");
 const g2d = canvas.getContext("2d", { willReadFrequently: true });
 
 // ------------------------------------------------------------------ setup
-const { profile } = await requireStaff();
+// allowOffline: a guard must be able to open the scanner with no signal.
+const { user, profile } = await requireStaff(["guard", "admin"], { allowOffline: true });
 $("who").textContent = profile.full_name;
-$("signout").addEventListener("click", () => signOut());
+
+const store = await openStore();
+const queue = createQueue(store);
+const MAX_AGE_HOURS = 72; // mirrors the offline_max_age_hours setting (server is the authority)
 
 function setBanner(msg) {
   banner.textContent = msg;
   banner.hidden = !msg;
 }
-addEventListener("offline", () => setBanner("You are offline. Scans cannot be recorded."));
-addEventListener("online", () => setBanner(""));
-if (!navigator.onLine) setBanner("You are offline. Scans cannot be recorded.");
+
+// ---- gate list: cached so the scanner can start offline
+const GATES_KEY = "skpass.gates.v1";
+function saveGates(list) {
+  try {
+    localStorage.setItem(GATES_KEY, JSON.stringify({ at: Date.now(), list }));
+  } catch { /* ignore */ }
+}
+function cachedGates() {
+  try {
+    return JSON.parse(localStorage.getItem(GATES_KEY) ?? "null")?.list ?? null;
+  } catch {
+    return null;
+  }
+}
 
 async function loadGates() {
+  gateSel.replaceChildren(new Option("Choose a gate…", ""));
+  let list = null;
+  let usedCache = false;
   const { data, error } = await sb.from("gates").select("id, code, name, direction_mode")
     .eq("active", true).order("name");
-  gateSel.replaceChildren(new Option("Choose a gate…", ""));
-  if (error) return setBanner("Could not load gates. Check your connection.");
-  for (const g of data) {
+  if (!error) {
+    list = data;
+    saveGates(list);
+  } else {
+    list = cachedGates();
+    usedCache = !!list;
+    if (!list) return setBanner("Could not load gates. Check your connection.");
+  }
+  for (const g of list) {
     const label = g.direction_mode === "both" ? g.name : `${g.name} (${g.direction_mode} only)`;
     gateSel.append(new Option(label, g.id));
   }
@@ -61,8 +95,9 @@ async function loadGates() {
   try {
     saved = localStorage.getItem("skpass.gate") ?? "";
   } catch { /* ignore */ }
-  if (data.some((g) => g.id === saved)) gateSel.value = saved;
-  if (data.length === 0) setBanner("No active gates. Ask an administrator to add one.");
+  if (list.some((g) => g.id === saved)) gateSel.value = saved;
+  if (list.length === 0) setBanner("No active gates. Ask an administrator to add one.");
+  else if (usedCache) setBanner("Offline: using the gate list saved on this device.");
   updateStart();
 }
 function updateStart() {
@@ -157,8 +192,9 @@ document.addEventListener("visibilitychange", async () => {
   if (document.visibilityState === "hidden") {
     stopCamera();
     wakeLock?.release?.().catch(() => {});
-  } else if (wantCamera && !started) {
-    await startCamera();
+  } else {
+    if (wantCamera && !started) await startCamera();
+    syncNow("visible");
   }
 });
 
@@ -196,32 +232,211 @@ async function onCode(text) {
   lastTokenAt = now;
   busy = true;
   if (!isToken(text)) return showResult(describeFailure("notQr"));
-  showResult(await scan(text), true);
+  const r = await scan(text);
+  showResult(r, r.result !== "queued");
+}
+
+/** One call to the server with a timeout, so a dead connection fails fast instead of hanging. */
+async function callScan(params, ms = 8000) {
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(), ms);
+  try {
+    return await sb.rpc("scan_vehicle", params).abortSignal(ac.signal);
+  } catch (e) {
+    return { data: null, error: { message: String(e?.message ?? e), code: "" } };
+  } finally {
+    clearTimeout(t);
+  }
 }
 
 async function scan(token) {
-  const key = crypto.randomUUID(); // reused on retry => the server never records it twice
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const { data, error } = await sb.rpc("scan_vehicle", {
-      p_token: token,
-      p_gate_id: gateSel.value,
-      p_idempotency_key: key,
-    });
-    if (!error) return data;
-    if (isAuthError(error)) {
-      const { error: refreshErr } = await sb.auth.refreshSession();
-      if (refreshErr) return describeFailure("session");
-      continue;
+  const key = crypto.randomUUID(); // reused on every retry AND on offline replay: never recorded twice
+  const at = new Date().toISOString();
+  const params = { p_token: token, p_gate_id: gateSel.value, p_idempotency_key: key };
+
+  if (navigator.onLine) {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const { data, error } = await callScan(params);
+      if (!error) {
+        if (!document.hidden) setTimeout(() => syncNow("scan"), 400); // also flush any backlog
+        return data;
+      }
+      if (isAuthError(error)) {
+        const { error: refreshErr } = await sb.auth.refreshSession();
+        if (refreshErr) {
+          if (isNetworkError(refreshErr)) break; // no signal after all: save it offline
+          return describeFailure("session");
+        }
+        continue;
+      }
+      if (isForbidden(error)) return describeFailure("forbidden");
+      if (!isNetworkError(error)) return describeFailure("server");
+      await new Promise((r) => setTimeout(r, 500));
     }
-    if (isForbidden(error)) return describeFailure("forbidden");
-    if (isNetworkError(error) && attempt < 2) {
-      await new Promise((r) => setTimeout(r, 800));
-      continue;
-    }
-    return describeFailure(isNetworkError(error) ? "offline" : "server");
   }
-  return describeFailure("server");
+
+  // No connection (or it failed twice): keep the scan on the phone and send it later.
+  const gateName = gateSel.selectedOptions[0]?.textContent ?? null;
+  await queue.add({
+    key,
+    token,
+    gate_id: gateSel.value,
+    gate_name: gateName,
+    user_id: user.id,
+    scanned_at: at,
+  });
+  refreshBar();
+  return queuedResult(gateName);
 }
+
+// ------------------------------------------------------------------ offline sync
+let syncing = false;
+let stopped = null; // why the last run stopped early: network | auth | forbidden
+let syncedJustNow = 0;
+let syncedTimer = null;
+const reports = [];
+
+/** Send one queued scan. Idempotent: the same key always returns the same answer. */
+async function send(item) {
+  const params = {
+    p_token: item.token,
+    p_gate_id: item.gate_id,
+    p_idempotency_key: item.key,
+    p_scanned_at: item.scanned_at,
+    p_offline: true,
+  };
+  let { data, error } = await callScan(params, 10000);
+  if (error && isAuthError(error)) {
+    const { error: refreshErr } = await sb.auth.refreshSession();
+    if (refreshErr) return { kind: isNetworkError(refreshErr) ? "network" : "auth" };
+    ({ data, error } = await callScan(params, 10000));
+  }
+  if (!error) return { kind: "result", data };
+  if (isAuthError(error)) return { kind: "auth" };
+  if (isForbidden(error)) return { kind: "forbidden" };
+  if (isNetworkError(error)) return { kind: "network" };
+  return { kind: "error", message: error.message };
+}
+
+async function doSync() {
+  const before = await queue.counts(user.id);
+  if (!before.pending) return refreshBar();
+  syncing = true;
+  stopped = null;
+  let done = 0;
+  refreshBar({ pending: before.pending });
+  const summary = await syncQueue(queue, user.id, send, {
+    onItem: () => {
+      done += 1;
+      refreshBar({ pending: Math.max(0, before.pending - done) });
+    },
+  });
+  syncing = false;
+  stopped = summary.stopped;
+  if (summary.sent > 0) {
+    syncedJustNow = summary.sent;
+    clearTimeout(syncedTimer);
+    syncedTimer = setTimeout(() => {
+      syncedJustNow = 0;
+      refreshBar();
+    }, 8000);
+  }
+  if (needsAttention(summary)) {
+    reports.push(summary);
+    maybeShowReport();
+  }
+  await refreshBar();
+  await refreshHistory();
+}
+
+/** Run a sync once at a time, even with several tabs open (Web Locks where available). */
+function syncNow(_reason) {
+  if (syncing || !navigator.onLine) return Promise.resolve();
+  if (navigator.locks?.request) {
+    return navigator.locks.request("skpass-sync", { ifAvailable: true }, async (lock) => {
+      if (lock) await doSync();
+    });
+  }
+  return doSync();
+}
+
+// ---- sync bar + review list
+const bar = $("syncbar");
+async function refreshBar(override = {}) {
+  const c = await queue.counts(user.id);
+  const s = syncBarState({
+    online: navigator.onLine,
+    pending: override.pending ?? c.pending,
+    failed: c.failed,
+    others: c.others,
+    syncing,
+    syncedJustNow,
+    nearExpiry: isNearExpiry(c.oldest, MAX_AGE_HOURS),
+    stopped,
+    degraded: !!store.degraded,
+  });
+  bar.hidden = !s.visible;
+  bar.dataset.tone = s.tone;
+  $("sync-text").textContent = s.text;
+  $("sync-now").hidden = !s.canSync;
+  $("sync-retry").hidden = !s.canRetry;
+}
+
+const fmtTime = (iso) =>
+  new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+async function refreshHistory() {
+  const h = (await queue.history()).slice(0, 15);
+  const list = $("synclist");
+  list.replaceChildren();
+  $("synchist").hidden = h.length === 0;
+  for (const e of h) {
+    const li = document.createElement("li");
+    li.dataset.result = e.result;
+    li.textContent = `${fmtTime(e.scanned_at)} · ${e.plate ?? "unknown QR"}${
+      e.gate ? ` · ${e.gate}` : ""
+    } · ${e.result === "ok" ? `${e.direction ?? ""} recorded` : (e.message ?? e.result)}`;
+    list.append(li);
+  }
+}
+
+$("sync-now").addEventListener("click", () => syncNow("button"));
+$("sync-retry").addEventListener("click", async () => {
+  await queue.retryFailed(user.id);
+  await refreshBar();
+  syncNow("retry");
+});
+
+addEventListener("online", () => {
+  setBanner("");
+  refreshBar();
+  syncNow("online");
+});
+addEventListener("offline", () => {
+  setBanner("You are offline. Scans are saved on this device and sent when you reconnect.");
+  refreshBar();
+});
+if (!navigator.onLine) {
+  setBanner("You are offline. Scans are saved on this device and sent when you reconnect.");
+}
+setInterval(() => {
+  if (!document.hidden) syncNow("timer");
+}, 20000);
+
+// ---- sign out: do not silently strand saved scans
+$("signout").addEventListener("click", async () => {
+  const c = await queue.counts(user.id);
+  if (
+    c.pending + c.failed > 0 &&
+    !confirm(
+      `${
+        c.pending + c.failed
+      } saved scan(s) have not been sent yet. They stay on this device and ` +
+        "are sent after you sign in again. Sign out anyway?",
+    )
+  ) return;
+  signOut();
+});
 
 // ------------------------------------------------------------------ result screen
 function showResult(r, fromServer = false) {
@@ -242,6 +457,14 @@ function showResult(r, fromServer = false) {
   if (v?.category === "visitor" && v.host_name) meta.push(`Visiting ${v.host_name}`);
   if (v?.valid_to) meta.push(`Valid until ${v.valid_to}`);
   $("ov-meta").textContent = meta.join(" · ");
+  const list = $("ov-list");
+  list.replaceChildren();
+  for (const line of r.list ?? []) {
+    const li = document.createElement("li");
+    li.textContent = line;
+    list.append(li);
+  }
+  list.hidden = !(r.list?.length);
   const photo = $("ov-photo");
   photo.hidden = true;
   photo.removeAttribute("src");
@@ -260,13 +483,45 @@ function showResult(r, fromServer = false) {
     });
   }
   clearTimeout(overlayTimer);
-  overlayTimer = setTimeout(dismiss, d.hold);
+  if (d.hold > 0) overlayTimer = setTimeout(dismiss, d.hold); // reports stay until tapped
+}
+
+/** After offline scans were replayed: anything denied or flagged must be seen by a person. */
+function maybeShowReport() {
+  if (!reports.length || !overlay.hidden) return; // show after the current screen is dismissed
+  const merged = reports.splice(0).reduce((a, s) => ({
+    sent: a.sent + s.sent,
+    denied: a.denied.concat(s.denied),
+    warnings: a.warnings.concat(s.warnings),
+    parked: a.parked + s.parked,
+  }), { sent: 0, denied: [], warnings: [], parked: 0 });
+  const line = (e, label) =>
+    `${fmtTime(e.scanned_at)} · ${e.plate ?? "unknown QR"}${
+      e.gate ? ` · ${e.gate}` : ""
+    } · ${label}: ${e.message ?? e.code ?? ""}`;
+  const list = [
+    ...merged.denied.map((e) => line(e, "NOT ALLOWED")),
+    ...merged.warnings.map((e) => line(e, "Warning")),
+  ];
+  if (merged.parked) {
+    list.push(`${merged.parked} scan(s) could not be sent. Tap "Retry" under the camera.`);
+  }
+  busy = true;
+  showResult({
+    result: "report",
+    code: merged.denied.length ? "sync_denied" : "sync_warn",
+    message: `${merged.sent} saved scan(s) were sent. ${list.length} need your attention:`,
+    list,
+    vehicle: null,
+    gate: null,
+  });
 }
 
 function dismiss() {
   clearTimeout(overlayTimer);
   overlay.hidden = true;
   busy = false;
+  maybeShowReport();
 }
 overlay.addEventListener("click", dismiss);
 
@@ -276,3 +531,8 @@ startBtn.addEventListener("click", async () => {
   wantCamera = true;
   await startCamera();
 });
+
+// First paint of the offline status, then flush anything left from an earlier session.
+await refreshBar();
+await refreshHistory();
+syncNow("start");

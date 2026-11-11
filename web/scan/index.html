@@ -23,6 +23,11 @@
     </header>
 
     <div id="banner" class="banner" role="status" hidden></div>
+    <div id="syncbar" class="syncbar" role="status" aria-live="polite" hidden>
+      <span id="sync-text"></span>
+      <button id="sync-now" class="syncbtn" type="button" hidden>Sync now</button>
+      <button id="sync-retry" class="syncbtn" type="button" hidden>Retry</button>
+    </div>
 
     <main class="stage">
       <div class="viewport">
@@ -37,6 +42,11 @@
       </div>
 
       <button id="torch" class="btn ghost torch" type="button" hidden>Torch: off</button>
+
+      <details id="synchist" class="synchist" hidden>
+        <summary>Recent offline sync results</summary>
+        <ul id="synclist"></ul>
+      </details>
     </main>
 
     <div id="overlay" class="overlay" role="alert" hidden>
@@ -47,6 +57,7 @@
       <span id="ov-cat" class="badge"></span>
       <div id="ov-msg" class="ov-msg"></div>
       <div id="ov-meta" class="ov-meta"></div>
+      <ul id="ov-list" class="ov-list" hidden></ul>
       <div id="ov-gate" class="ov-gate"></div>
       <div class="ov-tap">Tap to continue</div>
     </div>

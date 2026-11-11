@@ -1,4 +1,4 @@
-// Minimal inline-SVG charts (no library). Colors follow the brand: IN green, OUT charcoal.
+// Minimal inline-SVG charts (no library). Colors follow the brand: IN emerald, OUT slate.
 const NS = "http://www.w3.org/2000/svg";
 const svgEl = (tag, attrs = {}, text) => {
   const e = document.createElementNS(NS, tag);
@@ -7,7 +7,7 @@ const svgEl = (tag, attrs = {}, text) => {
   return e;
 };
 
-export const COLORS = { in: "#2d9a0f", out: "#2b2f33" };
+export const COLORS = { in: "#10b981", out: "#334155" };
 
 /** Stacked daily bars. rows: [{ day:'2026-11-11', in:3, out:2 }] */
 export function dailyChart(rows) {
@@ -27,14 +27,14 @@ export function dailyChart(rows) {
   for (let i = 0; i <= 4; i++) {
     const v = Math.round((niceMax / 4) * i);
     const y = padT + plotH - (v / niceMax) * plotH;
-    svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: y, y2: y, stroke: "#e3e8e1" }));
+    svg.append(svgEl("line", { x1: padL, x2: W - padR, y1: y, y2: y, stroke: "#1e293b" }));
     svg.append(
       svgEl("text", {
         x: padL - 6,
         y: y + 4,
         "text-anchor": "end",
         "font-size": 11,
-        fill: "#667078",
+        fill: "#94a3b8",
       }, v),
     );
   }
@@ -65,7 +65,7 @@ export function dailyChart(rows) {
           y: H - padB + 16,
           "text-anchor": "middle",
           "font-size": 11,
-          fill: "#667078",
+          fill: "#94a3b8",
         }, r.day.slice(5)),
       );
     }
@@ -93,7 +93,7 @@ export function gateBars(rows) {
         y: y + 17,
         "text-anchor": "end",
         "font-size": 14,
-        fill: "#1c2024",
+        fill: "#f1f5f9",
       }, r.gate),
     );
     const wIn = (r.in / max) * plotW;
@@ -107,7 +107,7 @@ export function gateBars(rows) {
     svg.append(
       svgEl(
         "text",
-        { x: padL + wIn + wOut + 8, y: y + 18, "font-size": 13, fill: "#667078" },
+        { x: padL + wIn + wOut + 8, y: y + 18, "font-size": 13, fill: "#94a3b8" },
         `${r.in} in · ${r.out} out`,
       ),
     );

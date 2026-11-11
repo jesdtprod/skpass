@@ -90,11 +90,20 @@ begin
   perform pg_temp.chk('far-future client time is ignored', format('select ((x->>''scanned_at'')::timestamptz < now() + interval ''1 hour'')::text from (select public.scan_vehicle(%L,%L,%L,%L) x) s', tok3, g1, 'key-future-0000000011', now() + interval '1 day'), 'true');
   perform pg_temp.chk('very old client time is ignored', format('select ((x->>''scanned_at'')::timestamptz > now() - interval ''1 hour'')::text from (select public.scan_vehicle(%L,%L,%L,%L) x) s', tok2, g1, 'key-old-00000000000012', now() - interval '30 days'), 'true');
 
+  -- offline replay (5th argument): recorded as source=offline, idempotent, bounded timestamp
+  perform pg_temp.chk('offline replay is recorded', format('select (x->>''code'')||''/''||(x->>''result'') from (select public.scan_vehicle(%L,%L,%L,%L,true) x) s', tok, g1, 'key-offl-000000000021', base + interval '10 hours'), 'ok/ok');
+  perform pg_temp.chk('offline replay row has source=offline', format('select source from public.gate_logs where idempotency_key = %L', 'key-offl-000000000021'), 'offline');
+  perform pg_temp.chk('offline replay keeps the original device timestamp', format('select (scanned_at = %L::timestamptz)::text from public.gate_logs where idempotency_key = %L', base + interval '10 hours', 'key-offl-000000000021'), 'true');
+  perform pg_temp.chk('offline replay of the same key is idempotent', format('select (x->>''replayed'') from (select public.scan_vehicle(%L,%L,%L,%L,true) x) s', tok, g1, 'key-offl-000000000021', base + interval '10 hours'), 'true');
+  perform pg_temp.chk('online scans are source=online', format('select source from public.gate_logs where idempotency_key = %L', 'key-in-0000000000001'), 'online');
+  perform pg_temp.chk('replay older than offline_max_age_hours falls back to server time', format('select ((x->>''scanned_at'')::timestamptz > now() - interval ''1 hour'')::text from (select public.scan_vehicle(%L,%L,%L,%L,true) x) s', tok3, g1, 'key-offl-000000000022', now() - interval '30 days'), 'true');
+
   ------------------------------------------------------ vehicle states
   reset role;
   update public.vehicles set status = 'blocked', blocked_reason = 't' where id = veh2;
   set local role authenticated;
   perform pg_temp.chk('blocked vehicle denied', format(q, tok2, g1, 'key-blk-000000000013', null), '-/denied/blocked');
+  perform pg_temp.chk('blocked vehicle denied when replayed offline', format('select coalesce(x->>''direction'',''-'')||''/''||(x->>''result'')||''/''||(x->>''code'') from (select public.scan_vehicle(%L,%L,%L,null,true) x) s', tok2, g1, 'key-blk-offl-0000023'), '-/denied/blocked');
 
   reset role;
   update public.vehicles set status = 'pending' where id = veh2;
@@ -136,6 +145,8 @@ begin
   set local role authenticated;
   perform pg_temp.chk('admin may replay a guard key', format(qr, tok, g1, 'key-in-0000000000001', null), 'true/IN');
   perform pg_temp.chk('denials are in the audit log', 'select (count(*) >= 8)::text from public.audit_logs where action = ''scan_denied''', 'true');
+  perform pg_temp.chk('offline denials are flagged in the audit log', 'select (count(*) >= 1)::text from public.audit_logs where action = ''scan_denied'' and (after->>''offline'') = ''true''', 'true');
+  perform pg_temp.chk('offline replays are visible to admins with their source', 'select (count(*) >= 1)::text from public.gate_logs where source = ''offline''', 'true');
   perform pg_temp.chk('visitor shows in inside-now view', 'select count(*)::text from public.v_vehicles_inside where plate = ''SMP-3003''', '1');
   reset role;
 

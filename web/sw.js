@@ -1,6 +1,6 @@
 // Service worker: caches the static app shell only.
 // Supabase / Turnstile (cross-origin) requests are never cached.
-const CACHE = "skpass-shell-v10";
+const CACHE = "skpass-shell-v11";
 const SHELL = [
   "./",
   "./index.html",
@@ -22,10 +22,25 @@ const SHELL = [
   "./icons/logo.png",
   "./icons/icon-192.png",
   "./icons/favicon-32.png",
+  // Guard scanner: must open and keep working with no connection.
+  "./scan/",
+  "./scan/index.html",
+  "./css/scan.css",
+  "./js/scan.js",
+  "./js/scan-ui.js",
+  "./js/offline-queue.js",
+  "./js/auth.js",
+  "./js/vendor/supabase.js",
+  "./js/vendor/jsQR.js",
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // Tolerant precache: one missing file must not stop the whole worker from installing.
+  event.waitUntil(
+    caches.open(CACHE)
+      .then((c) => Promise.allSettled(SHELL.map((u) => c.add(u))))
+      .then(() => self.skipWaiting()),
+  );
 });
 
 self.addEventListener("activate", (event) => {
@@ -50,6 +65,10 @@ self.addEventListener("fetch", (event) => {
         }
         return res;
       })
-      .catch(() => caches.match(req).then((hit) => hit || caches.match("./index.html"))),
+      .catch(() =>
+        caches.match(req, { ignoreSearch: true }).then((hit) =>
+          hit || (req.mode === "navigate" ? caches.match("./index.html") : Response.error())
+        )
+      ),
   );
 });
