@@ -1,0 +1,156 @@
+/* Shared desktop density: fit the public portal into common laptop viewports.
+   Content remains in normal flow so zoom, small screens and multiple passes can scroll. */
+@media (min-width: 1024px) and (min-height: 700px) {
+  body {
+    min-height: 100dvh;
+  }
+  body > main {
+    padding-top: 16px !important;
+    padding-bottom: 16px !important;
+  }
+  .portal-page main {
+    flex: 1 0 auto;
+  }
+  .portal-page [data-purpose="portal-branding"] {
+    gap: 16px;
+  }
+  .portal-page [data-purpose="portal-branding"] > * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .portal-page .portal-logo {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 0;
+  }
+  .portal-page [data-purpose="action-portal-container"] > div > div:last-child {
+    padding: 22px;
+  }
+  .portal-page [data-purpose="primary-action-buttons"] > a {
+    min-height: 64px;
+    padding-block: 12px;
+  }
+  .portal-page [data-purpose="primary-action-buttons"] > a + a {
+    margin-top: 10px;
+  }
+  .portal-page [data-purpose="action-portal-container"] .border-b {
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+  }
+  .portal-page [data-purpose="gate-status-dashboard"] {
+    padding-top: 0;
+    padding-bottom: 12px;
+  }
+  .portal-page [data-purpose="gate-status-dashboard"] > div {
+    padding: 12px 16px;
+  }
+  body > main > .flex-col {
+    gap: 12px;
+  }
+  body > main > div > .text-center {
+    margin-bottom: 0;
+  }
+  body > main > div > .text-center > div:first-child,
+  .my-qr-brand-frame {
+    width: 56px;
+    height: 56px;
+    padding: 7px;
+    margin-bottom: 8px;
+  }
+  .my-qr-brand-frame img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .my-qr-introduction {
+    margin-bottom: 0;
+  }
+  .pass-page [data-purpose="vehicle-gate-pass-card"] {
+    padding: 20px 24px;
+  }
+  .pass-section-heading {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+  }
+  .pass-identity-layout {
+    margin: 14px 0;
+  }
+  #auth-card,
+  #find-form {
+    padding: 22px 24px;
+  }
+  .registration-login #auth-card > .border-b {
+    margin-bottom: 16px;
+  }
+}
+@media (min-width: 1024px) and (min-height: 700px) and (max-height: 800px) {
+  body > main {
+    padding-block: 10px !important;
+  }
+  .portal-page .portal-logo {
+    width: 128px;
+    height: 128px;
+  }
+  .portal-page [data-purpose="portal-branding"] {
+    gap: 12px;
+  }
+  .portal-page [data-purpose="primary-action-buttons"] > a {
+    min-height: 58px;
+    padding-block: 9px;
+  }
+  .portal-page [data-purpose="primary-action-buttons"] > a + a {
+    margin-top: 8px;
+  }
+  .portal-page [data-purpose="action-portal-container"] > div > div:last-child {
+    padding: 18px 22px;
+  }
+  .portal-page [data-purpose="gate-status-dashboard"] {
+    padding-bottom: 8px;
+  }
+  .portal-page [data-purpose="gate-status-dashboard"] > div {
+    padding-block: 9px;
+  }
+}
+@media (min-width: 1024px) and (min-height: 700px) and (max-height: 800px) {
+  .portal-page [data-purpose="primary-action-buttons"] > a {
+    min-height: 54px;
+    padding-block: 7px;
+  }
+  .pass-page main > .flex-col {
+    gap: 8px;
+  }
+  .pass-page .my-qr-brand-frame {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 4px;
+  }
+  .pass-page .my-qr-introduction h1 {
+    margin-block: 0;
+    font-size: 28px;
+    line-height: 34px;
+  }
+  .pass-page .my-qr-introduction p {
+    margin-top: 4px;
+  }
+  .pass-page [data-purpose="vehicle-gate-pass-card"] {
+    padding: 16px 20px;
+  }
+  .pass-page .pass-section-heading {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+  }
+  .pass-page .pass-identity-layout {
+    margin-block: 8px;
+  }
+  .pass-page [data-purpose="vehicle-gate-pass-card"] > .h-px {
+    margin-block: 4px;
+  }
+  .pass-page [data-purpose="vehicle-gate-pass-card"] > .border-amber-500\/30 {
+    margin-bottom: 8px;
+    padding-block: 8px;
+  }
+}
+@media (min-width: 1024px) and (min-height: 700px) and (max-height: 800px) {
+  .pass-page main > .flex-col {
+    gap: 6px;
+  }
+}
