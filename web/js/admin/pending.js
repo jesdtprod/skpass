@@ -360,7 +360,9 @@ export async function render(root, ctx) {
     approveAll.disabled = true;
     const visitors = list.filter((v) => v.category === "visitor").length;
     const okGo = await confirmBox({
-      title: `Approve all ${list.length} registrations?`,
+      title: `Approve ${
+        list.length === 1 ? "this registration" : `all ${list.length} registrations`
+      }?`,
       message: `Confirm approval of ${list.length} pending registration${
         list.length === 1 ? "" : "s"
       }. Each vehicle will receive an access pass.${
