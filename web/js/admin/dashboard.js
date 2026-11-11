@@ -721,6 +721,16 @@ function paint(d, ctx, days) {
               h("span", { class: "cat-label" }, CATEGORY_LABEL[k]),
               h("span", { class: "n" }, String(cats[k] ?? 0)),
               h("span", { class: "p" }, `${pct(cats[k] ?? 0, catTotal)}%`),
+              h("span", { class: "cat-detail" }, "Approved vehicles"),
+              h("div", {
+                class: "cat-progress",
+                role: "meter",
+                "aria-label": `${CATEGORY_LABEL[k]} share of approved vehicles`,
+                "aria-valuemin": 0,
+                "aria-valuemax": 100,
+                "aria-valuenow": pct(cats[k] ?? 0, catTotal),
+              }, h("span", { style: `width:${pct(cats[k] ?? 0, catTotal)}%` })),
+              h("span", { class: "cat-context" }, `Of ${catTotal} total approved`),
             )
           ),
         ),
