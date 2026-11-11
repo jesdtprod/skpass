@@ -1,36 +1,586 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html class="dark" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SKPass</title>
-    <meta name="description" content="Vehicle registration and QR gate pass" />
-    <meta name="theme-color" content="#2d9a0f" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SKPass - Vehicle Gate Pass | Provincial Government</title>
+    <meta name="description"
+      content="Official Provincial Government vehicle registration and QR gate entry clearance." />
+    <meta name="theme-color" content="#0a0e14" />
+
+    <!-- PWA & Favicons -->
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="icon" href="icons/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16.png" />
-    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
-    <link rel="stylesheet" href="css/base.css" />
+    <link rel="icon" type="image/png" href="icons/favicon-32.png?v=fullcolor-2" sizes="32x32" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=fullcolor-2" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Tailwind Configuration -->
+    <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', "sans-serif"],
+            mono: ['"JetBrains Mono"', "monospace"],
+          },
+          colors: {
+            brand: {
+              50: "#f3ffe5",
+              100: "#e5ffc2",
+              200: "#d0ff9b",
+              300: "#bcf569",
+              400: "#a3e635",
+              500: "#91df16", // Emerald primary
+              600: "#70ba0b",
+              700: "#438509",
+              800: "#2c590b",
+              900: "#1e3c0a",
+              glow: "rgba(145, 223, 22, 0.35)",
+            },
+            surface: {
+              base: "#0a0e14",
+              card: "#1c2026",
+              cardHighlight: "#262b30",
+              border: "#30363b",
+              borderLight: "#42494e",
+            },
+          },
+          boxShadow: {
+            "glow-emerald": "0 0 35px -5px rgba(145, 223, 22, 0.3)",
+            "glow-card": "0 20px 50px -15px rgba(2, 6, 23, 0.8), 0 0 20px 0 rgba(145, 223, 22, 0.05)",
+          },
+        },
+      },
+    };
+    </script>
+
+    <!-- Custom Styles for Ambience & Animations -->
+    <link rel="stylesheet" href="css/portal.css?v=fonts-7" />
+    <style data-purpose="micro-interactions">
+    .btn-shine {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shine::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        60deg,
+        transparent,
+        rgba(255, 255, 255, 0.12),
+        transparent
+      );
+      transform: rotate(30deg);
+      transition: transform 0.75s ease;
+    }
+    .btn-shine:hover::after {
+      transform: rotate(30deg) translate(20%, 20%);
+    }
+
+    /* Pulse animation for gate status dot */
+    @keyframes pulse-subtle {
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(1.15);
+      }
+    }
+    .status-pulse {
+      animation: pulse-subtle 2s infinite ease-in-out;
+    }
+    </style>
   </head>
-  <body>
-    <main class="container">
-      <header class="brand">
-        <img src="icons/logo.png" alt="SKPass logo" />
-        <h1>SKPass</h1>
-        <p>Vehicle Gate Pass</p>
-      </header>
+  <body
+    class="portal-page min-h-screen text-slate-200 antialiased flex flex-col justify-between relative selection:bg-brand-500 selection:text-slate-950 font-sans"
+  >
+    <!-- Background Decorative Grid Overlay -->
+    <canvas class="portal-pattern" aria-hidden="true"></canvas>
+    <script type="module" src="js/background.js?v=convex-2"></script>
+    <!-- Ambient Glow Top Spot -->
+    <div
+      class="fixed top-0 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-brand-500/10 blur-[130px] rounded-full pointer-events-none z-0"
+    ></div>
 
-      <nav class="menu">
-        <a class="btn" href="register/">Register a vehicle</a>
-        <a class="btn secondary" href="my-qr/">My QR</a>
-        <a class="btn ghost" href="find/">Find my QR</a>
-        <a class="btn ghost" href="login/">Staff login</a>
-        <button class="btn ghost" data-install hidden>Add to Home Screen</button>
-      </nav>
+    <!-- BEGIN: SiteNavigation -->
+    <header
+      class="relative z-10 w-full border-b border-surface-border/60 bg-surface-base/80 backdrop-blur-md px-6 py-4"
+    >
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <!-- Left: Official Authority Identity -->
+        <div class="flex items-center gap-3">
+          <a href="./" aria-label="SKPass home" class="shrink-0">
+            <img src="icons/logo.png?v=original-1" width="40" height="40" alt="SKPass"
+              class="w-10 h-10 object-contain" />
+          </a>
+          <div class="leading-tight">
+            <span class="text-xs tracking-wider uppercase font-semibold text-slate-400 block">
+              Provincial Government
+            </span>
+            <span
+              class="text-xs text-slate-500 font-medium">Digital Access &amp; Security Division</span>
+          </div>
+        </div>
 
-      <footer>Provincial Government</footer>
+        <!-- Right: Real-time Gate Indicator & Help Link -->
+        <div class="flex items-center gap-4 sm:gap-6">
+          <!-- Live System Status -->
+          <div
+            class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-medium"
+          >
+            <span class="w-2 h-2 rounded-full bg-lime-500 status-pulse"></span>
+            <span class="text-slate-300">All Gates Active</span>
+            <span class="text-slate-600">|</span>
+            <span class="text-brand-400 font-mono">0.4s Scan Avg</span>
+          </div>
+
+          <!-- Official Support Link -->
+          <a
+            id="support-link"
+            class="text-xs text-slate-400 hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+            href="#support"
+          >
+            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 14v-3a9 9 0 0 1 18 0v3" />
+              <rect x="3" y="11" width="4" height="7" rx="2" />
+              <rect x="17" y="11" width="4" height="7" rx="2" />
+              <path d="M21 16v2a4 4 0 0 1-4 4h-3" />
+              <path d="M11 22h3" />
+            </svg>
+            Support Desk
+          </a>
+
+          <!-- Staff Access Direct Link -->
+          <a
+            class="text-xs font-semibold px-3 py-1.5 rounded-md text-slate-300 hover:text-white hover:bg-slate-800/80 border border-slate-700/60 transition"
+            href="login/"
+          >
+            Official Staff Portal →
+          </a>
+        </div>
+      </div>
+    </header>
+    <!-- END: SiteNavigation -->
+
+    <!-- BEGIN: MainContent -->
+    <main class="relative z-10 flex-1 flex items-center justify-center p-4 sm:p-6 md:py-12">
+      <div class="max-w-5xl w-full mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <!-- Left Column: Branding Showcase & Fast Security Overview -->
+        <section
+          class="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6"
+          data-purpose="portal-branding"
+        >
+          <div class="portal-logo" data-purpose="system-logo">
+            <img src="icons/logo.png?v=original-1" width="184" height="204"
+              alt="SKPass vehicle gate pass logo" />
+          </div>
+
+          <!-- Typography Block -->
+          <div>
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-lime-500/10 border border-lime-500/30 text-lime-400 text-xs font-semibold tracking-wide uppercase mb-3"
+            >
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L3 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"></path>
+              </svg>
+              Official Gate Management Gateway
+            </div>
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
+              SK<span class="text-brand-500">Pass</span>
+            </h1>
+            <p class="text-xl sm:text-2xl font-medium text-slate-300 mt-1">
+              Vehicle Gate Pass
+            </p>
+            <p class="text-sm font-semibold tracking-widest uppercase text-brand-400/90 mt-1">
+              Provincial Government
+            </p>
+          </div>
+
+          <p class="text-slate-400 text-sm sm:text-base max-w-md leading-relaxed">
+            Your next entry, made simple. Register your vehicle, keep your QR pass ready, and move through provincial checkpoints with ease.
+          </p>
+
+          <!-- Feature Points Matrix -->
+          <div class="grid grid-cols-3 gap-3 w-full max-w-md pt-2">
+            <div class="bg-surface-card/60 border border-surface-border rounded-xl p-3 text-center">
+              <span class="block text-brand-400 font-bold text-lg">24 / 7</span>
+              <span class="text-[11px] text-slate-400 font-medium">Automated Entry</span>
+            </div>
+            <div class="bg-surface-card/60 border border-surface-border rounded-xl p-3 text-center">
+              <span class="block text-white font-bold text-lg font-mono">100%</span>
+              <span class="text-[11px] text-slate-400 font-medium">Encrypted Passes</span>
+            </div>
+            <div class="bg-surface-card/60 border border-surface-border rounded-xl p-3 text-center">
+              <span class="block text-brand-400 font-bold text-lg">&lt; 1s</span>
+              <span class="text-[11px] text-slate-400 font-medium">Scanner Read</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Column: Primary Interactive Hub Card -->
+        <section class="w-full" data-purpose="action-portal-container">
+          <!-- Glowing Frame Container -->
+          <div class="relative">
+            <!-- Outer gradient backdrop aura -->
+            <div
+              class="absolute -inset-1 rounded-3xl bg-gradient-to-b from-brand-500/25 via-surface-border to-slate-900/40 blur-lg opacity-80"
+            ></div>
+
+            <!-- Card Base -->
+            <div
+              class="relative bg-surface-card/95 border border-surface-borderLight/80 rounded-2xl p-6 sm:p-8 shadow-glow-card backdrop-blur-xl"
+            >
+              <!-- Card Header Sub-bar -->
+              <div
+                class="flex items-center justify-between border-b border-surface-border pb-4 mb-6">
+                <div class="flex items-center gap-2">
+                  <div class="w-2.5 h-2.5 rounded-full bg-brand-500 animate-pulse"></div>
+                  <span class="text-xs uppercase tracking-wider font-semibold text-slate-300">
+                    Your access starts here
+                  </span>
+                </div>
+                <span
+                  class="text-[11px] font-mono text-slate-500 bg-slate-900/80 px-2.5 py-1 rounded border border-slate-800"
+                >
+                  SKPASS / PORTAL
+                </span>
+              </div>
+
+              <!-- Action Buttons Group -->
+              <div class="space-y-3.5" data-purpose="primary-action-buttons">
+                <!-- 1. REGISTER A VEHICLE -->
+                <a
+                  class="btn-shine group relative w-full flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-lime-600 via-brand-500 to-lime-600 text-white font-bold text-base shadow-lg shadow-lime-950/60 hover:shadow-brand-500/25 transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] border border-lime-400/40"
+                  href="register/"
+                >
+                  <div class="flex items-center gap-3.5">
+                    <div
+                      class="w-10 h-10 rounded-lg bg-lime-700/60 flex items-center justify-center border border-lime-300/30 group-hover:bg-lime-700 transition"
+                    >
+                      <svg class="portal-action-icon" xmlns="http://www.w3.org/2000/svg" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <path d="m5 10 1.5-4h11L19 10" />
+                        <path d="M5 17H3v-5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v5h-2M9 17h6" />
+                        <circle cx="7" cy="17" r="2" />
+                        <circle cx="17" cy="17" r="2" />
+                        <path d="M6 13h2m8 0h2" />
+                      </svg>
+                    </div>
+                    <div class="text-left">
+                      <div
+                        class="text-white text-base font-bold tracking-wide">Register a vehicle</div>
+                      <div
+                        class="text-lime-100/80 text-xs font-normal">New permanent or guest entry pass</div>
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center text-lime-100 group-hover:translate-x-1 transition-transform">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5"
+                      viewBox="0 0 24 24">
+                      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </div>
+                </a>
+
+                <!-- 2. MY QR -->
+                <a
+                  class="group relative w-full flex items-center justify-between p-4 rounded-xl bg-[#1e2738] hover:bg-[#253247] text-white font-semibold text-base border border-slate-700/80 shadow-md transition-all duration-200 hover:scale-[1.01] active:scale-[0.99]"
+                  href="my-qr/"
+                >
+                  <div class="flex items-center gap-3.5">
+                    <div
+                      class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700 group-hover:border-brand-500/50 group-hover:text-brand-400 transition"
+                    >
+                      <svg class="portal-action-icon" xmlns="http://www.w3.org/2000/svg" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <rect x="3" y="3" width="6" height="6" rx="1" />
+                        <rect x="15" y="3" width="6" height="6" rx="1" />
+                        <rect x="3" y="15" width="6" height="6" rx="1" />
+                        <path d="M15 15h3v3h3v3h-6v-3m6-6v2M3 12h6m3-9v6m0 6v6" />
+                      </svg>
+                    </div>
+                    <div class="text-left">
+                      <div class="text-white font-semibold">My QR</div>
+                      <div
+                        class="text-slate-400 text-xs font-normal">Instant digital gate pass display</div>
+                    </div>
+                  </div>
+                  <div
+                    class="flex items-center text-slate-400 group-hover:text-white group-hover:translate-x-1 transition">
+                    <span
+                      class="text-xs font-medium mr-2 text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20">
+                      QR PASS
+                    </span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+                      viewBox="0 0 24 24">
+                      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </div>
+                </a>
+
+                <!-- 3. FIND MY QR -->
+                <a
+                  class="group w-full flex items-center justify-between p-3.5 rounded-xl bg-slate-900/70 hover:bg-slate-800/80 text-slate-200 border border-surface-border transition-all duration-200 hover:border-slate-600"
+                  href="find/"
+                >
+                  <div class="flex items-center gap-3.5">
+                    <div
+                      class="w-9 h-9 rounded-lg bg-slate-800/80 flex items-center justify-center text-slate-400 group-hover:text-brand-400 transition"
+                    >
+                      <svg class="portal-action-icon" xmlns="http://www.w3.org/2000/svg" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <circle cx="10.5" cy="10.5" r="6.5" />
+                        <path d="m16 16 5 5" />
+                      </svg>
+                    </div>
+                    <div class="text-left">
+                      <span
+                        class="text-sm font-semibold text-slate-200 group-hover:text-white block">Find my QR</span>
+                      <span
+                        class="text-[11px] text-slate-400 font-normal">Search by plate number, mobile, or pass ID</span>
+                    </div>
+                  </div>
+                  <div class="text-slate-500 group-hover:text-slate-300 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                      viewBox="0 0 24 24">
+                      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </div>
+                </a>
+
+                <!-- 4. STAFF LOGIN -->
+                <a
+                  class="group w-full flex items-center justify-between p-3.5 rounded-xl bg-slate-900/70 hover:bg-slate-800/80 text-slate-200 border border-surface-border transition-all duration-200 hover:border-slate-600"
+                  href="login/"
+                >
+                  <div class="flex items-center gap-3.5">
+                    <div
+                      class="w-9 h-9 rounded-lg bg-slate-800/80 flex items-center justify-center text-slate-400 group-hover:text-lime-400 transition"
+                    >
+                      <svg class="portal-action-icon" xmlns="http://www.w3.org/2000/svg" width="24"
+                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                        aria-hidden="true">
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M5 21v-2a7 7 0 0 1 14 0v2Z" />
+                      </svg>
+                    </div>
+                    <div class="text-left">
+                      <span
+                        class="text-sm font-semibold text-slate-200 group-hover:text-white block">Staff Login</span>
+                      <span
+                        class="text-[11px] text-slate-400 font-normal">Authorized gate marshals, security, &amp; administrators</span>
+                    </div>
+                  </div>
+                  <div
+                    class="text-slate-500 group-hover:text-slate-300 transition flex items-center gap-1.5">
+                    <span class="text-[10px] text-slate-500 font-mono">STAFF-ID</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                      viewBox="0 0 24 24">
+                      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </div>
+                </a>
+
+                <!-- 5. ADD TO HOME SCREEN / PWA COMPANION -->
+                <div class="pt-2 border-t border-surface-border/70">
+                  <button
+                    class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 hover:bg-slate-800/60 text-slate-300 hover:text-white border border-dashed border-slate-700/80 transition-all text-xs"
+                    id="install-pwa-button"
+                    data-install
+                    type="button"
+                  >
+                    <div class="flex items-center gap-2.5">
+                      <svg class="w-4 h-4 text-brand-400" fill="none" stroke="currentColor"
+                        stroke-width="2" viewBox="0 0 24 24">
+                        <rect height="20" rx="2" ry="2" width="14" x="5" y="2"></rect>
+                        <path d="M12 18h.01"></path>
+                      </svg>
+                      <span class="font-medium font-sans">Install SKPass on your device</span>
+                    </div>
+                    <span
+                      class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-400 border border-slate-700">
+                      Install
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Fast Plate Lookup Input Bar Teaser -->
+              <form id="plate-quick-form"
+                class="mt-6 pt-5 border-t border-surface-border text-center">
+                <label class="text-xs text-slate-400 block mb-2 font-medium"
+                  for="plate-quick-search">
+                  Quick Clearance Check by License Plate
+                </label>
+                <div class="flex items-center gap-2">
+                  <div class="relative flex-1">
+                    <div
+                      class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 font-mono text-xs">
+                      ABC-1234
+                    </div>
+                    <input
+                      class="w-full bg-slate-950/70 border border-slate-700 rounded-lg pl-24 pr-3 py-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 uppercase tracking-wider font-mono"
+                      id="plate-quick-search"
+                      name="plate"
+                      placeholder="ABC-1234"
+                      type="text"
+                      maxlength="15"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <button
+                    id="verify-plate-btn"
+                    class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium text-xs rounded-lg border border-slate-600 transition flex items-center gap-1 cursor-pointer"
+                    type="submit"
+                  >
+                    Verify
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
     </main>
+    <!-- END: MainContent -->
+
+    <!-- BEGIN: InformationDrawer / Gates Grid -->
+    <section class="relative z-10 max-w-7xl mx-auto w-full px-6 py-6"
+      data-purpose="gate-status-dashboard">
+      <div
+        class="p-4 rounded-xl bg-surface-card/40 border border-surface-border/80 backdrop-blur-md">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+          <!-- Checkpoint Status Line -->
+          <div class="flex items-center flex-wrap gap-4 text-slate-400">
+            <span
+              class="font-semibold text-slate-300 uppercase tracking-wider text-[11px]">Gate Telemetry:</span>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-lime-500"></span>
+              <span>North Gate: <strong class="text-slate-200">Optimal (1 min)</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-lime-500"></span>
+              <span>South Gate: <strong class="text-slate-200">Optimal (2 min)</strong></span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-lime-500"></span>
+              <span>VIP / Staff Gate: <strong class="text-slate-200">Clear (0 min)</strong></span>
+            </div>
+          </div>
+
+          <!-- Protocol Version -->
+          <div class="text-slate-500 font-mono text-[11px] flex items-center gap-2">
+            <span>SEC-GATE v4.2.1-PROV</span>
+            <span aria-hidden="true">&bull;</span>
+            <span class="text-slate-400">RFID &amp; QR Sync Live</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END: InformationDrawer / Gates Grid -->
+
+    <!-- BEGIN: MainFooter -->
+    <footer
+      class="site-footer relative z-10 w-full border-t border-surface-border/70 bg-surface-base/90 backdrop-blur-md py-6 px-6 text-slate-500 text-xs"
+    >
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Authority & Copyright Notice -->
+        <div class="flex items-center gap-3 text-center md:text-left">
+          <div
+            class="w-6 h-6 rounded-md bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400"
+          >
+            <svg class="w-3.5 h-3.5 text-brand-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"></path>
+            </svg>
+          </div>
+          <div>
+            <span class="text-slate-400 font-medium">SKPass System</span> &mdash; Official Portal of the
+            <strong class="text-slate-300">Provincial Government</strong>.
+            <span class="block md:inline text-slate-600">
+              All rights reserved. Unauthorized access is punishable by law.
+            </span>
+          </div>
+        </div>
+
+        <!-- Footer Policy Links -->
+        <div class="flex items-center gap-4 text-slate-400 flex-wrap justify-center">
+          <a class="hover:text-brand-400 transition-colors" href="#privacy"
+            onclick="alert('Privacy Policy: All vehicle registration data is secured in compliance with the Data Privacy Act.'); return false;">Privacy Policy</a>
+          <span aria-hidden="true">&bull;</span>
+          <a class="hover:text-brand-400 transition-colors" href="#terms"
+            onclick="alert('Terms of Clearance: All gate passes are non-transferable and subject to security marshal inspection upon perimeter entry.'); return false;">Terms of Clearance</a>
+          <span aria-hidden="true">&bull;</span>
+          <a class="hover:text-brand-400 transition-colors" href="#accessibility"
+            onclick="alert('Accessibility: High-contrast responsive design optimized for standard screen readers and high-throughput checkpoint terminals.'); return false;">Accessibility</a>
+          <span aria-hidden="true">&bull;</span>
+          <a class="hover:text-brand-400 transition-colors" href="#gate-protocols"
+            onclick="alert('Gate Protocols: Vehicles must slow down to 10 km/h at checkpoint scanners. Display your digital QR pass or physical placard to the guard camera.'); return false;">Gate Protocols</a>
+        </div>
+      </div>
+    </footer>
+    <!-- END: MainFooter -->
+
+    <!-- PWA Service Worker Registration -->
     <script type="module" src="js/pwa.js"></script>
+
+    <!-- Client Interaction Script -->
+    <script data-purpose="interaction-handlers">
+    // Add to Home Screen interaction with fallback
+    document.getElementById("install-pwa-button")?.addEventListener("click", () => {
+      // If pwa.js handled prompt, this fallback only fires if beforeinstallprompt is unsupported
+      setTimeout(() => {
+        alert(
+          "To install SKPass on your device: Tap the Share / Menu icon in your browser, then select 'Add to Home Screen'.",
+        );
+      }, 300);
+    });
+
+    // Quick plate search handler -> forwards to find page with prefilled plate
+    const quickForm = document.getElementById("plate-quick-form");
+    const searchInput = document.getElementById("plate-quick-search");
+
+    quickForm?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const plate = searchInput?.value.trim();
+      if (plate) {
+        window.location.href = `find/?plate=${encodeURIComponent(plate.toUpperCase())}`;
+      } else {
+        searchInput?.focus();
+      }
+    });
+
+    // Support Desk modal / notification
+    document.getElementById("support-link")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      alert(
+        "Provincial Security Operations Center\n\nGate Marshal Support Hotline: (02) 8920-0000 loc. 4421\nEmail: security-clearance@skpass.gov\nHours: 24/7 Gate Patrol Dispatch",
+      );
+    });
+    </script>
   </body>
 </html>

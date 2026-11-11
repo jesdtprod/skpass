@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+
 :root {
   --green: #2d9a0f;
   --green-dark: #1f7a08;
@@ -17,7 +19,7 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Plus Jakarta Sans", sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
@@ -252,4 +254,16 @@ a {
 
 [hidden] {
   display: none !important;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Space Grotesk", sans-serif;
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
 }

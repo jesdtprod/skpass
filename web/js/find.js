@@ -7,6 +7,11 @@ const alertBox = document.getElementById("alert");
 const btn = document.getElementById("submit");
 const captcha = mountCaptcha("#captcha");
 
+const initialPlate = new URLSearchParams(location.search).get("plate");
+if (initialPlate && form?.plate) {
+  form.plate.value = initialPlate;
+}
+
 function show(msg, kind = "error") {
   alertBox.textContent = msg;
   alertBox.className = `alert ${kind}`;
