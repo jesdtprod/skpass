@@ -1,5 +1,5 @@
 import { myStatus } from "./api.js";
-import { downloadQr, drawQr } from "./qr.js";
+import { downloadPassJpg, drawQr } from "./qr.js";
 import { listVehicles, removeVehicle, updateVehicle } from "./store.js";
 import { announceDecision, mountNotifyCard, refreshNotifyCard } from "./owner-alerts.js";
 
@@ -312,23 +312,10 @@ function card(rec, view, note) {
     other: "Other",
   };
 
-  function displayDate(value) {
-    if (!value) return null;
-    const date = new Date(value.length === 10 ? `${value}T12:00:00` : value);
-    return Number.isNaN(date.getTime()) ? null : date.toLocaleDateString("en-PH", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  }
 
   const details = [
     ["Position / Title", view.position],
     ["Agency / Office", view.agency],
-    ["Visiting", view.host_name],
-    ["Purpose of visit", view.purpose],
-    ["Valid from", displayDate(view.valid_from)],
-    ["Valid until", displayDate(view.valid_to)],
   ].filter(([, value]) => value);
 
   if (details.length) {
@@ -540,10 +527,23 @@ function card(rec, view, note) {
           class:
             "w-full py-3.5 px-4 bg-brand-bright hover:bg-brand-400 active:bg-brand-500 text-slate-950 font-bold text-sm tracking-wide rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 cursor-pointer",
           type: "button",
-          onclick: () => downloadQr(view.token, rec.plate),
+          onclick: () =>
+            downloadPassJpg({
+              token: view.token,
+              plate: displayPlate,
+              category: displayCategory,
+              holder: view.owner_name,
+              vehicleType: typeNames[view.vehicle_type] ?? view.vehicle_type,
+              color: view.color,
+              status: "Approved",
+              reference: rec.vehicle_id,
+              validity: [displayDate(view.valid_from), displayDate(view.valid_to)].every(Boolean)
+                ? `${displayDate(view.valid_from)} – ${displayDate(view.valid_to)}`
+                : null,
+            }),
         },
         svgIcon("download", "w-4 h-4 text-slate-950"),
-        "Download QR",
+        "Download pass (JPG)",
       ),
     );
   }

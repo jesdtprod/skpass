@@ -137,12 +137,12 @@ body.pass-page {
     font-size: 28px;
   }
 }
-.pass-page [data-purpose="vehicle-gate-pass-card"] {
+.pass-page :is([data-purpose="vehicle-gate-pass-card"], #skeleton-loader) {
   background: #1a2025;
   border-color: #ffffff16;
   box-shadow: 0 16px 64px #0002;
 }
-.pass-page [data-purpose="vehicle-gate-pass-card"] > .absolute {
+.pass-page :is([data-purpose="vehicle-gate-pass-card"], #skeleton-loader) > .absolute {
   display: none;
 }
 .pass-page .pass-qr-section,

@@ -379,3 +379,69 @@ body.portal-page {
 .portal-page [data-purpose="portal-branding"] > div:last-child > div > span:last-child {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
+
+/* ==========================================================================
+   Universal SKPass Shimmer Skeleton Loading System
+   ========================================================================== */
+.sk-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.sk-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.02) 20%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.02) 80%,
+    transparent 100%
+  );
+  animation: sk-shimmer-wave 1.6s ease-in-out infinite;
+}
+
+.sk-shimmer-brand {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(163, 230, 53, 0.15);
+  border: 1px solid rgba(163, 230, 53, 0.25);
+}
+
+.sk-shimmer-brand::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(163, 230, 53, 0.05) 20%,
+    rgba(163, 230, 53, 0.25) 50%,
+    rgba(163, 230, 53, 0.05) 80%,
+    transparent 100%
+  );
+  animation: sk-shimmer-wave 1.6s ease-in-out infinite;
+}
+
+@keyframes sk-shimmer-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-shimmer::after,
+  .sk-shimmer-brand::after {
+    animation: none !important;
+    display: none !important;
+  }
+}
+
