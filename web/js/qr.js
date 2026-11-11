@@ -140,13 +140,40 @@ export async function drawPassImage(pass) {
   const S = 2; // render at 2x so it stays sharp on phones
   const W = 674;
   const H = 302;
+  const headingHeight = 76;
+  const totalHeight = H + headingHeight;
   const c = document.createElement("canvas");
   c.width = W * S;
-  c.height = H * S;
+  c.height = totalHeight * S;
   const g = c.getContext("2d");
   g.scale(S, S);
-  g.fillStyle = "#1a2227"; // same opaque surface as the on-screen pass
-  g.fillRect(0, 0, W, H);
+  // JPEG is opaque; the page-colored corners frame the rounded pass.
+  g.fillStyle = "#10141a";
+  g.fillRect(0, 0, W, totalHeight);
+  g.save();
+  g.beginPath();
+  g.roundRect(0.5, 0.5, W - 1, totalHeight - 1, 22);
+  g.fillStyle = "#1a2227";
+  g.fill();
+  g.strokeStyle = "#36424a";
+  g.lineWidth = 1;
+  g.stroke();
+  g.clip();
+  g.fillStyle = "#a3e635";
+  g.fillRect(0, 0, W, 2);
+
+  g.fillStyle = "#dce6ec";
+  g.font = `700 16px ${SANS}`;
+  g.fillText("Vehicle Pass Details", 22, 31);
+  g.fillStyle = "#94a3b8";
+  g.font = `500 12px ${SANS}`;
+  g.fillText("Review your vehicle information, holder details, and gate access QR.", 22, 51);
+  g.strokeStyle = "#ffffff12";
+  g.beginPath();
+  g.moveTo(22, 67);
+  g.lineTo(W - 22, 67);
+  g.stroke();
+  g.translate(0, headingHeight);
 
   // ---- left panel: QR
   g.fillStyle = "#11181d";
@@ -270,6 +297,7 @@ export async function drawPassImage(pass) {
   g.fillStyle = "#e8eef2";
   g.font = `700 13px ${MONO}`;
   g.fillText(pass.reference, x0 + 14, y + 34, W - x0 - 70);
+  g.restore();
   return c;
 }
 
