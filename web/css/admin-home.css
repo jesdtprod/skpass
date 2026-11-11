@@ -60,11 +60,12 @@ body.admin-home {
   background: #171f24;
 }
 .admin-home #nav {
-  padding: 20px 12px;
-  gap: 6px;
+  padding: 12px;
+  gap: 4px;
 }
 .admin-home .nav-item {
-  min-height: 46px;
+  min-height: 38px;
+  padding: 7px 12px;
   border-radius: 12px;
   border: 1px solid transparent;
   font-size: 13px;
