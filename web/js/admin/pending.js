@@ -13,13 +13,24 @@ const ICON_EYE =
 
 /** Icon-only action with an accessible name and a tooltip. */
 function iconBtn(kind, label, path, onclick) {
-  return h("button", {
+  const button = h("button", {
     class: `ap-icon ${kind}`,
     type: "button",
     title: label,
     "aria-label": label,
-    onclick,
+    onclick: async () => {
+      if (button.disabled) return;
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+      try {
+        await onclick();
+      } finally {
+        button.disabled = false;
+        button.removeAttribute("aria-busy");
+      }
+    },
   }, svgIcon(path));
+  return button;
 }
 
 function svgIcon(d) {
@@ -46,7 +57,7 @@ function ensureCss() {
   document.head.append(h("link", {
     id: "approvals-css",
     rel: "stylesheet",
-    href: new URL("../../css/approvals.css", import.meta.url).href,
+    href: new URL("../../css/approvals.css?v=table-2", import.meta.url).href,
   }));
 }
 
@@ -289,7 +300,7 @@ export async function render(root, ctx) {
         { class: "tablewrap" },
         h(
           "table",
-          { class: "data ap-table" },
+          { class: "data ap-table", "aria-label": "Registrations awaiting approval" },
           h(
             "thead",
             {},
@@ -297,7 +308,7 @@ export async function render(root, ctx) {
               "tr",
               {},
               ["Plate", "Owner", "Category", "Visit dates", "Submitted", "Actions"].map((t) =>
-                h("th", {}, t)
+                h("th", { scope: "col" }, t)
               ),
             ),
           ),

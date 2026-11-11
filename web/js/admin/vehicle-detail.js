@@ -14,7 +14,7 @@ export const VEHICLE_TYPES = ["car", "suv", "van", "truck", "motorcycle", "tricy
 
 export const statusBadge = (s) => h("span", { class: `st ${s}` }, s);
 
-/** Approve: visitors need a date range, so ask for it; everyone else is one click. */
+/** Confirm approval; visitor confirmation also asks for the pass validity dates. */
 export async function approveVehicle(ctx, v) {
   let from = null, to = null;
   if (v.category !== "visitor") {
@@ -28,8 +28,9 @@ export async function approveVehicle(ctx, v) {
   }
   if (v.category === "visitor") {
     const a = await ask({
-      title: `Approve ${v.plate}`,
-      intro: "Visitor passes are only valid inside this date range.",
+      title: `Approve ${v.plate}?`,
+      intro:
+        `Confirm the visitor pass for ${v.owner_name}. It will only be valid within the dates below.`,
       okText: "Approve",
       fields: [
         { name: "from", label: "Valid from", type: "date", required: true, value: v.valid_from },
