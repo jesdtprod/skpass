@@ -19,7 +19,6 @@ class SKPassFooter extends HTMLElement {
     <div class="footer-links">
     <nav aria-label="Footer">
       <a href="#privacy" class="policy-link" data-policy="privacy">Privacy Policy</a><span class="divider" aria-hidden="true">|</span><a href="#terms" class="policy-link" data-policy="terms">Terms of Clearance</a><span class="divider" aria-hidden="true">|</span><a href="#accessibility" class="policy-link" data-policy="accessibility">Accessibility</a><span class="divider" aria-hidden="true">|</span><a href="#gate-protocols" class="policy-link" data-policy="protocols">Gate Protocols</a>
-      <span class="status" role="status"><i aria-hidden="true"></i><span class="status-text"></span></span>
     </nav>
     <p class="legal">All rights reserved. Unauthorized access is punishable by law.</p>
     </div>
@@ -125,24 +124,6 @@ class SKPassFooter extends HTMLElement {
         modal.close();
       }
     });
-
-    // The pill shows REAL connection state (not a made-up metric).
-    const dot = root.querySelector(".status i");
-    const text = root.querySelector(".status-text");
-    const update = () => {
-      let state = "ok";
-      let label = location.protocol === "https:" ? "Secure connection" : "Local connection";
-      if (location.protocol !== "https:") state = "warn";
-      if (!navigator.onLine) {
-        state = "warn";
-        label = "Offline";
-      }
-      dot.dataset.state = state;
-      text.textContent = label;
-    };
-    update();
-    addEventListener("online", update);
-    addEventListener("offline", update);
   }
 }
 customElements.define("skpass-footer", SKPassFooter);
