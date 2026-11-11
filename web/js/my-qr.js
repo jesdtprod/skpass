@@ -318,12 +318,10 @@ function card(rec, view, note) {
   }
 
   const details = [
-    ["Office / Department", view.office],
     ["Position / Title", view.position],
     ["Agency / Office", view.agency],
     ["Visiting", view.host_name],
     ["Purpose of visit", view.purpose],
-    ["Registered", displayDate(view.created_at)],
     ["Valid from", displayDate(view.valid_from)],
     ["Valid until", displayDate(view.valid_to)],
   ].filter(([, value]) => value);
