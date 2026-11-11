@@ -230,7 +230,11 @@
   display: block;
 }
 .scan-page .reticle {
-  inset: 14% 22%;
+  inset: 50% auto auto 50%;
+  width: min(72cqw, 72cqh);
+  height: auto;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
   border: 2px solid #a3e635;
   border-radius: 16px;
 }
@@ -841,4 +845,8 @@ body.site-theme.scan-page {
   .gate-menu-option {
     transition: none;
   }
+}
+/* Size the square reticle against both dimensions of the live preview. */
+.scan-page .viewport {
+  container-type: size;
 }
