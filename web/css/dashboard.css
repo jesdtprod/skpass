@@ -1399,3 +1399,44 @@
   padding-top: 10px;
   font-size: 10px;
 }
+
+/* One consistent two-column grid with matching row and footer alignment. */
+.dashboard-view .dash-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+.dashboard-view .dash-grid > .panel {
+  grid-column: auto;
+}
+.dashboard-view .dash-grid .panel-head {
+  min-height: 39px;
+  flex-shrink: 0;
+}
+.dashboard-view .dash-grid .chart-empty {
+  flex: 1;
+}
+.admin-home .dashboard-view .dash-grid .legend {
+  margin-top: auto;
+  margin-bottom: 0;
+  padding-top: 10px;
+  min-height: 27px;
+}
+.dashboard-view .dash-grid .gate-bars-list {
+  margin-bottom: 12px;
+}
+.dashboard-view .dash-grid .cattotal {
+  margin-top: auto;
+}
+.dashboard-view .dash-grid .panel-empty {
+  flex: 1;
+  display: grid;
+  place-items: center;
+}
+.dashboard-view .dash-grid .chart {
+  margin-bottom: 12px;
+}
+@media (max-width: 820px) {
+  .dashboard-view .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
