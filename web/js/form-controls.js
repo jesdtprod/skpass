@@ -1,6 +1,6 @@
 import { enhanceCalendar } from "./calendar.js";
 
-const upper = new Set(["owner_name", "plate", "agency"]);
+const upper = new Set(["owner_name", "plate", "agency", "id_number"]);
 const proper = new Set(["office", "position", "purpose", "host_name", "color"]);
 function normalize(input) {
   const start = input.selectionStart, end = input.selectionEnd;
