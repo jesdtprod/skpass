@@ -2,11 +2,11 @@ import { ask, confirmBox } from "./dialog.js";
 import { attempt, h } from "./util.js";
 
 const MODES = [
-  { value: "both", label: "Both (auto IN / OUT)" },
-  { value: "in", label: "Entry only" },
-  { value: "out", label: "Exit only" },
+  { value: "both", label: "Entrance and exit (auto IN / OUT)" },
+  { value: "in", label: "Entrance only (IN)" },
+  { value: "out", label: "Exit only (OUT)" },
 ];
-const MODE_TEXT = { both: "Both", in: "Entry only", out: "Exit only" };
+const MODE_TEXT = { both: "Entrance + exit", in: "Entrance only", out: "Exit only" };
 
 export async function render(root, ctx) {
   const box = h("div");
@@ -15,7 +15,7 @@ export async function render(root, ctx) {
     h(
       "p",
       { class: "sub" },
-      "Add as many gates as you need. Guards pick their gate on the scanner. Entry-only and exit-only lanes enable double-entry and double-exit warnings.",
+      "Add as many gates as you need. Give each gate a location and a lane type (entrance, exit, or both). Assign gates to guards under Staff; a guard only sees the gates assigned to them.",
     ),
     h(
       "div",
@@ -45,6 +45,12 @@ export async function render(root, ctx) {
           hint: "Unique, e.g. G3.",
         },
         {
+          name: "location",
+          label: "Location",
+          maxlength: 120,
+          hint: "Where this gate is, e.g. North Wing, Capitol Road side.",
+        },
+        {
           name: "direction_mode",
           label: "Lane type",
           type: "select",
@@ -59,6 +65,7 @@ export async function render(root, ctx) {
         ctx.sb.from("gates").insert({
           name: a.name.trim(),
           code: a.code.trim(),
+          location: a.location?.trim() || null,
           direction_mode: a.direction_mode,
         }), "Gate added.")
     ) load();
@@ -70,6 +77,13 @@ export async function render(root, ctx) {
       fields: [
         { name: "name", label: "Name", required: true, maxlength: 60, value: g.name },
         { name: "code", label: "Short code", required: true, maxlength: 12, value: g.code },
+        {
+          name: "location",
+          label: "Location",
+          maxlength: 120,
+          hint: "Where this gate is, e.g. North Wing, Capitol Road side.",
+          value: g.location ?? "",
+        },
         {
           name: "direction_mode",
           label: "Lane type",
@@ -85,14 +99,23 @@ export async function render(root, ctx) {
         ctx.sb.from("gates").update({
           name: a.name.trim(),
           code: a.code.trim(),
+          location: a.location?.trim() || null,
           direction_mode: a.direction_mode,
         }).eq("id", g.id), "Saved.")
     ) load();
   }
 
   async function load() {
-    const { data, error } = await ctx.sb.from("gates").select("id,code,name,active,direction_mode")
-      .order("name");
+    const [{ data, error }, { data: links }] = await Promise.all([
+      ctx.sb.from("gates").select("id,code,name,location,active,direction_mode").order("name"),
+      ctx.sb.from("staff_gates").select("gate_id,profiles(full_name)"),
+    ]);
+    const staffByGate = new Map();
+    for (const l of links ?? []) {
+      const list = staffByGate.get(l.gate_id) ?? [];
+      list.push(l.profiles?.full_name ?? "?");
+      staffByGate.set(l.gate_id, list);
+    }
     if (error) {
       return box.replaceChildren(h("div", { class: "alert error" }, "Could not load gates."));
     }
@@ -108,7 +131,13 @@ export async function render(root, ctx) {
         {},
         h("td", {}, h("strong", {}, g.name)),
         h("td", {}, g.code),
+        h("td", {}, g.location ?? "\u2014"),
         h("td", {}, MODE_TEXT[g.direction_mode]),
+        h(
+          "td",
+          {},
+          staffByGate.get(g.id)?.join(", ") ?? h("span", { class: "muted" }, "No guard yet"),
+        ),
         h(
           "td",
           {},
@@ -164,7 +193,13 @@ export async function render(root, ctx) {
           h(
             "thead",
             {},
-            h("tr", {}, ["Name", "Code", "Lane type", "Status", ""].map((x) => h("th", {}, x))),
+            h(
+              "tr",
+              {},
+              ["Name", "Code", "Location", "Lane type", "Guards", "Status", ""].map((x) =>
+                h("th", {}, x)
+              ),
+            ),
           ),
           tbody,
         ),

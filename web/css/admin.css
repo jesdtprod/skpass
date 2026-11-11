@@ -660,3 +660,54 @@ table.data strong {
 .btn.danger-text:hover {
   background: rgba(127, 29, 29, 0.4);
 }
+
+/* gate picker (checkbox list) */
+.pick-list {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 16px;
+  max-height: 50vh;
+  overflow: auto;
+}
+.pick-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #ffffff1a;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.pick-row:hover {
+  background: #ffffff08;
+}
+.pick-row input {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  accent-color: #a3e635;
+  flex: none;
+}
+.pick-row strong {
+  display: block;
+  font-size: 14px;
+}
+.pick-row small {
+  display: block;
+  color: #8fa1ac;
+  font-size: 12px;
+  margin-top: 2px;
+}
+.gate-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.gate-chips span {
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #a3e63540;
+  background: #a3e6350f;
+  color: #c2f17b;
+  font-size: 12px;
+}

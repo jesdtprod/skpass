@@ -43,11 +43,12 @@ begin
   reset role;
 
   ---------------------------------------------------------------- GUARD
+  insert into public.staff_gates (profile_id, gate_id) select grd, id from public.gates where deleted_at is null and active limit 1;
   perform set_config('request.jwt.claims', json_build_object('sub', grd, 'role', 'authenticated')::text, true);
   perform set_config('request.jwt.claim.sub', grd::text, true);
   set local role authenticated;
   perform pg_temp.chk('guard: vehicles invisible', 'select count(*)::text from public.vehicles', '0');
-  perform pg_temp.chk('guard: sees 2 active gates', 'select count(*)::text from public.gates', '2');
+  perform pg_temp.chk('guard: sees only the one gate assigned to them', 'select count(*)::text from public.gates', '1');
   perform pg_temp.chk('guard: sees only public settings', 'select count(*)::text from public.settings', '3');
   perform pg_temp.chk('guard: audit_logs invisible', 'select count(*)::text from public.audit_logs', '0');
   perform pg_temp.chk('guard: sees only own profile', 'select count(*)::text from public.profiles', '1');

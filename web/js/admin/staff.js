@@ -1,5 +1,5 @@
 import { SUPABASE_URL } from "../config.js";
-import { ask } from "./dialog.js";
+import { ask, pickMany } from "./dialog.js";
 import { attempt, fmtTime, h } from "./util.js";
 
 const FN = `${SUPABASE_URL}/functions/v1/create-staff`;
@@ -79,7 +79,40 @@ export async function render(root, ctx) {
     });
     if (!a) return;
     const r = await attempt(() => callStaff(ctx, { action: "create", ...a }), "Account created.");
-    if (r) load();
+    if (r) {
+      await load();
+      // a new guard cannot scan until a gate is assigned, so offer that straight away
+      const id = r.data?.id;
+      if (id && a.role === "guard") {
+        await assignGates({ id, full_name: a.full_name, role: "guard" });
+      }
+    }
+  }
+
+  async function assignGates(p) {
+    const [{ data: gates }, { data: mine }] = await Promise.all([
+      ctx.sb.from("gates").select("id,name,code,location,direction_mode,active").order("name"),
+      ctx.sb.from("staff_gates").select("gate_id").eq("profile_id", p.id),
+    ]);
+    const lane = { both: "entrance + exit", in: "entrance only", out: "exit only" };
+    const chosen = await pickMany({
+      title: `Gates for ${p.full_name}`,
+      intro: "Tick every gate this person may scan at. They only see these on the scanner.",
+      options: (gates ?? []).map((g) => ({
+        value: g.id,
+        label: `${g.name}${g.active ? "" : " (inactive)"}`,
+        hint: [g.location, lane[g.direction_mode]].filter(Boolean).join(" \u00b7 "),
+      })),
+      selected: (mine ?? []).map((m) => m.gate_id),
+      okText: "Save gates",
+      empty: "No gates yet. Add gates first under Gates.",
+    });
+    if (!chosen) return;
+    await attempt(
+      () => ctx.sb.rpc("set_staff_gates", { p_profile_id: p.id, p_gate_ids: chosen }),
+      "Gates updated.",
+    );
+    load();
   }
 
   async function load() {
@@ -89,6 +122,14 @@ export async function render(root, ctx) {
     if (error) {
       return box.replaceChildren(h("div", { class: "alert error" }, "Could not load staff."));
     }
+    const [{ data: links }, { data: gateList }] = await Promise.all([
+      ctx.sb.from("staff_gates").select("profile_id,gate_id"),
+      ctx.sb.from("gates").select("id,name"),
+    ]);
+    const gateName = new Map((gateList ?? []).map((g) => [g.id, g.name]));
+    const gatesOf = (id) =>
+      (links ?? []).filter((l) => l.profile_id === id).map((l) => gateName.get(l.gate_id))
+        .filter(Boolean);
     const tbody = h("tbody");
     for (const p of data) {
       const me = p.id === ctx.profile.id;
@@ -106,6 +147,16 @@ export async function render(root, ctx) {
         h(
           "td",
           {},
+          p.role === "admin" ? h("span", { class: "muted" }, "All gates") : (() => {
+            const g = gatesOf(p.id);
+            return g.length
+              ? h("div", { class: "gate-chips" }, g.map((n) => h("span", {}, n)))
+              : h("span", { class: "muted" }, "None assigned");
+          })(),
+        ),
+        h(
+          "td",
+          {},
           h("span", { class: `st ${p.active ? "ok" : "off"}` }, p.active ? "Active" : "Disabled"),
         ),
         h("td", {}, fmtTime(p.created_at, ctx.tz)),
@@ -115,6 +166,13 @@ export async function render(root, ctx) {
           h(
             "div",
             { class: "row-actions" },
+            p.role === "guard"
+              ? h("button", {
+                class: "btn sm",
+                type: "button",
+                onclick: () => assignGates(p),
+              }, "Assign gates")
+              : null,
             h("button", {
               class: "btn sm ghost",
               type: "button",
@@ -174,7 +232,9 @@ export async function render(root, ctx) {
             h(
               "tr",
               {},
-              ["Name", "Email", "Role", "Status", "Created", ""].map((x) => h("th", {}, x)),
+              ["Name", "Email", "Role", "Gates", "Status", "Created", ""].map((x) =>
+                h("th", {}, x)
+              ),
             ),
           ),
           tbody,

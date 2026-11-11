@@ -44,6 +44,7 @@ begin
   insert into public.profiles (id, full_name, role) values (grd, 'Scan Guard', 'guard');
   insert into public.gates (code, name, direction_mode) values ('T-IN', 'Test entry lane', 'in') returning id into g_in;
   insert into public.gates (code, name, direction_mode) values ('T-OUT', 'Test exit lane', 'out') returning id into g_out;
+  insert into public.staff_gates (profile_id, gate_id) select grd, x from unnest(array[g1, g_in, g_out]) x;
 
   ------------------------------------------------------------------ anon
   set local role anon;
@@ -159,6 +160,22 @@ begin
     perform set_config('request.jwt.claim.sub', g2::text, true);
     set local role authenticated;
     perform pg_temp.chk('other guard cannot replay my key', format(q, tok, g1, 'key-in-0000000000001', null), 'ERR:%idempotency_conflict%');
+    perform pg_temp.chk('unassigned guard is denied at a real gate', format(q, tok, g1, 'key-unassigned-000001', null), '-/denied/invalid_gate');
+    perform pg_temp.chk('unassigned guard sees no gates', 'select count(*)::text from public.gates', '0');
+    reset role;
+    perform set_config('request.jwt.claims', json_build_object('sub', adm, 'role', 'authenticated')::text, true);
+    perform set_config('request.jwt.claim.sub', adm::text, true);
+    set local role authenticated;
+    perform pg_temp.chk('admin assigns two gates', format('select jsonb_array_length(public.set_staff_gates(%L, array[%L, %L])->''gates'')::text', g2, g_in, g_out), '2');
+    perform pg_temp.chk('unknown gate id is refused', format('select public.set_staff_gates(%L, array[''NOPE''])::text', g2), 'ERR:%unknown_gate%');
+    reset role;
+    perform set_config('request.jwt.claims', json_build_object('sub', g2, 'role', 'authenticated')::text, true);
+    perform set_config('request.jwt.claim.sub', g2::text, true);
+    set local role authenticated;
+    perform pg_temp.chk('assigned guard sees exactly the assigned gates', 'select count(*)::text from public.gates', '2');
+    perform pg_temp.chk('assigned guard can scan at an assigned gate', format(q, tok, g_in, 'key-assigned-0000001', null), 'IN/%');
+    perform pg_temp.chk('guard cannot change assignments', format('select public.set_staff_gates(%L, array[%L])::text', g2, g1), 'ERR:%forbidden%');
+    perform pg_temp.chk('guard cannot write staff_gates directly', format('insert into public.staff_gates (profile_id, gate_id) values (%L, %L)', g2, g1), 'ERR:%');
     reset role;
   end;
 

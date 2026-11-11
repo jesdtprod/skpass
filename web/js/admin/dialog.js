@@ -144,3 +144,47 @@ export function panel(title, content) {
   open(dlg);
   return { close: () => dlg.close(), el: dlg };
 }
+
+/**
+ * Tick any number of options. options: [{ value, label, hint }]. Resolves to an array of the
+ * ticked values, or null if cancelled.
+ */
+export async function pickMany({ title, intro, options, selected = [], okText = "Save", empty }) {
+  const picked = new Set(selected);
+  const list = h(
+    "div",
+    { class: "pick-list" },
+    options.length
+      ? options.map((o) => {
+        const box = h("input", { type: "checkbox", value: o.value });
+        box.checked = picked.has(o.value);
+        box.addEventListener("change", () =>
+          box.checked ? picked.add(o.value) : picked.delete(o.value));
+        return h(
+          "label",
+          { class: "pick-row" },
+          box,
+          h("span", {}, h("strong", {}, o.label), o.hint ? h("small", {}, o.hint) : null),
+        );
+      })
+      : h("p", { class: "muted" }, empty ?? "Nothing to choose from."),
+  );
+  const dlg = h(
+    "dialog",
+    { class: "dlg" },
+    h("h2", {}, title),
+    intro ? h("p", { class: "muted" }, intro) : null,
+    list,
+    h(
+      "div",
+      { class: "dlg-actions" },
+      h(
+        "button",
+        { class: "btn ghost", type: "button", onclick: () => dlg.close("cancel") },
+        "Cancel",
+      ),
+      h("button", { class: "btn", type: "button", onclick: () => dlg.close("ok") }, okText),
+    ),
+  );
+  return (await open(dlg)) === "ok" ? [...picked] : null;
+}

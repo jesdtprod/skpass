@@ -2,7 +2,7 @@
 //  * Supabase Realtime pushes new registrations to this open page instantly.
 //  * Web Push (via the service worker) reaches admins whose dashboard is closed.
 //  * Both play a loud 3x sound while a page is open; both are de-duplicated.
-import { audioReady, isMuted, playAlert, setMuted, unlockAudio } from "../alert-sound.js";
+import { isMuted, playAlert, setMuted, unlockAudio } from "../alert-sound.js";
 import {
   currentSubscription,
   disablePush,
@@ -13,14 +13,14 @@ import {
   sendAdminTest,
   showLocalNotification,
 } from "../notify.js";
-import { h, toast } from "./util.js";
+import { fmtTime, h, toast } from "./util.js";
 
 const DEDUPE_MS = 60_000;
 const POLL_MS = 30_000;
 
 export function start(ctx) {
   const seen = new Map(); // key -> time, so Realtime + push for the same event sound once
-  const state = { live: "connecting" };
+  const state = { live: "connecting", unread: false };
   let lastTestSound = -Infinity;
   async function playTestSound() {
     const now = performance.now();
@@ -52,6 +52,9 @@ export function start(ctx) {
     const what = plate ? `${plate}${category ? ` (${category})` : ""}` : "A vehicle";
     const t = toast(`New registration: ${what} is waiting for approval`, "ok");
     t?.addEventListener?.("click", () => (location.hash = "#/pending"));
+    state.unread = true;
+    paint();
+    if (!panel.hidden) loadNotifications();
     playAlert("new_registration");
     if (document.hidden) {
       showLocalNotification({
@@ -80,6 +83,7 @@ export function start(ctx) {
       } else {
         // someone else approved/rejected/edited: keep numbers and lists current, quietly
         ctx.refreshBadge?.();
+        if (!panel.hidden) loadNotifications();
         refreshIfIdle();
       }
     })
@@ -155,42 +159,167 @@ export function start(ctx) {
     { class: "al-btn ghost", type: "button", hidden: true },
     "Send a test notification",
   ));
-  const panel = h(
-    "div",
-    { class: "al-panel", role: "dialog", "aria-label": "Alerts", hidden: true },
-    h("h3", {}, "Alerts"),
-    live,
+  const feed = h("div", { class: "al-feed", "aria-live": "polite" });
+  const settings = h(
+    "section",
+    { class: "al-settings", hidden: true },
+    h("p", { class: "al-section-label" }, "Notification settings"),
     h(
       "label",
-      { class: "al-row", for: "al-sound" },
+      { class: "al-setting", for: "al-sound" },
+      h(
+        "span",
+        {},
+        h("strong", {}, "Alert sound"),
+        h("small", {}, "Play three chimes for new registrations while this page is open."),
+      ),
       soundBox,
-      h("span", {}, "Loud alert sound (plays 3×) while SKPass is open"),
     ),
     h("button", {
       class: "al-btn ghost",
       type: "button",
       onclick: async () => {
         await unlockAudio();
-        const r = await playAlert("new_registration", { force: true });
-        if (r < 0) {
-          toast(
-            "Your browser is blocking sound. Tap anywhere on the page, then try again.",
-            "error",
-          );
+        if (await playAlert("new_registration", { force: true }) < 0) {
+          toast("Your browser blocked audio. Interact with this page and try again.", "error");
         }
       },
-    }, "▶ Test the sound"),
-    h("hr"),
-    h("p", { class: "al-title" }, "Notifications on this device"),
-    pushStatus,
-    pushBtn,
-    testPush,
+    }, "Test alert sound"),
     h(
-      "p",
-      { class: "al-note" },
-      "When SKPass is closed, your phone or computer plays its own notification sound. A web page cannot change that sound or make it louder.",
+      "div",
+      { class: "al-device" },
+      h("p", { class: "al-title" }, "Device notifications"),
+      pushStatus,
+      pushBtn,
+      testPush,
+      h(
+        "p",
+        { class: "al-note" },
+        "Receive new registration alerts when this page is closed. Delivery and sound depend on browser and device settings.",
+      ),
     ),
   );
+  soundBox.setAttribute("role", "switch");
+  const inboxTab = h(
+    "button",
+    { class: "al-tab", type: "button", "aria-pressed": "true" },
+    "Notifications",
+  );
+  const settingsTab = h(
+    "button",
+    { class: "al-tab", type: "button", "aria-pressed": "false" },
+    "Settings",
+  );
+  function selectTab(showSettings) {
+    feed.hidden = showSettings;
+    settings.hidden = !showSettings;
+    inboxTab.setAttribute("aria-pressed", String(!showSettings));
+    settingsTab.setAttribute("aria-pressed", String(showSettings));
+  }
+  inboxTab.addEventListener("click", () => selectTab(false));
+  settingsTab.addEventListener("click", () => selectTab(true));
+  function closePanel() {
+    panel.hidden = true;
+    bell.setAttribute("aria-expanded", "false");
+  }
+  const close = h("button", {
+    class: "al-close",
+    type: "button",
+    "aria-label": "Close notifications",
+    onclick: () => {
+      closePanel();
+      bell.focus();
+    },
+  }, "×");
+  const panel = h(
+    "div",
+    {
+      class: "al-panel",
+      id: "admin-notifications",
+      role: "dialog",
+      "aria-labelledby": "al-heading",
+      hidden: true,
+    },
+    h(
+      "div",
+      { class: "al-panel-heading" },
+      h(
+        "div",
+        {},
+        h("h3", { id: "al-heading" }, "Notifications"),
+        h("p", { class: "al-note" }, "Registration updates and device preferences"),
+      ),
+      close,
+    ),
+    live,
+    h("div", { class: "al-tabs" }, inboxTab, settingsTab),
+    feed,
+    settings,
+  );
+  bell.setAttribute("aria-controls", "admin-notifications");
+  let feedRequest = 0;
+  async function loadNotifications() {
+    const request = ++feedRequest;
+    feed.replaceChildren(h("p", { class: "al-empty" }, "Loading registrations…"));
+    try {
+      const { data, error } = await ctx.sb.from("vehicles").select("id,plate,category,created_at")
+        .is("deleted_at", null).eq("status", "pending").order("created_at", { ascending: false })
+        .limit(5);
+      if (request !== feedRequest) return;
+      if (error) throw error;
+      const rows = data ?? [];
+      feed.replaceChildren(
+        h("p", { class: "al-section-label" }, "Awaiting your review"),
+        ...rows.map((row) =>
+          h(
+            "a",
+            { class: "al-item", href: "#/pending", onclick: closePanel },
+            h("span", { class: "al-item-dot", "aria-hidden": "true" }),
+            h(
+              "span",
+              {},
+              h("strong", {}, `${row.plate || "Vehicle"} · Registration pending`),
+              h(
+                "span",
+                {},
+                `${
+                  ({ employee: "Employee", official: "Official", visitor: "Visitor" })[
+                    row.category
+                  ] ?? "Vehicle"
+                } pass awaiting approval.`,
+              ),
+              h(
+                "time",
+                { datetime: row.created_at },
+                fmtTime(row.created_at, ctx.tz ?? "Asia/Manila"),
+              ),
+            ),
+          )
+        ),
+        rows.length
+          ? h(
+            "a",
+            { class: "al-view-all", href: "#/pending", onclick: closePanel },
+            "View all approvals →",
+          )
+          : h(
+            "p",
+            { class: "al-empty" },
+            "You're all caught up. No registrations are waiting for approval.",
+          ),
+      );
+    } catch {
+      if (request === feedRequest) {
+        feed.replaceChildren(
+          h(
+            "p",
+            { class: "al-empty" },
+            "Unable to load registrations. Reopen this panel to try again.",
+          ),
+        );
+      }
+    }
+  }
   const wrap = h("div", { class: "al-wrap" }, panel, bell);
   const header = document.querySelector("skpass-header");
   if (header) {
@@ -202,7 +331,13 @@ export function start(ctx) {
   bell.addEventListener("click", () => {
     panel.hidden = !panel.hidden;
     bell.setAttribute("aria-expanded", String(!panel.hidden));
-    if (!panel.hidden) syncPush();
+    if (!panel.hidden) {
+      state.unread = false;
+      paint();
+      loadNotifications();
+      syncPush();
+      inboxTab.focus();
+    }
   });
   document.addEventListener("click", (e) => {
     if (!panel.hidden && !e.composedPath().includes(wrap)) {
@@ -210,23 +345,30 @@ export function start(ctx) {
       bell.setAttribute("aria-expanded", "false");
     }
   });
-  soundBox.addEventListener("change", () => {
+  panel.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closePanel();
+      bell.focus();
+    }
+  });
+  soundBox.addEventListener("change", async () => {
     setMuted(!soundBox.checked);
+    if (soundBox.checked) await unlockAudio();
     paint();
   });
 
   function paint() {
     els.live.textContent = state.live === "live"
-      ? "● Live: new registrations appear instantly"
+      ? "Live updates connected"
       : state.live === "connecting"
-      ? "○ Connecting…"
-      : "○ Not live right now. Checking every 30 seconds.";
+      ? "Connecting to live updates…"
+      : "Reconnecting · checking every 30 seconds";
     els.live.dataset.state = state.live;
-    els.dot.hidden = !(isMuted() || (!audioReady() && false));
-    bell.title = isMuted() ? "Alert sound is off" : "Alerts";
+    els.dot.hidden = !state.unread;
+    bell.title = state.unread ? "New registration awaiting review" : "Notifications and settings";
   }
 
-  async function syncPush(quiet = false) {
+  async function syncPush(_quiet = false) {
     const s = pushSupport();
     if (!s.supported) {
       els.pushStatus.textContent = REASON_TEXT[s.reason] ?? "Not supported here.";
@@ -244,13 +386,18 @@ export function start(ctx) {
       return;
     }
     const on = perm === "granted" && !!sub;
-    els.pushStatus.textContent = on ? "✓ On for this device" : "Off for this device";
-    els.pushBtn.textContent = on ? "Turn off" : "Turn on notifications";
+    els.pushStatus.textContent = on ? "Enabled on this device" : "Not enabled on this device";
+    els.pushBtn.textContent = on ? "Disable device notifications" : "Enable device notifications";
     els.pushBtn.hidden = false;
     els.testPush.hidden = !on;
     // The browser may have rotated its subscription: silently re-register it.
-    if (on && !quiet) tokenThen((t) => enableAdminPush(t));
-    else if (on && quiet) tokenThen((t) => enableAdminPush(t));
+    if (on) {
+      const result = await tokenThen((t) => enableAdminPush(t));
+      if (!result?.ok) {
+        els.pushStatus.textContent =
+          "Browser permission granted, but registration alerts could not be connected. Try disabling and enabling notifications.";
+      }
+    }
   }
 
   async function tokenThen(fn) {
@@ -263,8 +410,12 @@ export function start(ctx) {
     try {
       const sub = await currentSubscription();
       if (sub && permission() === "granted") {
-        await tokenThen((t) => disablePush({ audience: "admin" }, t));
-        toast("Notifications turned off for this device.");
+        const result = await tokenThen((t) => disablePush({ audience: "admin" }, t));
+        if (result?.ok) toast("Notifications turned off for this device.");
+        else {toast(
+            "Could not confirm removal of this device subscription. Please try again.",
+            "error",
+          );}
       } else {
         const r = await tokenThen((t) => enableAdminPush(t));
         if (r?.ok) toast("Notifications are on. You will be told about new registrations.");

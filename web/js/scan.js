@@ -77,7 +77,7 @@ async function loadGates() {
   gateSel.replaceChildren(new Option("Choose a gate…", ""));
   let list = null;
   let usedCache = false;
-  const { data, error } = await sb.from("gates").select("id, code, name, direction_mode")
+  const { data, error } = await sb.from("gates").select("id, code, name, location, direction_mode")
     .eq("active", true).order("name");
   if (!error) {
     list = data;
@@ -88,7 +88,13 @@ async function loadGates() {
     if (!list) return setBanner("Could not load gates. Check your connection.");
   }
   for (const g of list) {
-    const label = g.direction_mode === "both" ? g.name : `${g.name} (${g.direction_mode} only)`;
+    const lane = g.direction_mode === "in"
+      ? "entrance only"
+      : g.direction_mode === "out"
+      ? "exit only"
+      : null;
+    const extra = [g.location, lane].filter(Boolean).join(" \u00b7 ");
+    const label = extra ? `${g.name} (${extra})` : g.name;
     gateSel.append(new Option(label, g.id));
   }
   let saved = "";
@@ -96,8 +102,10 @@ async function loadGates() {
     saved = localStorage.getItem("skpass.gate") ?? "";
   } catch { /* ignore */ }
   if (list.some((g) => g.id === saved)) gateSel.value = saved;
-  if (list.length === 0) setBanner("No active gates. Ask an administrator to add one.");
-  else if (usedCache) setBanner("Offline: using the gate list saved on this device.");
+  else if (list.length === 1) gateSel.value = list[0].id; // one assigned gate: nothing to choose
+  if (list.length === 0) {
+    setBanner("No gate is assigned to your account. Ask an administrator to assign one.");
+  } else if (usedCache) setBanner("Offline: using the gate list saved on this device.");
   updateStart();
 }
 function updateStart() {
