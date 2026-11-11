@@ -109,12 +109,12 @@ function ensureCss() {
 
 // ------------------------------------------------------------------ formatting
 function clockText(now, tz) {
-  const time = new Intl.DateTimeFormat("en-GB", {
+  const time = new Intl.DateTimeFormat("en-PH", {
     timeZone: tz,
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hourCycle: "h23",
+    hour12: true,
   }).format(now);
   let off = "";
   try {

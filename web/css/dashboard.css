@@ -1090,8 +1090,8 @@
   gap: 10px;
 }
 .dashboard-view .dash-btn {
-  min-height: 44px;
-  padding: 8px 16px;
+  min-height: 34px;
+  padding: 7px 12px;
   font-weight: 700;
 }
 .dashboard-view .live-pill {
@@ -1104,18 +1104,40 @@
   height: 6px;
 }
 .dashboard-view .seg {
-  min-height: 44px;
+  min-height: 34px;
+  padding: 2px;
   align-items: stretch;
   border-radius: 10px;
 }
 .dashboard-view .seg button {
+  padding: 5px 9px;
+  font-size: 11px;
+  border-radius: 6px;
+}
+.dashboard-view .dash-updated {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 9px;
+  border: 1px solid #ffffff12;
   border-radius: 7px;
+  background: #1a2227;
+  color: #9bb0bb;
+  font-size: 10px;
+  line-height: 16px;
+  font-variant-numeric: tabular-nums;
 }
 @media (max-width: 720px) {
   .dashboard-view .dash-controls {
     width: 100%;
   }
   .dashboard-view .dash-updated {
-    flex-basis: 100%;
+    flex-basis: auto;
+  }
+}
+@media (pointer: coarse) {
+  .dashboard-view .seg button,
+  .dashboard-view .dash-btn {
+    min-height: 44px;
   }
 }
