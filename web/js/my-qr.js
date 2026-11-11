@@ -143,6 +143,7 @@ function card(rec, view, note) {
   }
 
   const kids = [];
+  kids.push(h("h2", { class: "pass-section-title" }, "Vehicle Pass Details"));
 
   // Top Ambient Glow Accent
   kids.push(
