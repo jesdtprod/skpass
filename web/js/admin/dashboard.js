@@ -455,7 +455,8 @@ function paint(d, ctx, days) {
       "a",
       { class: `action${hot ? " hot" : ""}`, href },
       h("span", { class: "ai" }, svgIcon(icon)),
-      h("span", {}, h("strong", {}, title), h("small", {}, hint)),
+      h("span", { class: "action-copy" }, h("strong", {}, title), h("small", {}, hint)),
+      h("span", { class: "action-chevron" }, svgIcon("m9 5 7 7-7 7")),
     );
   const actions = h(
     "nav",

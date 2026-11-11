@@ -1015,39 +1015,79 @@
   border-radius: 8px;
 }
 .dashboard-view .actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 10px;
-  border: 1px solid var(--dv-line);
-  border-radius: 12px;
-  background: var(--dv-card);
-}
-.dashboard-view .action {
-  flex: 1 1 145px;
-  padding: 8px 10px;
-  gap: 8px;
-  border-radius: 8px;
-  background: #11181d;
-}
-.dashboard-view .action .ai {
-  width: 26px;
-  height: 26px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  padding: 0;
   border: 0;
   background: none;
 }
+.dashboard-view .action {
+  min-width: 0;
+  min-height: 78px;
+  padding: 14px;
+  gap: 12px;
+  border-radius: 14px;
+  background: var(--dv-card);
+  border-color: #ffffff12;
+}
+.dashboard-view .action .ai {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #a3e6351f;
+  border-radius: 11px;
+  background: #a3e63509;
+}
 .dashboard-view .action strong {
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 18px;
 }
 .dashboard-view .action small {
   font-size: 10px;
+  line-height: 16px;
+  margin-top: 2px;
+}
+.dashboard-view .action-copy {
+  flex: 1;
+  min-width: 0;
+}
+.dashboard-view .action-chevron {
+  flex: 0 0 12px;
+  color: #708692;
+  transition: color .18s, transform .18s;
+}
+.dashboard-view .action-chevron svg {
+  width: 12px;
+  height: 12px;
+  display: block;
+}
+.dashboard-view .action.hot {
+  border-color: #e7c57a38;
+}
+.dashboard-view .action.hot .ai {
+  background: #e7c57a0d;
+  border-color: #e7c57a26;
+}
+.dashboard-view .action:hover {
+  background: #202a30;
+  border-color: #a3e63550;
+}
+.dashboard-view .action:hover .action-chevron {
+  color: #a3e635;
+  transform: translateX(2px);
 }
 @media (max-width: 1200px) {
+  .dashboard-view .actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
   .admin-home .dashboard-view .stats {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 @media (max-width: 600px) {
+  .dashboard-view .actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
   .admin-home .dashboard-view .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1059,6 +1099,11 @@
   }
   .dashboard-view .dash-top {
     gap: 12px;
+  }
+}
+@media (max-width: 440px) {
+  .dashboard-view .actions {
+    grid-template-columns: 1fr;
   }
 }
 
