@@ -12,16 +12,11 @@
     <link rel="stylesheet" href="../css/scan.css" />
     <link rel="stylesheet" href="../css/control-shapes.css" />
     <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/scanner-workspace.css" />
   </head>
   <body class="site-theme scan-page">
-    <skpass-header></skpass-header>
+    <skpass-header scanner></skpass-header>
     <script type="module" src="../js/header.js"></script>
-    <header class="bar">
-      <img src="../icons/logo.png" alt="SKPass" />
-      <select id="gate" aria-label="Gate"></select>
-      <span id="who" class="who"></span>
-      <button id="signout" class="link" type="button">Sign out</button>
-    </header>
 
     <div id="banner" class="banner" role="status" hidden></div>
     <div id="syncbar" class="syncbar" role="status" aria-live="polite" hidden>
@@ -31,18 +26,46 @@
     </div>
 
     <main class="stage">
-      <div class="viewport">
-        <video id="video" playsinline muted></video>
-        <div class="reticle" aria-hidden="true"></div>
+      <div class="scanner-intro">
+        <span class="scanner-eyebrow">Gate control</span>
+        <h1>Vehicle pass scanner</h1>
+        <p>Choose your assigned gate and scan a vehicle's QR pass.</p>
       </div>
-
-      <div id="startbox" class="startbox">
-        <p>Choose your gate, then start the camera.</p>
-        <button id="start" class="btn" type="button" disabled>Start scanning</button>
-        <p id="camerr" class="alert error" role="alert" hidden></p>
-      </div>
-
-      <button id="torch" class="btn ghost torch" type="button" hidden>Torch: off</button>
+      <section class="scanner-workspace" aria-label="Gate scanner">
+        <div class="scanner-session">
+          <span class="session-icon"
+            aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 8 4v5c0 5-8 9-8 9s-8-4-8-9V7l8-4Z"/><path d="m8 12 3 3 5-6"/></svg></span>
+          <div><span class="scanner-label">Signed in as</span><span id="who" class="who"></span></div>
+          <button id="signout" class="scanner-signout"
+            type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M10 4H4v16h6m5-12 4 4-4 4m-6-4h12" stroke-linecap="round" stroke-linejoin="round"/></svg>Sign out</button>
+        </div>
+        <div class="scanner-gate">
+          <label class="scanner-label" for="gate">Assigned gate</label>
+          <div
+            class="gate-control"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21V10h6v11" stroke-linecap="round" stroke-linejoin="round"/></svg><select id="gate"><option value="">Loading assigned gates…</option></select></div>
+        </div>
+        <div
+          class="scanner-camera-heading"><h2>QR scanner</h2><span id="camera-status" class="camera-status" role="status">Camera off</span></div>
+        <div class="viewport">
+          <video id="video" playsinline muted aria-label="Live scanner camera"></video>
+          <div class="camera-idle">
+            <span class="camera-idle-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8V4h4m8 0h4v4m0 8v4h-4M8 20H4v-4M7 12h10"/></svg></span>
+            <strong>Ready when you are</strong><span>Start the camera to scan a vehicle pass.</span>
+          </div>
+          <div class="reticle" aria-hidden="true"></div>
+          <span class="camera-live-hint">Position the QR inside the frame</span>
+        </div>
+        <div id="startbox" class="startbox">
+          <button id="start" class="btn" type="button"
+            disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 8V4h4m8 0h4v4m0 8v4h-4M8 20H4v-4M7 12h10" stroke-linecap="round" stroke-linejoin="round"/></svg>Start scanning</button>
+          <p id="camerr" class="alert error" role="alert" hidden></p>
+        </div>
+        <div class="scanner-live-controls">
+          <button id="torch" class="btn ghost torch" type="button" hidden>Torch: off</button>
+          <button id="stop" class="btn ghost" type="button" hidden>Stop camera</button>
+        </div>
+        <p class="scanner-help">Hold the QR steady and keep it fully visible in the frame.</p>
+      </section>
 
       <details id="synchist" class="synchist" hidden>
         <summary>Recent offline sync results</summary>

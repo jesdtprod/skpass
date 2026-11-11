@@ -110,6 +110,11 @@ async function loadGates() {
 }
 function updateStart() {
   startBtn.disabled = !gateSel.value;
+  $("camera-status").textContent = started
+    ? "Camera active"
+    : gateSel.value
+    ? "Ready to scan"
+    : "Select a gate";
 }
 gateSel.addEventListener("change", () => {
   try {
@@ -140,10 +145,12 @@ function play(pattern) {
 function showCamError(msg) {
   camErr.textContent = msg;
   camErr.hidden = !msg;
+  if (msg) $("camera-status").textContent = "Camera unavailable";
 }
 
 async function startCamera() {
   showCamError("");
+  $("camera-status").textContent = "Starting camera…";
   if (!globalThis.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
     return showCamError("The camera needs a secure (HTTPS) connection.");
   }
@@ -169,6 +176,8 @@ async function startCamera() {
   started = true;
   $("startbox").hidden = true;
   document.body.classList.add("scanning");
+  $("camera-status").textContent = "Camera active";
+  $("stop").hidden = false;
   try {
     wakeLock = await navigator.wakeLock?.request("screen");
   } catch { /* optional */ }
@@ -180,7 +189,20 @@ function stopCamera() {
   stream = null;
   video.srcObject = null;
   started = false;
+  document.body.classList.remove("scanning");
+  $("startbox").hidden = false;
+  $("stop").hidden = true;
+  torchBtn.hidden = true;
+  torchOn = false;
+  torchBtn.textContent = "Torch: off";
+  updateStart();
 }
+
+$("stop").addEventListener("click", () => {
+  wantCamera = false;
+  stopCamera();
+  wakeLock?.release?.().catch(() => {});
+});
 
 torchBtn.addEventListener("click", async () => {
   const track = stream?.getVideoTracks()[0];
@@ -534,10 +556,18 @@ function dismiss() {
 overlay.addEventListener("click", dismiss);
 
 startBtn.addEventListener("click", async () => {
-  audioCtx ??= new (globalThis.AudioContext ?? globalThis.webkitAudioContext)();
-  await audioCtx.resume?.();
-  wantCamera = true;
-  await startCamera();
+  if (startBtn.disabled) return;
+  startBtn.disabled = true;
+  startBtn.setAttribute("aria-busy", "true");
+  try {
+    audioCtx ??= new (globalThis.AudioContext ?? globalThis.webkitAudioContext)();
+    await audioCtx.resume?.();
+    wantCamera = true;
+    await startCamera();
+  } finally {
+    startBtn.removeAttribute("aria-busy");
+    startBtn.disabled = !gateSel.value;
+  }
 });
 
 // First paint of the offline status, then flush anything left from an earlier session.
