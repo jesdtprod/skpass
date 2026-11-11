@@ -140,6 +140,11 @@
   margin-bottom: 10px;
 }
 .scan-page .scanner-camera-heading h2 {
+  padding: 4px 8px;
+  border: 1px solid #a3e63526;
+  border-radius: 7px;
+  background: #a3e63508;
+  color: #b2eb65;
   margin: 0;
   font: 600 12px/20px "Plus Jakarta Sans", sans-serif;
 }
