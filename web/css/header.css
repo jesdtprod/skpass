@@ -79,6 +79,7 @@ a {
   flex-shrink: 0;
 }
 .brand strong {
+  font: 600 12px/1.25 "Plus Jakarta Sans", sans-serif;
   display: block;
   line-height: 1.25;
   text-transform: uppercase;
@@ -86,6 +87,7 @@ a {
   font-weight: 600;
 }
 .brand small {
+  font: 500 12px/1.25 "Plus Jakarta Sans", sans-serif;
   display: block;
   line-height: 1.25;
   font-size: 12px;

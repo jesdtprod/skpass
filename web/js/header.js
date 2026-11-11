@@ -4,9 +4,17 @@ class SKPassHeader extends HTMLElement {
     if (this.shadowRoot) return;
     const root = this.attachShadow({ mode: "open" });
     const base = new URL("../", import.meta.url);
+    // Font faces must load in the document, including pages without theme.css.
+    if (!document.getElementById("skpass-shared-fonts")) {
+      const fonts = document.createElement("link");
+      fonts.id = "skpass-shared-fonts";
+      fonts.rel = "stylesheet";
+      fonts.href = new URL("css/fonts.css", base).href;
+      document.head.append(fonts);
+    }
     const css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = new URL("css/header.css?v=modal-1", base).href;
+    css.href = new URL("css/header.css?v=fonts-2", base).href;
     root.append(css);
     const template = document.createElement("template");
     template.innerHTML = `<header><div class="inner">
