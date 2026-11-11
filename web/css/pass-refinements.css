@@ -4,11 +4,19 @@ body.pass-page {
   background-attachment: fixed;
 }
 .pass-section-title {
-  margin: 0 0 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #ffffff12;
+  margin: 0;
   color: #dce6ec;
   font: 600 16px/24px "Space Grotesk", sans-serif;
+}
+.pass-section-heading {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ffffff12;
+}
+.pass-section-description {
+  margin: 4px 0 0;
+  color: #94a3b8;
+  font: 400 12px/1.6 "Plus Jakarta Sans", sans-serif;
 }
 .my-qr-introduction {
   text-align: center;

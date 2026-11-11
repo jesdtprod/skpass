@@ -143,7 +143,18 @@ function card(rec, view, note) {
   }
 
   const kids = [];
-  kids.push(h("h2", { class: "pass-section-title" }, "Vehicle Pass Details"));
+  kids.push(
+    h(
+      "div",
+      { class: "pass-section-heading" },
+      h("h2", { class: "pass-section-title" }, "Vehicle Pass Details"),
+      h(
+        "p",
+        { class: "pass-section-description" },
+        "Review your vehicle information, holder details, and gate access QR.",
+      ),
+    ),
+  );
 
   // Top Ambient Glow Accent
   kids.push(
