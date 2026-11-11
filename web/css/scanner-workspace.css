@@ -553,3 +553,145 @@
     font-size: 20px;
   }
 }
+
+/* Camera-first screen without site chrome; the preview uses available space. */
+.scan-page .viewport > video {
+  position: absolute;
+  inset: 0;
+}
+body.site-theme.scan-page {
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+.scan-page > .banner,
+.scan-page > .syncbar {
+  flex-shrink: 0;
+}
+.scan-page .stage {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: max(14px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+}
+.scan-page .scanner-intro {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+}
+.scan-page .scanner-intro h1 {
+  font-size: 24px;
+}
+.scan-page .scanner-eyebrow {
+  margin-bottom: 3px;
+}
+.scan-page .scanner-intro p {
+  margin-top: 4px;
+}
+.scan-page .scanner-workspace {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: min-content;
+  padding: 16px;
+}
+.scan-page .scanner-session {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+.scan-page .scanner-gate {
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+.scan-page .scanner-camera-heading {
+  flex-shrink: 0;
+}
+.scan-page .viewport {
+  flex: 1;
+  min-height: 150px;
+  height: auto;
+  max-height: none;
+}
+.scan-page .startbox,
+.scan-page .scanner-live-controls,
+.scan-page .scanner-help {
+  flex-shrink: 0;
+}
+.scan-page .scanner-help {
+  margin-top: 10px;
+}
+.scan-page .scanner-live-controls:not(:has(> button:not([hidden]))) {
+  display: none;
+}
+@media (max-width: 480px) {
+  .scan-page .stage {
+    padding-inline: 12px;
+  }
+  .scan-page .scanner-intro h1 {
+    font-size: 22px;
+  }
+  .scan-page .scanner-workspace {
+    padding: 12px;
+  }
+  .scan-page .scanner-eyebrow {
+    display: none;
+  }
+}
+@media (min-width: 700px) and (max-height: 600px) {
+  .scan-page .stage {
+    max-width: 1080px;
+  }
+  .scan-page .scanner-intro h1 {
+    font-size: 20px;
+  }
+  .scan-page .scanner-intro p,
+  .scan-page .scanner-eyebrow {
+    display: none;
+  }
+  .scan-page .scanner-workspace {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+    grid-template-rows: 36px auto auto 1fr;
+    gap: 10px 18px;
+  }
+  .scan-page .scanner-session {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 0;
+    margin: 0;
+    border: 0;
+  }
+  .scan-page .scanner-gate {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
+  }
+  .scan-page .scanner-camera-heading {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+  }
+  .scan-page .viewport {
+    grid-column: 2;
+    grid-row: 2 / 5;
+    min-height: 140px;
+    height: auto;
+  }
+  .scan-page .startbox,
+  .scan-page .scanner-live-controls {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 0;
+    padding: 0;
+  }
+  .scan-page .scanner-help {
+    grid-column: 1;
+    grid-row: 4;
+    margin: 0;
+    text-align: left;
+  }
+}

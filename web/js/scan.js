@@ -33,6 +33,8 @@ let stream = null;
 let torchOn = false;
 let busy = false; // a scan request or result screen is active
 let started = false;
+let starting = false;
+let wantCamera = true;
 let lastToken = "";
 let lastTokenAt = 0;
 let audioCtx = null;
@@ -110,7 +112,7 @@ async function loadGates() {
   updateStart();
 }
 function updateStart() {
-  startBtn.disabled = !gateSel.value;
+  startBtn.disabled = starting || !gateSel.value;
   $("camera-status").textContent = started
     ? "Camera active"
     : gateSel.value
@@ -122,6 +124,13 @@ gateSel.addEventListener("change", () => {
     localStorage.setItem("skpass.gate", gateSel.value);
   } catch { /* ignore */ }
   updateStart();
+  if (gateSel.value) {
+    wantCamera = true;
+    startCamera();
+  } else {
+    stopCamera();
+    wakeLock?.release?.().catch(() => {});
+  }
 });
 await loadGates();
 
@@ -150,39 +159,62 @@ function showCamError(msg) {
 }
 
 async function startCamera() {
-  showCamError("");
-  $("camera-status").textContent = "Starting camera…";
-  if (!globalThis.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
-    return showCamError("The camera needs a secure (HTTPS) connection.");
-  }
+  if (started || starting || !gateSel.value || document.hidden) return;
+  starting = true;
+  startBtn.disabled = true;
+  startBtn.setAttribute("aria-busy", "true");
   try {
-    stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 } },
-      audio: false,
-    });
-  } catch (e) {
-    const name = e?.name ?? "";
-    return showCamError(
-      name === "NotAllowedError" || name === "SecurityError"
-        ? "Camera permission was denied. Allow camera access for this site in your browser settings, then reload."
-        : name === "NotFoundError" || name === "OverconstrainedError"
-        ? "No camera was found on this device."
-        : "The camera could not be started. Close other apps using the camera and try again.",
-    );
+    showCamError("");
+    $("camera-status").textContent = "Starting camera…";
+    if (!globalThis.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+      return showCamError("The camera needs a secure (HTTPS) connection.");
+    }
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 } },
+        audio: false,
+      });
+    } catch (e) {
+      const name = e?.name ?? "";
+      return showCamError(
+        name === "NotAllowedError" || name === "SecurityError"
+          ? "Camera permission was denied. Allow camera access for this site in your browser settings, then reload."
+          : name === "NotFoundError" || name === "OverconstrainedError"
+          ? "No camera was found on this device."
+          : "The camera could not be started. Close other apps using the camera and try again.",
+      );
+    }
+    if (!wantCamera || document.hidden || !gateSel.value) {
+      stopCamera();
+      return;
+    }
+    video.srcObject = stream;
+    try {
+      await video.play();
+    } catch {
+      stopCamera();
+      return showCamError("Tap Start scanning to enable the camera on this device.");
+    }
+    if (!stream || !wantCamera || document.hidden || !gateSel.value) {
+      stopCamera();
+      return;
+    }
+    const track = stream.getVideoTracks()[0];
+    torchBtn.hidden = !track.getCapabilities?.().torch;
+    started = true;
+    $("startbox").hidden = true;
+    document.body.classList.add("scanning");
+    $("camera-status").textContent = "Camera active";
+    $("stop").hidden = false;
+    try {
+      wakeLock = await navigator.wakeLock?.request("screen");
+    } catch { /* optional */ }
+    loop();
+  } finally {
+    starting = false;
+    startBtn.disabled = !gateSel.value;
+    startBtn.removeAttribute("aria-busy");
   }
-  video.srcObject = stream;
-  await video.play().catch(() => {});
-  const track = stream.getVideoTracks()[0];
-  torchBtn.hidden = !track.getCapabilities?.().torch;
-  started = true;
-  $("startbox").hidden = true;
-  document.body.classList.add("scanning");
-  $("camera-status").textContent = "Camera active";
-  $("stop").hidden = false;
-  try {
-    wakeLock = await navigator.wakeLock?.request("screen");
-  } catch { /* optional */ }
-  loop();
 }
 
 function stopCamera() {
@@ -218,7 +250,6 @@ torchBtn.addEventListener("click", async () => {
 });
 
 // Release the camera when the page is hidden (battery, privacy) and resume when it returns.
-let wantCamera = false;
 document.addEventListener("visibilitychange", async () => {
   if (document.visibilityState === "hidden") {
     stopCamera();
@@ -598,20 +629,22 @@ overlay.addEventListener("keydown", (event) => {
 
 startBtn.addEventListener("click", async () => {
   if (startBtn.disabled) return;
-  startBtn.disabled = true;
-  startBtn.setAttribute("aria-busy", "true");
+  unlockFeedbackAudio();
+  wantCamera = true;
+  await startCamera();
+});
+
+function unlockFeedbackAudio() {
   try {
     audioCtx ??= new (globalThis.AudioContext ?? globalThis.webkitAudioContext)();
-    await audioCtx.resume?.();
-    wantCamera = true;
-    await startCamera();
-  } finally {
-    startBtn.removeAttribute("aria-busy");
-    startBtn.disabled = !gateSel.value;
-  }
-});
+    audioCtx.resume?.().catch(() => {});
+  } catch { /* Camera scanning does not depend on audio support. */ }
+}
+document.addEventListener("pointerdown", unlockFeedbackAudio, { once: true });
+document.addEventListener("keydown", unlockFeedbackAudio, { once: true });
 
 // First paint of the offline status, then flush anything left from an earlier session.
 await refreshBar();
 await refreshHistory();
 syncNow("start");
+if (gateSel.value && !document.hidden) startCamera();
