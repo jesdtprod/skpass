@@ -8,10 +8,16 @@ body.registration-login {
   position: relative;
   z-index: 1;
 }
-.registration-login #auth-card {
+.registration-login :is(#auth-card, #session-skeleton) {
   background: #1a2025;
   border-color: #ffffff16;
   box-shadow: 0 16px 64px #0002;
+}
+html.has-auth-session #auth-card {
+  display: none !important;
+}
+html.has-auth-session #session-skeleton {
+  display: block !important;
 }
 .registration-login #login-form input {
   background: #11181d;

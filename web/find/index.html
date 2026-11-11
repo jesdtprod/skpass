@@ -273,37 +273,68 @@
         <!-- Shimmer Skeleton Loading Preview Card (Visible while querying) -->
         <div
           id="search-skeleton"
-          class="bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden animate-pulse space-y-4"
+          class="bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden"
           hidden
           aria-live="polite"
+          aria-hidden="true"
         >
-          <!-- Shimmer line -->
+          <!-- Decorative Ambient Top Border Glow -->
           <div
-            class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-500/40 to-transparent"
+            class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-500/50 to-transparent opacity-80 pointer-events-none"
           ></div>
 
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-surface-750/90 flex-shrink-0"></div>
-              <div class="space-y-1.5">
-                <div class="h-6 w-28 bg-surface-750/90 rounded-md"></div>
-                <div class="h-3 w-16 bg-surface-750/50 rounded"></div>
+          <!-- Query Status Header -->
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-500 animate-ping"></span>
+              <span class="text-xs uppercase tracking-wider font-semibold text-brand-400 font-mono">
+                Locating Pass Credentials…
+              </span>
+            </div>
+            <span
+              class="text-[10px] font-mono uppercase bg-surface-750 text-slate-400 px-2 py-0.5 rounded border border-slate-700"
+            >
+              SEARCHING
+            </span>
+          </div>
+
+          <!-- Pass Header Preview -->
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <div class="flex items-center space-x-3.5 min-w-0">
+              <div
+                class="w-11 h-11 rounded-2xl bg-surface-750 border border-emerald-500/20 flex-shrink-0 sk-shimmer"
+              ></div>
+              <div class="space-y-1.5 min-w-0">
+                <div class="h-6 w-32 rounded-lg sk-shimmer"></div>
+                <div class="h-2.5 w-20 rounded sk-shimmer"></div>
               </div>
             </div>
-            <div class="h-6 w-24 bg-surface-750/80 rounded-full"></div>
+            <div class="h-6 w-20 rounded-md sk-shimmer flex-shrink-0"></div>
           </div>
 
-          <div class="space-y-1.5">
-            <div class="h-3 w-24 bg-surface-750/50 rounded"></div>
-            <div class="h-5 w-40 bg-surface-750/90 rounded-lg"></div>
+          <!-- Holder Details Preview -->
+          <div class="space-y-1.5 mb-4">
+            <div class="h-2.5 w-24 rounded sk-shimmer"></div>
+            <div class="h-5 w-44 rounded-lg sk-shimmer"></div>
           </div>
 
+          <!-- QR Verification Container Preview -->
           <div
-            class="h-36 w-full bg-surface-900/90 border border-slate-800 rounded-2xl flex items-center justify-center">
-            <div class="w-20 h-20 bg-surface-750/70 rounded-xl"></div>
+            class="search-preview-box bg-surface-900/90 border border-slate-800/90 rounded-2xl p-5 flex flex-col items-center justify-center mb-5 space-y-3"
+          >
+            <div class="h-2.5 w-32 rounded sk-shimmer"></div>
+            <div
+              class="w-32 h-32 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center sk-shimmer"
+            >
+              <div class="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
+                <div class="w-4 h-4 rounded-sm bg-white/20"></div>
+              </div>
+            </div>
+            <div class="h-2.5 w-40 rounded sk-shimmer"></div>
           </div>
 
-          <div class="h-10 w-full bg-brand-500/20 rounded-xl"></div>
+          <!-- Action Button Shimmer -->
+          <div class="h-11 w-full rounded-xl sk-shimmer-brand"></div>
         </div>
 
         <skpass-navigation></skpass-navigation>

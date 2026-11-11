@@ -312,7 +312,6 @@ function card(rec, view, note) {
     other: "Other",
   };
 
-
   const details = [
     ["Position / Title", view.position],
     ["Agency / Office", view.agency],
@@ -685,7 +684,7 @@ async function viewFor(rec) {
 const lastStatusCheck = new Map();
 async function refresh(id, force = false) {
   const now = Date.now();
-  if (now - (lastStatusCheck.get(id) ?? 0) < (force ? 5000 : 25000)) return;
+  if (now - (lastStatusCheck.get(id) ?? 0) < (force ? 2000 : 4000)) return;
   const recs = await listVehicles();
   const rec = recs.find((r) => r.vehicle_id === id);
   if (!rec) return;
@@ -718,8 +717,10 @@ async function refresh(id, force = false) {
 
 async function render() {
   const recs = await listVehicles();
-  if (skeleton) skeleton.hidden = true;
-  if (!list || !empty) return;
+  if (!list || !empty) {
+    if (skeleton) skeleton.hidden = true;
+    return;
+  }
   list.replaceChildren();
   empty.hidden = recs.length > 0;
   recs.sort((a, b) => (a.vehicle_id === focusId ? -1 : b.vehicle_id === focusId ? 1 : 0));
@@ -727,6 +728,7 @@ async function render() {
   for (const rec of recs) {
     list.append(card(rec, rec.view ?? { status: rec.status ?? "pending" }));
   }
+  if (skeleton) skeleton.hidden = true;
   await Promise.all(recs.map((r) => refresh(r.vehicle_id)));
 }
 
@@ -734,13 +736,28 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") render();
 });
 
-// Push handles instant updates; polling is a low-frequency fallback.
-setInterval(async () => {
-  if (document.hidden) return;
-  for (const r of await listVehicles()) {
-    if ((r.status ?? "pending") === "pending") await refresh(r.vehicle_id);
+// Push gives instant updates when allowed. Polling is the fallback, and it is quick while a
+// registration is waiting: every 5 s for the first 5 minutes on screen, then every 15 s, and
+// slower again if the server asks us to back off.
+let pollStart = Date.now();
+let backoff = 0;
+async function pollPending() {
+  const delay = Date.now() - pollStart < 300_000 ? 5000 : 15000;
+  if (!document.hidden) {
+    for (const r of await listVehicles()) {
+      if ((r.status ?? "pending") !== "pending") continue;
+      await refresh(r.vehicle_id);
+      if (list?.querySelector(`[data-id="${r.vehicle_id}"] .refresh-status-note`)) {
+        backoff = Math.min(backoff + 1, 4);
+      } else backoff = 0;
+    }
   }
-}, 30000);
+  setTimeout(pollPending, delay * (1 + backoff));
+}
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) pollStart = Date.now();
+});
+setTimeout(pollPending, 5000);
 
 // A push that arrives while the page is open: update straight away.
 navigator.serviceWorker?.addEventListener("message", (e) => {

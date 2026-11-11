@@ -176,64 +176,102 @@
         <!-- Shimmer Skeleton Card (Visible while initializing / loading pass data) -->
         <div
           id="skeleton-loader"
-          class="bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden animate-pulse"
+          class="bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden transition-all formatted-pass"
+          data-purpose="vehicle-gate-pass-card"
           aria-hidden="true"
         >
           <!-- Decorative Ambient Top Border Glow -->
           <div
-            class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-500/40 to-transparent opacity-80"
+            class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-500/40 to-transparent opacity-80 pointer-events-none"
           ></div>
 
-          <!-- Header shimmer -->
-          <div class="flex items-start justify-between mb-4">
-            <div class="flex items-center space-x-3.5">
+          <!-- Section Heading Shimmer -->
+          <div class="pass-section-heading">
+            <div class="h-5 w-44 rounded-md sk-shimmer mb-2"></div>
+            <div class="h-3.5 w-80 max-w-full rounded sk-shimmer"></div>
+          </div>
+
+          <!-- Identity Layout with QR (Two-column on >=621px, stacked on mobile) -->
+          <div class="pass-identity-layout with-qr">
+            <!-- Left Column: QR Section Shimmer -->
+            <div
+              class="pass-qr-section bg-surface-900/90 border border-slate-800/90 rounded-2xl p-5 flex flex-col items-center justify-center qr-container-glow mb-6"
+            >
+              <div class="h-3 w-32 rounded sk-shimmer mb-4"></div>
               <div
-                class="w-12 h-12 rounded-2xl bg-surface-750/90 border border-slate-700/60 flex-shrink-0"></div>
-              <div class="space-y-2">
-                <div class="h-7 w-28 sm:w-36 bg-surface-750/90 rounded-lg"></div>
-                <div class="h-3 w-20 bg-surface-750/50 rounded"></div>
+                class="qr-paper relative bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center w-full aspect-square sk-shimmer"
+              >
+                <!-- Subtle center logo seal shimmer -->
+                <div
+                  class="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center">
+                  <div class="w-5 h-5 rounded-md bg-white/20"></div>
+                </div>
+              </div>
+              <div class="h-3 w-48 rounded sk-shimmer mt-4"></div>
+            </div>
+
+            <!-- Right Column: Pass Holder Details Panel Shimmer -->
+            <div class="pass-holder-panel">
+              <!-- Pass Card Header Shimmer (Plate ID, Icon, Category Chip) -->
+              <div class="pass-card-header flex items-center justify-between gap-3 mb-4">
+                <div class="flex items-center space-x-3.5 min-w-0">
+                  <div
+                    class="w-12 h-12 rounded-2xl bg-surface-750 border border-emerald-500/20 flex-shrink-0 sk-shimmer"
+                  ></div>
+                  <div class="space-y-1.5 min-w-0">
+                    <div class="h-7 w-36 sm:w-44 rounded-lg sk-shimmer"></div>
+                    <div class="h-2.5 w-24 rounded sk-shimmer"></div>
+                    <div class="h-3 w-28 rounded sk-shimmer mt-1"></div>
+                  </div>
+                </div>
+                <div class="category-chip flex-shrink-0">
+                  <div class="h-4 w-16 rounded sk-shimmer"></div>
+                </div>
+              </div>
+
+              <!-- Pass Holder & Status Badge Row Shimmer -->
+              <div class="pass-holder-row">
+                <div class="pass-holder mb-4">
+                  <div class="h-2.5 w-24 rounded sk-shimmer mb-1.5"></div>
+                  <div class="h-5 w-44 rounded-lg sk-shimmer"></div>
+                </div>
+                <div class="pass-approval flex-shrink-0">
+                  <div class="h-6 w-24 rounded-full sk-shimmer"></div>
+                </div>
+              </div>
+
+              <!-- Pass Vehicle Fields Shimmer (Type & Color) -->
+              <dl class="pass-vehicle-fields">
+                <div>
+                  <div class="h-2.5 w-20 rounded sk-shimmer mb-1.5"></div>
+                  <div class="h-4 w-24 rounded sk-shimmer"></div>
+                </div>
+                <div>
+                  <div class="h-2.5 w-16 rounded sk-shimmer mb-1.5"></div>
+                  <div class="h-4 w-20 rounded sk-shimmer"></div>
+                </div>
+              </dl>
+
+              <!-- Pass Reference Shimmer -->
+              <div class="pass-reference mb-5">
+                <div class="h-2.5 w-24 rounded sk-shimmer mb-1.5"></div>
+                <div
+                  class="flex items-center justify-between bg-surface-900/60 px-3 py-2.5 rounded-lg border border-slate-800"
+                >
+                  <div class="h-4 w-52 max-w-[80%] rounded sk-shimmer"></div>
+                  <div class="w-4 h-4 rounded sk-shimmer flex-shrink-0"></div>
+                </div>
               </div>
             </div>
-            <div class="h-6 w-20 bg-surface-750/90 rounded-lg flex-shrink-0"></div>
           </div>
 
-          <!-- Status pill shimmer -->
-          <div class="h-6 w-28 bg-surface-750/80 rounded-full mb-5"></div>
-
-          <!-- Holder shimmer -->
-          <div class="space-y-1.5 mb-5">
-            <div class="h-3 w-24 bg-surface-750/50 rounded"></div>
-            <div class="h-5 w-44 bg-surface-750/90 rounded-lg"></div>
-          </div>
-
-          <div class="w-full h-px bg-slate-800 my-4"></div>
-
-          <!-- Pass reference shimmer -->
-          <div class="space-y-1.5 mb-5">
-            <div class="h-3 w-20 bg-surface-750/50 rounded"></div>
-            <div class="h-10 w-full bg-surface-900/90 rounded-lg border border-slate-800"></div>
-          </div>
-
-          <!-- QR display box shimmer -->
-          <div
-            class="bg-surface-900/90 border border-slate-800/90 rounded-2xl p-5 flex flex-col items-center justify-center mb-6 space-y-4"
-          >
-            <div class="h-3 w-32 bg-surface-750/50 rounded"></div>
+          <!-- Bottom Action Buttons Row Shimmer (3 buttons) -->
+          <div class="pass-action-row" style="--action-count: 3">
+            <div class="min-h-[44px] rounded-xl sk-shimmer-brand"></div>
             <div
-              class="w-40 h-40 sm:w-48 sm:h-48 bg-slate-800/60 rounded-2xl flex items-center justify-center border border-slate-700/40"
-            >
-              <div class="w-12 h-12 rounded-2xl bg-surface-700/80"></div>
-            </div>
-            <div class="h-3 w-48 bg-surface-750/40 rounded"></div>
-          </div>
-
-          <!-- Action control group shimmer -->
-          <div class="space-y-3">
-            <div class="h-12 w-full bg-brand-500/20 rounded-xl"></div>
-            <div class="grid grid-cols-2 gap-3 pt-1">
-              <div class="h-9 bg-surface-800/80 rounded-xl"></div>
-              <div class="h-9 bg-surface-800/80 rounded-xl"></div>
-            </div>
+              class="min-h-[44px] rounded-xl sk-shimmer bg-surface-800/80 border border-slate-700/60"></div>
+            <div
+              class="min-h-[44px] rounded-xl sk-shimmer bg-surface-800/80 border border-slate-700/60"></div>
           </div>
         </div>
 
@@ -378,7 +416,7 @@
 
     <!-- QR Code Generator & Core Scripts -->
     <script src="../js/vendor/qrcode.js"></script>
-    <script type="module" src="../js/my-qr.js?v=approval-auto-4"></script>
+    <script type="module" src="../js/my-qr.js?v=approval-auto-5"></script>
     <script type="module" src="../js/pwa.js"></script>
     <script type="module" src="../js/qr-modal-fit.js"></script>
   </body>

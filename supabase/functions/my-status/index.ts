@@ -30,7 +30,7 @@ export async function handler(req: Request): Promise<Response> {
   // Rate limits: per IP and per vehicle (throttles guessing).
   const ip = clientIp(req);
   // Allow normal refreshes and multiple saved passes behind a shared gate network.
-  for (const [key, limit] of [[`status-ip:${ip}`, 600], [`status-v:${vehicleId}`, 180]] as const) {
+  for (const [key, limit] of [[`status-ip:${ip}`, 1500], [`status-v:${vehicleId}`, 500]] as const) {
     const { data: ok, error } = await db.rpc("check_rate_limit", {
       p_key: key,
       p_limit: limit,

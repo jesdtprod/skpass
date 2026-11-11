@@ -25,6 +25,7 @@ if (reason === "noaccess") show("This account does not have access to staff page
 // Already signed in with a valid staff profile? Go straight in.
 sb.auth.getSession().then(async ({ data: { session } }) => {
   if (!session) {
+    document.documentElement.classList.remove("has-auth-session");
     if (sessionSkeleton) sessionSkeleton.hidden = true;
     if (authCard) authCard.hidden = false;
     return;
@@ -36,9 +37,11 @@ sb.auth.getSession().then(async ({ data: { session } }) => {
     location.replace(HOME[p.role]);
     return;
   }
+  document.documentElement.classList.remove("has-auth-session");
   if (sessionSkeleton) sessionSkeleton.hidden = true;
   if (authCard) authCard.hidden = false;
 }).catch(() => {
+  document.documentElement.classList.remove("has-auth-session");
   if (sessionSkeleton) sessionSkeleton.hidden = true;
   if (authCard) authCard.hidden = false;
 });

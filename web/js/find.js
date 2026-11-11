@@ -37,7 +37,8 @@ form.addEventListener("submit", async (e) => {
   show("");
   if (!captcha.getToken()) return show("Please complete the captcha check.");
   btn.disabled = true;
-  btn.textContent = "Searching…";
+  btn.innerHTML =
+    '<span class="inline-block w-4 h-4 border-2 border-slate-950/30 border-t-slate-950 rounded-full animate-spin"></span> <span>Searching…</span>';
   if (skeleton) {
     skeleton.hidden = false;
     skeleton.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -91,6 +92,7 @@ form.addEventListener("submit", async (e) => {
     captcha.reset();
   } finally {
     btn.disabled = false;
-    btn.textContent = "Find my QR";
+    btn.innerHTML =
+      '<svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg> <span>Find my QR</span>';
   }
 });
