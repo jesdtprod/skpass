@@ -160,6 +160,33 @@ body.pass-page {
   border-color: #c0fa7266;
   color: #19280e;
 }
+.pass-page .pass-action-row > button {
+  transition: background-color .18s, border-color .18s, color .18s, transform .18s;
+}
+.pass-page .pass-action-row > button:hover:not(:disabled) {
+  background-color: #202a30;
+  border-color: #a3e63570;
+  color: #f0f5f7;
+  transform: translateY(-1px);
+}
+.pass-page .pass-action-row > button.bg-brand-bright:hover:not(:disabled) {
+  background-color: #b6ef52;
+  border-color: #c8fa84;
+  color: #19280e;
+}
+.pass-page .pass-action-row > button:active:not(:disabled) {
+  transform: translateY(0);
+}
+.pass-page .pass-action-row > button:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 0;
+}
+.pass-page .pass-action-row > button:disabled {
+  cursor: wait;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pass-page .pass-action-row > button { transition: none; }
+}
 .pass-page main > div {
   max-width: 700px;
 }

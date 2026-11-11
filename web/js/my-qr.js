@@ -11,6 +11,16 @@ const params = new URLSearchParams(location.search);
 const focusId = params.get("v");
 if (params.get("new") === "1" && welcome) welcome.hidden = false;
 
+function displayDate(value) {
+  if (!value) return null;
+  const date = new Date(`${String(value).slice(0, 10)}T00:00:00`);
+  return Number.isNaN(date.getTime()) ? null : date.toLocaleDateString("en-PH", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 /** Tiny DOM helper. Uses textContent only, so user data can never inject markup. */
 function h(tag, props = {}, ...kids) {
   const el = document.createElement(tag);
@@ -526,20 +536,32 @@ function card(rec, view, note) {
           class:
             "w-full py-3.5 px-4 bg-brand-bright hover:bg-brand-400 active:bg-brand-500 text-slate-950 font-bold text-sm tracking-wide rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2 cursor-pointer",
           type: "button",
-          onclick: () =>
-            downloadPassJpg({
-              token: view.token,
-              plate: displayPlate,
-              category: displayCategory,
-              holder: view.owner_name,
-              vehicleType: typeNames[view.vehicle_type] ?? view.vehicle_type,
-              color: view.color,
-              status: "Approved",
-              reference: rec.vehicle_id,
-              validity: [displayDate(view.valid_from), displayDate(view.valid_to)].every(Boolean)
-                ? `${displayDate(view.valid_from)} – ${displayDate(view.valid_to)}`
-                : null,
-            }),
+          onclick: async (event) => {
+            const button = event.currentTarget;
+            button.disabled = true;
+            button.setAttribute("aria-busy", "true");
+            try {
+              await downloadPassJpg({
+                token: view.token,
+                plate: displayPlate,
+                category: displayCategory,
+                holder: view.owner_name,
+                vehicleType: typeNames[view.vehicle_type] ?? view.vehicle_type,
+                color: view.color,
+                status: "Approved",
+                reference: rec.vehicle_id,
+                validity: [displayDate(view.valid_from), displayDate(view.valid_to)].every(Boolean)
+                  ? `${displayDate(view.valid_from)} – ${displayDate(view.valid_to)}`
+                  : null,
+              });
+            } catch (error) {
+              console.error("Pass download failed", error);
+              alert("Unable to download your pass. Please try again.");
+            } finally {
+              button.disabled = false;
+              button.removeAttribute("aria-busy");
+            }
+          },
         },
         svgIcon("download", "w-4 h-4 text-slate-950"),
         "Download pass (JPG)",

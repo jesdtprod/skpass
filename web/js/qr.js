@@ -266,6 +266,7 @@ export async function drawPassImage(pass) {
 export async function downloadPassJpg(pass) {
   const canvas = await drawPassImage(pass);
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
+  if (!blob) throw new Error("The browser could not create the pass image.");
   const safe = String(pass.plate).replace(/[^A-Za-z0-9-]+/g, "") || "pass";
   const a = document.createElement("a");
   Object.assign(a, { href: URL.createObjectURL(blob), download: `skpass-${safe}.jpg` });
