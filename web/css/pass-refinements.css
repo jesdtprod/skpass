@@ -31,10 +31,15 @@ body.pass-page {
   color: #fff;
 }
 .my-qr-introduction p {
-  max-width: 380px;
+  max-width: none;
   margin: 6px auto 0;
   color: #94a3b8;
   font: 400 13px/1.6 "Plus Jakarta Sans",sans-serif;
+}
+@media (min-width: 640px) {
+  .my-qr-introduction p {
+    white-space: nowrap;
+  }
 }
 .qr-embedded .my-qr-introduction {
   display: none;
