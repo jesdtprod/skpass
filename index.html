@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SKPass</title>
+    <meta http-equiv="refresh" content="0; url=web/" />
+    <link rel="icon" type="image/png" href="web/icons/favicon-32.png" />
+    <script>
+      // Keep any query string / hash (e.g. ?plate=ABC or #/dashboard) when forwarding to the app.
+      location.replace("web/" + location.search + location.hash);
+    </script>
+  </head>
+  <body>
+    <!--
+      This file exists only so the repository root has an entry page when GitHub Pages is set to
+      "Deploy from a branch". With Pages source = "GitHub Actions" the app is published from web/
+      directly and this file is not used.
+    -->
+    <p>Opening SKPass… <a href="web/">Continue</a></p>
+  </body>
+</html>
