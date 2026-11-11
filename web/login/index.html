@@ -1,67 +1,331 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Staff Login | SKPass</title>
-    <meta name="description" content="SKPass sign in for authorized guards and administrators." />
-    <meta name="theme-color" content="#10141a" />
-    <link rel="manifest" href="../manifest.webmanifest" />
-    <link rel="icon" type="image/png" href="../icons/favicon-32.png" sizes="32x32" />
-    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
+    <title>Staff Login | SKPass - Vehicle Gate Pass</title>
+    <meta name="description"
+      content="Official SKPass sign in portal for authorized guards and administrators." />
+    <meta name="theme-color" content="#070b11" />
 
+    <!-- PWA & Favicons -->
+    <link rel="manifest" href="../manifest.webmanifest" />
+    <link rel="icon" href="../icons/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="../icons/favicon-16.png" />
+    <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png" />
+
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN with Forms & Container Queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Custom Tailwind Configuration -->
+    <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              400: "#4ade80",
+              500: "#22c55e",
+              600: "#16a34a",
+              accent: "#84cc16",
+              bright: "#a3e635",
+            },
+            surface: {
+              900: "#070b11",
+              850: "#0d131f",
+              800: "#111827",
+              750: "#151e2e",
+              700: "#1c2638",
+            },
+          },
+          fontFamily: {
+            sans: [
+              "Inter",
+              "system-ui",
+              "-apple-system",
+              "Segoe UI",
+              "Roboto",
+              "sans-serif",
+            ],
+            mono: [
+              '"JetBrains Mono"',
+              "ui-monospace",
+              "SFMono-Regular",
+              "Menlo",
+              "Monaco",
+              "Consolas",
+              "monospace",
+            ],
+          },
+        },
+      },
+    };
+    </script>
+
+    <!-- Styling: Background Grid & Custom Accents -->
+    <style data-purpose="background-pattern">
+    .tech-grid-bg {
+      background-color: #070b11;
+      background-image:
+        radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+        radial-gradient(rgba(34, 197, 94, 0.12) 1px, transparent 1px);
+      background-size: 100% 100%, 28px 28px;
+    }
+    .alert {
+      padding: 0.875rem 1rem;
+      border-radius: 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+    .alert.error {
+      background: rgba(127, 29, 29, 0.35);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fecaca;
+    }
+    .alert.info {
+      background: rgba(6, 78, 59, 0.35);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      color: #bbf7d0;
+    }
+    </style>
     <link rel="stylesheet" href="../css/portal.css" />
-    <link rel="stylesheet" href="../css/form-controls.css" />
-    <link rel="stylesheet" href="../css/login.css" />
-    <link rel="stylesheet" href="../css/control-shapes.css" />
-    <link rel="stylesheet" href="../css/password-toggle.css" />
-    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/login-surfaces.css" />
   </head>
-  <body class="site-theme login-page">
+  <body
+    class="registration-login min-h-screen text-slate-200 antialiased flex flex-col justify-between selection:bg-brand-500 selection:text-black"
+  >
     <canvas class="portal-pattern" aria-hidden="true"></canvas>
     <script type="module" src="../js/background.js?v=convex-2"></script>
+    <!-- BEGIN: MainHeader -->
     <skpass-header></skpass-header>
     <script type="module" src="../js/header.js"></script>
-    <main>
-      <div class="auth-container">
-        <div class="auth-intro">
-          <img src="../icons/logo.png" width="88" height="88" alt="SKPass vehicle gate pass" />
-          <h1>Staff Login</h1>
-          <p>Guards and administrators</p>
-        </div>
-        <section class="auth-card" aria-labelledby="auth-title">
+    <!-- END: MainHeader -->
+
+    <!-- BEGIN: MainContentContainer -->
+    <main class="flex-grow flex items-center justify-center px-3 sm:px-4 py-6 sm:py-12">
+      <div class="w-full max-w-[420px] flex flex-col gap-4">
+        <!-- Brand Header Section -->
+        <div class="text-center mb-2">
           <div
-            class="auth-card-heading"><span class="status-dot" aria-hidden="true"></span><h2 id="auth-title">Authentication portal</h2></div>
-          <div id="alert" class="alert error" role="alert" hidden></div>
-          <form id="login-form" novalidate>
-            <div class="field">
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" autocomplete="username"
-                placeholder="Enter your email" required />
+            class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 rounded-2xl bg-surface-850 border border-slate-700/80 p-2.5 flex items-center justify-center shadow-xl relative"
+          >
+            <div
+              class="absolute inset-0 bg-brand-500/10 rounded-2xl blur-lg pointer-events-none"
+            ></div>
+            <img
+              src="../icons/logo.png"
+              alt="SKPass Logo"
+              class="w-full h-full object-contain relative select-none"
+            />
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            Staff Login
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1 font-medium">
+            Gate Marshals &amp; Security Administrators
+          </p>
+        </div>
+
+        <!-- Session Checking Skeleton (Visible on initial load if session check is in flight) -->
+        <div
+          id="session-skeleton"
+          class="login-surface bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden animate-pulse space-y-4"
+          hidden
+        >
+          <div class="flex items-center gap-2">
+            <div class="w-2.5 h-2.5 rounded-full bg-brand-500"></div>
+            <div class="h-4 w-36 bg-surface-750/80 rounded"></div>
+          </div>
+          <div class="space-y-2">
+            <div class="h-3 w-16 bg-surface-750/50 rounded"></div>
+            <div class="h-10 w-full bg-surface-900/90 rounded-xl border border-slate-800"></div>
+          </div>
+          <div class="space-y-2">
+            <div class="h-3 w-20 bg-surface-750/50 rounded"></div>
+            <div class="h-10 w-full bg-surface-900/90 rounded-xl border border-slate-800"></div>
+          </div>
+          <div class="h-12 w-full bg-brand-500/20 rounded-xl"></div>
+        </div>
+
+        <!-- Alert Notification Box -->
+        <div id="alert" class="alert error" role="alert" hidden></div>
+
+        <!-- Auth Card -->
+        <div
+          id="auth-card"
+          class="bg-surface-850/95 backdrop-blur-xl border border-slate-700/60 rounded-3xl p-5 sm:p-7 shadow-2xl relative overflow-hidden"
+        >
+          <!-- Decorative Ambient Top Border Glow -->
+          <div
+            class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-500 to-transparent opacity-80 pointer-events-none"
+          ></div>
+
+          <!-- Card Sub-header -->
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-5">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-xs uppercase tracking-wider font-semibold text-slate-300">
+                Security Portal
+              </span>
             </div>
-            <div class="field">
-              <div
-                class="label-row"><label for="password">Password</label><a id="forgot" href="#forgot">Forgot password?</a></div>
-              <input id="password" name="password" type="password" autocomplete="current-password"
-                placeholder="Enter your password" required />
+            <span
+              class="text-[10px] font-mono uppercase bg-surface-750 text-slate-400 px-2 py-0.5 rounded border border-slate-700"
+            >
+              SEC-AUTH
+            </span>
+          </div>
+
+          <form id="login-form" class="space-y-4" novalidate>
+            <!-- Email Field -->
+            <div>
+              <label
+                for="email"
+                class="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono mb-1.5"
+              >
+                Official Email <span class="text-brand-500">*</span>
+              </label>
+              <div class="relative flex items-center">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                    viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autocomplete="username"
+                  placeholder="marshal@skpass.gov"
+                  required
+                  class="w-full bg-surface-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-3 text-base sm:text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all font-sans"
+                />
+              </div>
             </div>
-            <button id="submit"
-              type="submit">Sign in <span aria-hidden="true">&rarr;</span></button>
+
+            <!-- Password Field -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label
+                  for="password"
+                  class="block text-xs font-semibold uppercase tracking-wider text-slate-300 font-mono"
+                >
+                  Password <span class="text-brand-500">*</span>
+                </label>
+                <a
+                  id="forgot"
+                  href="#forgot"
+                  class="text-xs text-brand-400 hover:text-brand-bright transition-colors font-medium underline underline-offset-2 decoration-brand-500/30"
+                >
+                  Forgot password?
+                </a>
+              </div>
+              <div class="relative flex items-center">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                    viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  placeholder="Enter security key"
+                  required
+                  class="w-full bg-surface-900 border border-slate-700/80 rounded-xl pl-10 pr-11 py-3 text-base sm:text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500 transition-all font-sans"
+                />
+                <button
+                  id="toggle-password"
+                  type="button"
+                  class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-200 focus:outline-none cursor-pointer"
+                  aria-label="Toggle password visibility"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8"
+                    viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    ></path>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              id="submit"
+              type="submit"
+              class="w-full py-3.5 px-4 bg-brand-bright hover:bg-brand-400 active:bg-brand-500 text-slate-950 font-bold text-sm tracking-wide rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-400 pt-3"
+            >
+              <span>Sign in</span>
+              <svg class="w-4 h-4 text-slate-950" fill="none" stroke="currentColor"
+                stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            </button>
           </form>
-          <p
-            class="access-notice">Restricted to authorized enforcement officers, marshals, and perimeter administrators. All operations are logged.</p>
-        </section>
-        <a class="back-link" href="../"><span aria-hidden="true">&larr;</span> Back to home</a>
+
+          <!-- Disclaimer Notice -->
+          <div class="mt-5 pt-4 border-t border-slate-800 text-center">
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              Restricted to authorized enforcement officers, marshals, and perimeter administrators. All operations are logged.
+            </p>
+          </div>
+        </div>
+
+        <!-- Back to Home Link -->
+        <div class="text-center mt-2">
+          <a
+            class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-brand-400 transition-colors"
+            href="../"
+          >
+            <span aria-hidden="true">&larr;</span>
+            <span>Back to home</span>
+          </a>
+        </div>
       </div>
     </main>
+    <!-- END: MainContentContainer -->
+
+    <!-- BEGIN: MainFooter -->
     <skpass-footer></skpass-footer>
     <script type="module" src="../js/footer.js"></script>
+    <!-- END: MainFooter -->
+
     <script src="../js/vendor/supabase.js"></script>
     <script type="module" src="../js/login.js"></script>
-    <script type="module" src="../js/form-controls.js"></script>
-    <script type="module" src="../js/password-toggle.js"></script>
     <script type="module" src="../js/pwa.js"></script>
   </body>
 </html>

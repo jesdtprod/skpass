@@ -1,0 +1,36 @@
+/* Login uses the registration page's exact background and control palette. */
+body.registration-login {
+  background: radial-gradient(ellipse at 15% 25%, #a3e63512, transparent 45%),
+    radial-gradient(ellipse at 90% 80%, #a3e63510, transparent 40%), #10141a;
+  background-attachment: fixed;
+}
+.registration-login main {
+  position: relative;
+  z-index: 1;
+}
+.registration-login #auth-card {
+  background: #1a2025;
+  border-color: #ffffff16;
+  box-shadow: 0 16px 64px #0002;
+}
+.registration-login #login-form input {
+  background: #11181d;
+  color: #e9eef0;
+  border-color: #36424a;
+}
+.registration-login #login-form input::placeholder {
+  color: #82939e;
+  opacity: 1;
+}
+.registration-login #login-form input:focus {
+  border-color: #a3e635;
+  outline: none;
+  box-shadow: none;
+}
+.registration-login #submit {
+  background: #a3e635;
+  color: #19280e;
+}
+.registration-login #submit:hover {
+  background: #b3ee53;
+}
