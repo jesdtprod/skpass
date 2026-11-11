@@ -20,7 +20,17 @@ export function drawQr(canvas, token, label) {
   for (let r = 0; r < n; r++) {
     for (let c = 0; c < n; c++) {
       if (eyes.some(([x, y]) => c >= x && c < x + 7 && r >= y && r < y + 7)) continue;
-      if (qr.isDark(r, c)) g.fillRect((c + quiet) * cell, (r + quiet) * cell, cell, cell);
+      if (qr.isDark(r, c)) {
+        g.beginPath();
+        g.roundRect(
+          (c + quiet) * cell + .4,
+          (r + quiet) * cell + .4,
+          cell - .8,
+          cell - .8,
+          cell * .32,
+        );
+        g.fill();
+      }
     }
   }
   // Rounded finder rings retain the standard 7:5:3 module proportions.
@@ -57,13 +67,13 @@ export function downloadQr(token, plate) {
     try {
       const g = c.getContext("2d");
       const qrSize = c.width;
-      const logoSize = Math.round(qrSize * 0.22);
+      const logoSize = Math.round(qrSize * 0.18);
       const x = Math.round((qrSize - logoSize) / 2);
       const y = Math.round((qrSize - logoSize) / 2);
       const pad = Math.round(logoSize * 0.12);
       const r = Math.round(logoSize * 0.25);
 
-      // White protective halo / rounded backing with subtle emerald border
+      // Clean white backing keeps the center logo separate from data modules.
       g.fillStyle = "#ffffff";
       if (typeof g.roundRect === "function") {
         g.beginPath();
