@@ -184,7 +184,10 @@ function card(rec, view, note) {
           ),
           h(
             "span",
-            { class: "text-[10px] text-slate-400 uppercase tracking-widest font-mono" },
+            {
+              class:
+                "block mt-0.5 leading-tight text-[10px] text-slate-400 uppercase tracking-widest font-mono",
+            },
             "Terminal Pass ID",
           ),
         ),
