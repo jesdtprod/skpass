@@ -140,6 +140,11 @@ function card(rec, view, note) {
   const s = view.status;
   if (s === "approved" && (focusId === rec.vehicle_id || !focusId) && welcome) {
     welcome.hidden = true;
+    const url = new URL(location.href);
+    if (url.searchParams.has("new")) {
+      url.searchParams.delete("new");
+      history.replaceState(null, "", url);
+    }
   }
 
   const kids = [];
@@ -680,7 +685,7 @@ async function viewFor(rec) {
 const lastStatusCheck = new Map();
 async function refresh(id, force = false) {
   const now = Date.now();
-  if (now - (lastStatusCheck.get(id) ?? 0) < (force ? 5000 : 60000)) return;
+  if (now - (lastStatusCheck.get(id) ?? 0) < (force ? 5000 : 30000)) return;
   const recs = await listVehicles();
   const rec = recs.find((r) => r.vehicle_id === id);
   if (!rec) return;
@@ -693,6 +698,7 @@ async function refresh(id, force = false) {
     const fresh = card(rec, view, note);
     if (old?.isConnected) old.replaceWith(fresh);
     else if (!list?.querySelector(`[data-id="${id}"]`)) list?.append(fresh);
+    await refreshNotifyCard();
   } catch {
     // Keep the saved pass and its QR readable if the status service is unavailable.
     if (old?.isConnected && !old.querySelector(".refresh-status-note")) {
@@ -734,7 +740,7 @@ setInterval(async () => {
   for (const r of await listVehicles()) {
     if ((r.status ?? "pending") === "pending") await refresh(r.vehicle_id);
   }
-}, 120000);
+}, 30000);
 
 // A push that arrives while the page is open: update straight away.
 navigator.serviceWorker?.addEventListener("message", (e) => {
