@@ -282,6 +282,14 @@ const panel = (cls, title, note, linkHref, linkText, ...body) => {
 
 const failed = (what) => h("div", { class: "panel-error" }, `Could not load ${what}.`);
 const empty = (text) => h("div", { class: "panel-empty" }, text);
+const emptyChart = (title, detail) =>
+  h(
+    "div",
+    { class: "chart-empty" },
+    svgIcon("M4 19h16M7 15v-4m5 4V5m5 10v-7"),
+    h("strong", {}, title),
+    h("span", {}, detail),
+  );
 const catTag = (c) => h("span", { class: `tag cat-${c}` }, c);
 
 function skeleton() {
@@ -622,7 +630,10 @@ function paint(d, ctx, days) {
         )
         : null,
     ),
-    dailyChart(daily),
+    tot.total ? dailyChart(daily) : emptyChart(
+      "No activity in this period",
+      "Entries and exits will appear here after a gate scan.",
+    ),
     legend(),
   );
   const gatePanel = panel(
@@ -648,7 +659,9 @@ function paint(d, ctx, days) {
     null,
     d.hourly.error
       ? failed("hourly activity")
-      : hourChart(buckets, { nowHour: localParts(new Date(), ctx.tz).hour, peak }),
+      : peak
+      ? hourChart(buckets, { nowHour: localParts(new Date(), ctx.tz).hour, peak })
+      : emptyChart("No scans today", "Hourly activity updates as vehicles enter and exit."),
     legend(),
   );
 

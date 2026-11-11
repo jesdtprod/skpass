@@ -1281,3 +1281,121 @@
   outline: 2px solid #a3e635;
   outline-offset: 2px;
 }
+
+/* Compact analytics panels, with intentional space for empty data. */
+.dashboard-view .dash-grid {
+  gap: 16px;
+  align-items: start;
+}
+.admin-home .dashboard-view .dash-grid > .panel {
+  padding: 18px;
+  border-radius: 14px;
+  min-height: 0;
+}
+.dashboard-view .panel-head {
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  gap: 10px;
+}
+.dashboard-view .panel-head h2,
+.dashboard-view .panel-title {
+  font-size: 13px;
+  line-height: 20px;
+}
+.dashboard-view .panel-head .sub-note {
+  font-size: 10px;
+  line-height: 16px;
+}
+.dashboard-view .panel-action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+.dashboard-view .panel-action-btn svg {
+  width: 14px;
+  height: 14px;
+}
+.dashboard-view .totals {
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.dashboard-view .total-chip {
+  padding: 4px 7px;
+  font-size: 10px;
+  border-radius: 7px;
+}
+.dashboard-view .legend {
+  margin-top: 12px;
+  padding-top: 10px;
+  gap: 14px;
+  font-size: 10px;
+}
+.dashboard-view .gate-bars-list {
+  gap: 8px;
+}
+.dashboard-view .gate-row-card {
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+.dashboard-view .gate-name {
+  font-size: 12px;
+}
+.dashboard-view .gate-chip {
+  padding: 2px 6px;
+  font-size: 10px;
+}
+.dashboard-view .gate-progress-track {
+  height: 4px;
+  margin-top: 8px;
+}
+.dashboard-view .chart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 120px;
+  padding: 16px;
+  border: 1px dashed #ffffff0e;
+  border-radius: 10px;
+  background: #11181d55;
+  text-align: center;
+}
+.dashboard-view .chart-empty svg {
+  width: 22px;
+  height: 22px;
+  color: #708a98;
+  margin-bottom: 3px;
+}
+.dashboard-view .chart-empty strong {
+  color: #b8c9d2;
+  font-size: 12px;
+  font-weight: 600;
+}
+.dashboard-view .chart-empty span {
+  color: #7e97a5;
+  font-size: 10px;
+  line-height: 16px;
+}
+.dashboard-view .catbar {
+  height: 7px;
+  margin-bottom: 12px;
+}
+.dashboard-view .catlist li {
+  padding-block: 7px;
+  font-size: 12px;
+}
+.dashboard-view .cattotal {
+  margin-top: 10px;
+  padding-top: 10px;
+  font-size: 11px;
+}
+.admin-home .dashboard-view .panel-head h2 {
+  font-size: 13px;
+  line-height: 20px;
+}
+.admin-home .dashboard-view .legend {
+  margin-top: 12px;
+  padding-top: 10px;
+  font-size: 10px;
+}

@@ -11,7 +11,7 @@ export const COLORS = { in: "#a3e635", out: "#748995" };
 
 /** Stacked daily bars. rows: [{ day:'2026-11-11', in:3, out:2 }] */
 export function dailyChart(rows) {
-  const W = 560, H = 240, padL = 34, padB = 34, padT = 12, padR = 8;
+  const W = 560, H = 160, padL = 34, padB = 30, padT = 12, padR = 8;
   const svg = svgEl("svg", {
     viewBox: `0 0 ${W} ${H}`,
     role: "img",
@@ -204,7 +204,7 @@ export function gateBars(rows) {
  * `nowHour` (optional) marks the current hour; `peak` (optional) highlights the busiest hour.
  */
 export function hourChart(buckets, { nowHour = null, peak = null } = {}) {
-  const W = 560, H = 200, padL = 28, padB = 26, padT = 10, padR = 6;
+  const W = 560, H = 150, padL = 28, padB = 26, padT = 10, padR = 6;
   const svg = svgEl("svg", {
     viewBox: `0 0 ${W} ${H}`,
     role: "img",
