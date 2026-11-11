@@ -262,10 +262,12 @@ export async function render(root, ctx) {
       h(
         "div",
         {},
-        h("span", { class: "dash-eyebrow" }, "Admin workspace"),
         h("h1", {}, "Dashboard"),
-        greetEl,
-        h("div", { class: "dash-clockline" }, dateEl, clockEl, offEl),
+        h(
+          "p",
+          { class: "dash-sub" },
+          "Live overview of gate activity, vehicle access, and pending requests.",
+        ),
       ),
       h(
         "div",
@@ -745,9 +747,9 @@ function paint(d, ctx, days) {
   );
 
   return [
+    stats,
     attention,
     actions,
-    stats,
     h(
       "div",
       { class: "dash-grid" },
