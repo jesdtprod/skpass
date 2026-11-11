@@ -2,14 +2,8 @@
 //
 // Owners have no account, so a device is linked to a vehicle with that vehicle's claim secret
 // (the same proof My QR already uses). One browser can follow several vehicles.
-import { isMuted, playAlert, setMuted } from "./alert-sound.js";
-import {
-  enableOwnerPush,
-  permission,
-  pushSupport,
-  REASON_TEXT,
-  showLocalNotification,
-} from "./notify.js";
+import { playAlert } from "./alert-sound.js";
+import { enableOwnerPush, permission, pushSupport, showLocalNotification } from "./notify.js";
 
 const KEY = "skpass.push.vehicles";
 
@@ -130,13 +124,6 @@ export function mountNotifyCard(listEl, recsFn) {
   listEl.parentElement?.insertBefore(card, listEl);
 }
 
-const ERR = {
-  denied:
-    "Notifications are blocked for this site. Allow them in your browser settings, then try again.",
-  "ios-install": REASON_TEXT["ios-install"],
-  network: "No connection. Please try again.",
-};
-
 // Silent subscription: the decision banner and sound remain active without an opt-in panel.
 let syncingPush = false;
 let permissionGestureQueued = false;
@@ -178,25 +165,4 @@ async function syncPending(records) {
   } finally {
     syncingPush = false;
   }
-}
-
-function soundRow() {
-  const box = el("input", { type: "checkbox", id: "oa-sound" });
-  box.checked = !isMuted();
-  box.addEventListener("change", () => setMuted(!box.checked));
-  return el(
-    "div",
-    { class: "oa-sound" },
-    el(
-      "label",
-      { for: "oa-sound" },
-      box,
-      " Play a loud sound (3×) when the decision arrives while this page is open",
-    ),
-    el("button", {
-      type: "button",
-      class: "oa-link",
-      onclick: () => playAlert("approved", { force: true }),
-    }, "Test sound"),
-  );
 }

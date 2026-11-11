@@ -323,11 +323,11 @@ body.pass-page {
 .pass-page .qr-logo-backing {
   width: 18%;
   aspect-ratio: 1;
-  padding: 3px;
+  padding: 1px;
   border: 0;
   outline: 0;
   box-shadow: none;
-  border-radius: 10px;
+  border-radius: 50%;
 }
 .pass-page .qr-logo-backing img {
   border: 0;
