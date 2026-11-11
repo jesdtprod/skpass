@@ -70,7 +70,7 @@ body.portal-page {
   background: #11181d99;
   border: 1px solid #ffffff0c;
   border-radius: 12px;
-  padding: 10px 8px;
+  padding: 6px 8px;
 }
 .portal-page [data-purpose="action-portal-container"] > div > div:first-child {
   display: none;
