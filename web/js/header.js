@@ -16,6 +16,10 @@ class SKPassHeader extends HTMLElement {
     css.rel = "stylesheet";
     css.href = new URL("css/header.css?v=fonts-3", base).href;
     root.append(css);
+    const modalStyles = document.createElement("link");
+    modalStyles.rel = "stylesheet";
+    modalStyles.href = new URL("../css/modal-system.css", import.meta.url).href;
+    root.append(modalStyles);
     const template = document.createElement("template");
     template.innerHTML = `<header><div class="inner">
       <a class="brand" href="${base.href}" aria-label="SKPass home">

@@ -9,6 +9,10 @@ class SKPassFooter extends HTMLElement {
     stylesheet.href = new URL("../css/footer.css?v=alignment-2", import.meta.url).href;
     root.append(stylesheet);
     const logo = new URL("../icons/logo.webp", import.meta.url).href;
+    const modalStyles = document.createElement("link");
+    modalStyles.rel = "stylesheet";
+    modalStyles.href = new URL("../css/modal-system.css", import.meta.url).href;
+    root.append(modalStyles);
     const template = document.createElement("template");
     template.innerHTML = `<footer>
   <div class="inner">

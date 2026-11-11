@@ -1,0 +1,181 @@
+/* Shared dialog system, including header/footer shadow roots. */
+dialog.dlg,
+dialog.qr-modal,
+dialog.support-modal .modal-card,
+dialog.policy-modal .modal-card {
+  box-sizing: border-box;
+  background: #192126;
+  border: 1px solid #ffffff1c;
+  border-radius: 16px;
+  color: #dce5eb;
+  box-shadow: 0 24px 80px #0008, inset 0 1px #ffffff05;
+  font: 400 13px/1.65 "Plus Jakarta Sans", sans-serif;
+}
+dialog.dlg {
+  padding: 24px;
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+}
+dialog.dlg.wide {
+  width: min(760px, calc(100vw - 32px));
+}
+dialog:is(.dlg, .qr-modal, .support-modal, .policy-modal)::backdrop {
+  background: #03080dcc;
+  backdrop-filter: blur(6px);
+}
+dialog.dlg h2,
+dialog .qr-modal-heading h2,
+dialog .modal-title {
+  margin: 0;
+  color: #f1f5f8;
+  font: 650 16px/1.45 "Plus Jakarta Sans", sans-serif;
+  letter-spacing: -.02em;
+}
+dialog.dlg > h2 {
+  margin-bottom: 10px;
+}
+dialog.dlg > p {
+  margin: 0 0 18px;
+  color: #b7c5cf;
+  font-size: 13px;
+  line-height: 1.7;
+}
+dialog.dlg .dlg-form {
+  display: grid;
+  gap: 16px;
+}
+dialog.dlg .field {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+}
+dialog.dlg .field label {
+  color: #dce5eb;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 600;
+}
+dialog.dlg .field :is(input, select, textarea) {
+  box-sizing: border-box;
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #3b4851;
+  border-radius: 9px;
+  background: #10181d;
+  color: #eef3f6;
+  font: 400 13px/1.6 "Plus Jakarta Sans", sans-serif;
+}
+dialog.dlg .field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+dialog.dlg .field :is(input, select, textarea):focus {
+  border-color: #a3e635;
+  outline: none;
+  box-shadow: 0 0 0 3px #a3e63514;
+}
+dialog.dlg .field p,
+dialog.dlg .field-error,
+dialog.dlg .pick-row small {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #a7b8c3;
+}
+dialog.dlg .field-error {
+  color: #fca5a5;
+}
+dialog.dlg .dlg-actions {
+  gap: 8px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid #ffffff12;
+  flex-wrap: wrap;
+}
+dialog.dlg .btn,
+dialog .modal-actions .btn-dismiss {
+  min-height: 40px;
+  padding: 9px 16px;
+  border-radius: 9px;
+  font: 600 12px/20px "Plus Jakarta Sans", sans-serif;
+  box-shadow: none;
+}
+dialog.dlg .btn.ghost {
+  color: #c5d1d9;
+  background: #11191e;
+  border: 1px solid #3b4851;
+}
+dialog.dlg .btn.danger {
+  color: #ffb4b4;
+  background: #ef444414;
+  border: 1px solid #ef444440;
+}
+dialog.dlg .btn:focus-visible,
+dialog.dlg .link-btn:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 3px;
+}
+dialog .modal-card {
+  padding: 22px;
+  gap: 18px;
+}
+dialog .modal-glow-bar {
+  display: none;
+}
+dialog .modal-subtitle {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #a7b8c3;
+}
+dialog .modal-body {
+  font-size: 13px;
+  line-height: 1.75;
+  color: #c1ced7;
+}
+dialog .modal-notice {
+  font-size: 12px;
+  line-height: 1.65;
+  border-radius: 9px;
+}
+dialog .modal-actions {
+  padding-top: 16px;
+  border-top: 1px solid #ffffff12;
+}
+dialog .modal-badge-icon {
+  width: 34px;
+  height: 34px;
+  box-shadow: none;
+}
+dialog .modal-close-btn,
+dialog .qr-modal-heading button {
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 9px;
+}
+/* Keep scan results distinct and immediately readable at the gate. */
+.overlay[role="dialog"] .scan-result-card {
+  border-radius: 16px;
+  font: 400 13px/1.65 "Plus Jakarta Sans", sans-serif;
+}
+.overlay[role="dialog"] .ov-msg {
+  font-size: 16px;
+  line-height: 1.5;
+}
+.overlay[role="dialog"] .ov-owner {
+  font-size: 14px;
+}
+@media (max-width: 480px) {
+  dialog.dlg,
+  dialog.support-modal .modal-card,
+  dialog.policy-modal .modal-card {
+    padding: 20px;
+  }
+  /* Prevent mobile browsers from zooming when a form field receives focus. */
+  dialog.dlg .field :is(input, select, textarea) {
+    font-size: 16px;
+  }
+  dialog.dlg .dlg-actions > button {
+    flex: 1;
+  }
+}
