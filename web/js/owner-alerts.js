@@ -108,80 +108,47 @@ const ERR = {
   network: "No connection. Please try again.",
 };
 
-/** Show/hide/update the card from the saved vehicles. Safe to call often. */
+// Silent subscription: the decision banner and sound remain active without an opt-in panel.
+let syncingPush = false;
+let permissionGestureQueued = false;
 export async function refreshNotifyCard() {
   if (!card) return;
-  const recs = await getRecs();
-  const pending = recs.filter((r) => (r.status ?? "pending") === "pending" && r.claim_secret);
-  const follow = readSet();
-  const todo = pending.filter((r) => !follow.has(r.vehicle_id));
-  const sup = pushSupport();
-
+  card.hidden = true;
   card.replaceChildren();
-  if (!pending.length) {
-    card.hidden = true; // nothing is waiting for a decision
+  if (syncingPush || !pushSupport().supported || permission() === "denied") return;
+  const recs = await getRecs();
+  const follow = readSet();
+  const todo = recs.filter((r) =>
+    (r.status ?? "pending") === "pending" && r.claim_secret && !follow.has(r.vehicle_id)
+  );
+  if (!todo.length) return;
+  if (permission() !== "granted") {
+    // Browsers require a gesture for the native permission prompt.
+    if (!permissionGestureQueued) {
+      permissionGestureQueued = true;
+      document.addEventListener("click", () => syncPending(todo), { once: true });
+    }
     return;
   }
-  card.hidden = false;
-
-  if (!sup.supported) {
-    card.append(
-      el("strong", {}, "Want an alert when it's decided?"),
-      el(
-        "p",
-        {},
-        REASON_TEXT[sup.reason] ??
-          "This browser cannot show notifications. Keep this page open, or check back later.",
-      ),
-    );
-    return;
-  }
-  if (permission() === "denied") {
-    card.append(el("strong", {}, "Notifications are blocked"), el("p", {}, ERR.denied));
-    return;
-  }
-  if (!todo.length) {
-    card.append(
-      el("strong", {}, "✓ Notifications are on"),
-      el("p", {}, "You will be told as soon as your registration is approved or rejected."),
-      soundRow(),
-    );
-    return;
-  }
-
-  const msg = el("p", { class: "oa-msg", role: "status" });
-  const btn = el("button", { class: "oa-btn", type: "button" }, "Notify me when it's decided");
-  btn.addEventListener("click", async () => {
-    btn.disabled = true;
-    msg.textContent = "Turning on…";
-    let failed = null;
-    for (const r of todo) {
-      const res = await enableOwnerPush(r.vehicle_id, r.claim_secret);
-      if (res.ok) follow.add(r.vehicle_id);
-      else {
-        failed = res.error;
-        break;
-      }
+  await syncPending(todo);
+}
+async function syncPending(records) {
+  if (syncingPush || permission() === "denied") return;
+  syncingPush = true;
+  const follow = readSet();
+  try {
+    for (const record of records) {
+      if (follow.has(record.vehicle_id)) continue;
+      const result = await enableOwnerPush(record.vehicle_id, record.claim_secret);
+      if (result.ok) follow.add(record.vehicle_id);
+      else break;
     }
     writeSet(follow);
-    if (failed) {
-      msg.textContent = ERR[failed] ?? "Could not turn on notifications. Please try again.";
-      btn.disabled = false;
-    } else {
-      refreshNotifyCard();
-    }
-  });
-  card.append(
-    el("strong", {}, "Get an alert when your registration is decided"),
-    el(
-      "p",
-      {},
-      "We'll notify this device when an administrator approves or rejects it, even if this page is closed.",
-    ),
-    btn,
-    msg,
-    soundRow(),
-  );
+  } catch {
+    // In-page status checks still announce decisions when push is unavailable.
+  } finally {
+    syncingPush = false;
+  }
 }
 
 function soundRow() {
