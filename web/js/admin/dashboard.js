@@ -53,7 +53,8 @@ function svgIcon(d, stroke = "1.7") {
 }
 
 /** One metric card. `sub` is the context line shown under the number. */
-function stat(href, n, label, cls = "", sub = null) {
+function stat(href, n, label, cls = "", sub = null, total = 0, basis = "registered vehicles") {
+  const ratio = total > 0 ? Math.min(100, Math.max(0, n / total * 100)) : 0;
   const tone = label === "Blocked vehicles" && n
     ? "critical"
     : label === "Approved vehicles"
@@ -72,8 +73,18 @@ function stat(href, n, label, cls = "", sub = null) {
       "div",
       { class: "metric-value-row" },
       h("div", { class: "n" }, String(n)),
-      h("span", { class: "metric-arrow", "aria-hidden": "true" }, "↗"),
+      h("span", { class: "metric-arrow", "aria-hidden": "true" }, svgIcon("M7 17 17 7M7 7h10v10")),
     ),
+    h("div", {
+      class: "metric-track",
+      role: "meter",
+      "aria-label": `${label} as a share of ${basis}`,
+      "aria-valuemin": 0,
+      "aria-valuemax": 100,
+      "aria-valuenow": ratio.toFixed(1),
+      "aria-valuetext": `${n} of ${total} ${basis}`,
+      title: `${n} of ${total} ${basis}`,
+    }, h("span", { style: `width:${ratio}%` })),
     sub ? h("div", { class: "metric-sub" }, sub) : null,
   );
 }
@@ -521,14 +532,24 @@ function paint(d, ctx, days) {
           ` · ${fmtDuration(now - new Date(longest.entered_at).getTime())}`,
         ]
         : "No vehicles inside",
+      totalVehicles,
     ),
-    stat("#/logs", s.scans_today, "Scans today", "", trendLine),
+    stat(
+      "#/logs",
+      s.scans_today,
+      "Scans today",
+      "",
+      trendLine,
+      daily.reduce((sum, row) => sum + row.in + row.out, 0),
+      "scans in the selected period",
+    ),
     stat(
       "#/pending",
       s.pending,
       "Waiting for approval",
       s.pending ? "warn" : "",
       pend[0] ? ["Oldest waiting ", h("b", {}, fmtDuration(oldestPendingMs))] : "Queue is clear",
+      totalVehicles,
     ),
     stat(
       "#/logs",
@@ -538,6 +559,8 @@ function paint(d, ctx, days) {
       s.scans_today
         ? `${pct(s.warnings_today, s.scans_today)}% of today's scans`
         : "No scans yet today",
+      s.scans_today,
+      "today's scans",
     ),
     stat(
       "#/vehicles",
@@ -545,6 +568,7 @@ function paint(d, ctx, days) {
       "Approved vehicles",
       "",
       d.new7 == null ? "" : [h("b", {}, `+${d.new7}`), " approved in the last 7 days"],
+      totalVehicles,
     ),
     stat(
       "#/vehicles",
@@ -554,6 +578,7 @@ function paint(d, ctx, days) {
       totalVehicles
         ? `${pct(s.blocked, totalVehicles)}% of registered vehicles`
         : "No vehicles yet",
+      totalVehicles,
     ),
   );
 

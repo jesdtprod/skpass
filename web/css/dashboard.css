@@ -1141,3 +1141,71 @@
     min-height: 44px;
   }
 }
+
+/* Metric summaries: clear hierarchy, consistent icons and actual share meters. */
+.admin-home .dashboard-view .metric-card {
+  min-height: 144px;
+  padding: 16px;
+  border-radius: 14px;
+}
+.admin-home .dashboard-view .metric-card .l {
+  font: 600 11px/16px "Plus Jakarta Sans", sans-serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.dashboard-view .metric-heading {
+  min-height: 30px;
+  align-items: center;
+}
+.admin-home .dashboard-view .metric-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ffffff0c;
+  border-radius: 9px;
+  background: #ffffff04;
+  color: var(--metric-accent);
+}
+.dashboard-view .metric-icon svg {
+  width: 17px;
+  height: 17px;
+  display: block;
+}
+.dashboard-view .metric-value-row {
+  margin-top: 8px;
+  align-items: center;
+}
+.admin-home .dashboard-view .metric-card .n {
+  font-size: 30px;
+}
+.dashboard-view .metric-arrow svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+.dashboard-view .metric-track {
+  height: 4px;
+  overflow: hidden;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: #ffffff0b;
+}
+.dashboard-view .metric-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--metric-accent);
+}
+.dashboard-view .metric-sub {
+  border: 0;
+  padding-top: 0;
+  margin-top: 9px;
+  font-size: 10px;
+  line-height: 16px;
+}
+.admin-home .dashboard-view .metric-card:focus-visible {
+  outline: 2px solid #a3e635;
+  outline-offset: 2px;
+}
