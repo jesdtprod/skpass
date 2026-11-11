@@ -585,6 +585,9 @@ body.register-page {
   gap: 28px;
   max-width: none;
 }
+.registration-layout > .registration-breadcrumb {
+  margin-bottom: 0;
+}
 .registration-aside {
   position: static;
   padding-top: 0;
