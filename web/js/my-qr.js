@@ -555,7 +555,7 @@ function card(rec, view, note) {
           class:
             "py-2.5 px-3 bg-surface-800 hover:bg-surface-750 active:bg-surface-700 border border-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer",
           type: "button",
-          onclick: () => refresh(rec.vehicle_id),
+          onclick: () => refresh(rec.vehicle_id, true),
         },
         svgIcon("refresh", "w-3.5 h-3.5 text-slate-400"),
         "Refresh",
@@ -679,12 +679,16 @@ async function viewFor(rec) {
   };
 }
 
-async function refresh(id) {
+const lastStatusCheck = new Map();
+async function refresh(id, force = false) {
+  const now = Date.now();
+  if (now - (lastStatusCheck.get(id) ?? 0) < (force ? 5000 : 60000)) return;
   const recs = await listVehicles();
   const rec = recs.find((r) => r.vehicle_id === id);
   if (!rec) return;
   const old = list?.querySelector(`[data-id="${id}"]`);
   if (old?.getAttribute("aria-busy") === "true") return;
+  lastStatusCheck.set(id, now);
   old?.setAttribute("aria-busy", "true");
   try {
     const { view, note } = await viewFor(rec);
@@ -726,19 +730,18 @@ document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") render();
 });
 
-// While this page is open, check pending registrations every 20 s so a decision shows (and
-// sounds) within seconds, even without push notifications.
+// Push handles instant updates; polling is a low-frequency fallback.
 setInterval(async () => {
   if (document.hidden) return;
   for (const r of await listVehicles()) {
     if ((r.status ?? "pending") === "pending") await refresh(r.vehicle_id);
   }
-}, 20000);
+}, 120000);
 
 // A push that arrives while the page is open: update straight away.
 navigator.serviceWorker?.addEventListener("message", (e) => {
   if (e.data?.type === "skpass-push" && e.data.kind === "decision" && e.data.vehicle_id) {
-    refresh(e.data.vehicle_id);
+    refresh(e.data.vehicle_id, true);
   }
 });
 
