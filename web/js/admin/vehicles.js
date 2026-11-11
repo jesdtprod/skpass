@@ -1,5 +1,5 @@
 import { ask } from "./dialog.js";
-import { attempt, debounce, digits, fmtTime, h, normPlate, safeTerm } from "./util.js";
+import { attempt, debounce, fmtTime, h, normPlate, phoneSearch, safeTerm } from "./util.js";
 import { openVehicle, statusBadge, VEHICLE_TYPES } from "./vehicle-detail.js";
 
 const PAGE = 25;
@@ -129,7 +129,7 @@ export async function render(root, ctx) {
     if (t) {
       const parts = [`owner_name.ilike.*${t}*`];
       if (normPlate(t)) parts.push(`plate_norm.ilike.*${normPlate(t)}*`);
-      if (digits(t).length >= 3) parts.push(`phone_norm.ilike.*${digits(t)}*`);
+      if (phoneSearch(t).length >= 3) parts.push(`phone_norm.ilike.*${phoneSearch(t)}*`);
       q = q.or(parts.join(","));
     }
     const { data, count, error } = await q;

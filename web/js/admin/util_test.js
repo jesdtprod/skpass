@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { addDays, csvCell, digits, normPlate, safeTerm, toCsv } from "./util.js";
+import { addDays, csvCell, digits, normPlate, phoneSearch, safeTerm, toCsv } from "./util.js";
 
 Deno.test("csvCell quotes special characters", () => {
   assertEquals(csvCell("plain"), "plain");
@@ -31,6 +31,9 @@ Deno.test("safeTerm strips PostgREST filter syntax", () => {
 Deno.test("normalisers match the database", () => {
   assertEquals(normPlate("abc-123 x"), "ABC123X");
   assertEquals(digits("+63 912-345"), "63912345");
+  assertEquals(phoneSearch("0917 000"), "917000");
+  assertEquals(phoneSearch("+63 917 000"), "917000");
+  assertEquals(phoneSearch("917000"), "917000");
 });
 
 Deno.test("addDays crosses month and year boundaries", () => {

@@ -160,7 +160,10 @@ export function normPlate(p: string): string {
   return p.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
 }
 export function normPhone(p: string): string {
-  return p.replace(/[^0-9]/g, "");
+  const d = p.replace(/[^0-9]/g, "");
+  if (/^63[0-9]{10}$/.test(d)) return d.slice(2); // +63 912 345 6789
+  if (/^0[0-9]{10}$/.test(d)) return d.slice(1); // 0912 345 6789
+  return d;
 }
 
 /** Photo rules shared by the function and tests. */

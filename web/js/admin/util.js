@@ -83,6 +83,8 @@ export function downloadText(name, text, type = "text/csv;charset=utf-8") {
 export const safeTerm = (q) => String(q ?? "").replace(/[,()*%\\:]/g, " ").trim().slice(0, 60);
 export const normPlate = (p) => String(p ?? "").replace(/[^A-Za-z0-9]/g, "").toUpperCase();
 export const digits = (p) => String(p ?? "").replace(/\D/g, "");
+/** Digits for searching phone_norm: drop a leading 0 / 63 so "0917…" and "+63917…" find "917…". */
+export const phoneSearch = (p) => digits(p).replace(/^(63|0)/, "");
 
 export function debounce(fn, ms = 300) {
   let t;

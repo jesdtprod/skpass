@@ -103,5 +103,12 @@ Deno.test("photo validation", () => {
 Deno.test("normPlate / normPhone match the database normalizers", async () => {
   const { normPlate, normPhone } = await import("./validate.ts");
   assertEquals(normPlate("abc-123 x"), "ABC123X");
-  assertEquals(normPhone("+63 912-345 6789"), "639123456789");
+  // Philippine mobile formats all match each other
+  assertEquals(normPhone("+63 912-345 6789"), "9123456789");
+  assertEquals(normPhone("0912 345 6789"), "9123456789");
+  assertEquals(normPhone("912 345 6789"), "9123456789");
+  assertEquals(normPhone("63912 345 6789"), "9123456789");
+  // anything else is only stripped to digits
+  assertEquals(normPhone("(02) 8123-4567"), "0281234567");
+  assertEquals(normPhone("12345"), "12345");
 });
