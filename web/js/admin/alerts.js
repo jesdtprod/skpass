@@ -21,6 +21,16 @@ const POLL_MS = 30_000;
 export function start(ctx) {
   const seen = new Map(); // key -> time, so Realtime + push for the same event sound once
   const state = { live: "connecting" };
+  let lastTestSound = -Infinity;
+  async function playTestSound() {
+    const now = performance.now();
+    if (now - lastTestSound < 5000) return;
+    lastTestSound = now;
+    const result = await playAlert("test");
+    if (result < 0) {
+      toast("Tap Test the sound to enable notification audio in this browser.", "error");
+    }
+  }
 
   const css = h("link", {
     rel: "stylesheet",
@@ -99,7 +109,7 @@ export function start(ctx) {
     if (m?.type !== "skpass-push") return;
     if (m.kind === "new_registration") announceNew({ id: m.vehicle_id });
     else if (m.kind === "test") {
-      playAlert("test");
+      playTestSound();
       toast("Test notification received on this device.");
     }
   });
@@ -247,11 +257,19 @@ export function start(ctx) {
     }
   });
   testPush.addEventListener("click", async () => {
+    // Unlock during the click, before the asynchronous server request loses the user gesture.
+    await unlockAudio();
     testPush.disabled = true;
-    const r = await tokenThen((t) => sendAdminTest(t));
-    testPush.disabled = false;
-    if (r?.ok && r.sent > 0) toast("Test sent. It should arrive in a moment.");
-    else if (r?.ok) {
+    let r;
+    try {
+      r = await tokenThen((t) => sendAdminTest(t));
+    } finally {
+      testPush.disabled = false;
+    }
+    if (r?.ok && r.sent > 0) {
+      await playTestSound();
+      toast("Test sent. It should arrive in a moment.");
+    } else if (r?.ok) {
       toast(
         "The push service did not accept it. Try turning notifications off and on again.",
         "error",

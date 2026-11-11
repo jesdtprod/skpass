@@ -130,6 +130,7 @@ export async function showLocalNotification({ title, body, tag, url }) {
       icon: "./icons/icon-192.png",
       badge: "./icons/icon-192.png",
       renotify: true,
+      silent: false,
       requireInteraction: true,
       vibrate: [500, 200, 500, 200, 500],
       data: { url: new URL(url ?? "./", reg.scope).href },
